@@ -1,6 +1,10 @@
 // English and Japanese strings, keyed by the Chinese source text in index.html.
 // Japanese uses <ruby> furigana over kanji.
 window.I18N = {
+ "奶蛙宇宙": {
+  "en": "Naiwa Universe",
+  "ja": "ナイワ<ruby>宇宙<rt>うちゅう</rt></ruby>"
+ },
  "奶蛙": {
   "en": "Naiwa",
   "ja": "ナイワ"
@@ -621,9 +625,9 @@ window.I18N = {
   "en": "About",
   "ja": "このサイトについて"
  },
- "Copyright © 2026 loveandfuck.me。保留所有权利。": {
-  "en": "Copyright © 2026 loveandfuck.me. All rights reserved.",
-  "ja": "Copyright © 2026 loveandfuck.me. All rights reserved."
+ "Copyright © 2026 奶蛙.space。保留所有权利。": {
+  "en": "Copyright © 2026 奶蛙.space. All rights reserved.",
+  "ja": "Copyright © 2026 奶蛙.space. All rights reserved."
  },
  "隐私政策": {
   "en": "Privacy Policy",
@@ -641,9 +645,9 @@ window.I18N = {
   "en": "Site Map",
   "ja": "サイトマップ"
  },
- "奶蛙 · loveandfuck.me": {
-  "en": "Naiwa · loveandfuck.me",
-  "ja": "ナイワ · loveandfuck.me"
+ "奶蛙 · 奶蛙.space": {
+  "en": "Naiwa · 奶蛙.space",
+  "ja": "ナイワ · 奶蛙.space"
  },
  "奶蛙。抱紧肚子，稳住人生。": {
   "en": "Naiwa. Hug your belly. Hold your ground.",
