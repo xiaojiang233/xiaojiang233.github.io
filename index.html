@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>小黄 · loveandfuck.me</title>
-<meta name="description" content="一只抱着肚子、站得笔直的小黄。loveandfuck.me">
+<title>奶蛙 · loveandfuck.me</title>
+<meta name="description" content="一只抱着肚子、站得笔直的奶蛙。loveandfuck.me">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23F7C02B'/%3E%3Ccircle cx='58' cy='42' r='14' fill='%237DB544'/%3E%3Ccircle cx='60' cy='42' r='8' fill='%23111'/%3E%3C/svg%3E">
 <style>
   :root {
@@ -81,15 +81,15 @@
     background: linear-gradient(90deg, #f0a500, #ffd23f 50%, #f0a500);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .stage { position: relative; width: min(420px, 82vw); margin: 40px auto 0; aspect-ratio: 400 / 620; }
+  .stage { position: relative; width: min(380px, 72vw); margin: 40px auto 0; aspect-ratio: 520 / 1100; }
   .stage::before {
     content: ""; position: absolute; inset: 10% -30% 0; z-index: -1;
     background: radial-gradient(closest-side, rgba(247,192,43,.35), transparent);
     filter: blur(20px);
   }
   .critter { width: 100%; height: 100%; display: block; overflow: visible; cursor: pointer; }
-  .critter .bob { animation: bob 4s ease-in-out infinite; transform-origin: 200px 580px; }
-  .critter .lid { transform-origin: 178px 106px; animation: blink 5s infinite; transform: scaleY(0); }
+  .critter .bob { animation: bob 4s ease-in-out infinite; transform-origin: 410px 1170px; }
+  .critter .lid { transform-origin: 372px 205px; animation: blink 5s infinite; transform: scaleY(0); }
   .critter.wiggle .bob { animation: wiggle .7s ease-in-out; }
   @keyframes bob { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-6px) rotate(-1deg); } }
   @keyframes blink { 0%, 94%, 100% { transform: scaleY(0); } 96% { transform: scaleY(1); } }
@@ -117,7 +117,7 @@
   .colors { display: flex; justify-content: center; gap: clamp(8px, 3vw, 40px); margin-top: 56px; flex-wrap: wrap; }
   .colors figure { width: clamp(130px, 18vw, 180px); }
   .colors figcaption { margin-top: 12px; font-size: 14px; color: var(--muted); }
-  .colors .critter { height: auto; aspect-ratio: 400/620; }
+  .colors .critter { height: auto; aspect-ratio: 520/1100; }
 
   /* Stats (dark band) */
   .dark { background: #000; color: #f5f5f7; }
@@ -145,83 +145,103 @@
 <!-- Shared shading defs -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <radialGradient id="shade" cx="38%" cy="28%" r="80%">
-      <stop offset="0" stop-color="#fff" stop-opacity=".38"/>
-      <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
-      <stop offset="1" stop-color="#000" stop-opacity=".22"/>
+    <radialGradient id="hl" cx="30%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".42"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#7a3b00" stop-opacity=".28"/>
     </radialGradient>
-    <linearGradient id="limbShade" x1="0" x2="1">
-      <stop offset="0" stop-color="#fff" stop-opacity=".15"/>
-      <stop offset="1" stop-color="#000" stop-opacity=".18"/>
+    <linearGradient id="limb" x1="0" x2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
+      <stop offset=".55" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#7a3b00" stop-opacity=".3"/>
     </linearGradient>
-    <radialGradient id="eyeRing" cx="45%" cy="40%" r="60%">
-      <stop offset="0" stop-color="#a8d66a"/>
-      <stop offset="1" stop-color="#5f9a33"/>
+    <linearGradient id="limbV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a3b00" stop-opacity=".35"/>
+      <stop offset=".35" stop-color="#7a3b00" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="dark" cx="35%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".3"/>
+    </radialGradient>
+    <radialGradient id="iris" cx="40%" cy="38%" r="65%">
+      <stop offset="0" stop-color="#b9e27a"/>
+      <stop offset=".7" stop-color="#6fae3a"/>
+      <stop offset="1" stop-color="#3f7322"/>
     </radialGradient>
     <radialGradient id="ground" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#000" stop-opacity=".22"/>
+      <stop offset="0" stop-color="#000" stop-opacity=".25"/>
       <stop offset="1" stop-color="#000" stop-opacity="0"/>
     </radialGradient>
-    <clipPath id="bodyClip">
-      <path d="M215 60C262 58 286 108 288 168C290 228 338 266 340 342C343 414 304 452 244 454L160 454C99 452 70 408 74 346C78 284 118 254 138 214C147 194 150 172 146 154C137 150 127 142 129 132C131 123 141 118 150 113C161 90 181 62 215 60Z"/>
-    </clipPath>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="soft2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <clipPath id="bodyClip"><path d="M335 148C400 145 445 205 450 290C455 370 470 430 515 495C580 580 660 660 668 780C685 880 620 915 540 905C470 900 420 890 380 885C300 880 210 845 180 760C150 680 165 560 215 480C245 420 290 360 300 300C302 288 302 280 295 272C282 265 278 255 284 248C288 215 300 160 335 148Z"/></clipPath>
+    <clipPath id="armClip"><path d="M448 468C522 478 568 560 548 632C532 684 462 694 380 692L362 642C412 634 448 622 458 592C466 552 446 512 438 482Z"/></clipPath>
   </defs>
 </svg>
 
 <template id="critterTpl">
-  <svg class="critter" viewBox="0 0 400 620" role="img" aria-label="一只抱着肚子的黄色小家伙">
-    <ellipse cx="200" cy="596" rx="150" ry="16" fill="url(#ground)"/>
+  <svg class="critter" viewBox="150 120 520 1100" role="img" aria-label="一只抱着肚子的黄色小家伙">
+    <ellipse cx="410" cy="1170" rx="240" ry="28" fill="url(#ground)"/>
     <g class="bob">
       <!-- legs -->
-      <path d="M128 420C124 470 128 520 138 566L176 566C184 520 190 470 192 430Z" fill="var(--body)"/>
-      <path d="M128 420C124 470 128 520 138 566L176 566C184 520 190 470 192 430Z" fill="url(#limbShade)"/>
-      <path d="M232 430C236 480 236 530 230 584L270 584C282 530 290 470 288 420Z" fill="var(--body)"/>
-      <path d="M232 430C236 480 236 530 230 584L270 584C282 530 290 470 288 420Z" fill="url(#limbShade)"/>
+      <path d="M282 840C284 950 278 1020 282 1078L348 1078C356 1010 384 940 415 880Z" fill="var(--body)"/><path d="M282 840C284 950 278 1020 282 1078L348 1078C356 1010 384 940 415 880Z" fill="url(#limb)"/><path d="M282 840C284 950 278 1020 282 1078L348 1078C356 1010 384 940 415 880Z" fill="url(#limbV)"/><path d="M282 840C284 950 278 1020 282 1078L348 1078C356 1010 384 940 415 880Z" fill="#000" opacity=".08"/>
+      <path d="M455 875C462 980 466 1060 472 1135L548 1135C560 1050 594 950 602 855Z" fill="var(--body)"/><path d="M455 875C462 980 466 1060 472 1135L548 1135C560 1050 594 950 602 855Z" fill="url(#limb)"/><path d="M455 875C462 980 466 1060 472 1135L548 1135C560 1050 594 950 602 855Z" fill="url(#limbV)"/>
       <!-- feet -->
-      <path d="M92 572C92 556 120 552 150 556C168 558 180 562 182 572C183 580 176 584 164 584L104 584C96 584 92 580 92 572Z" fill="var(--hand)"/>
-      <path d="M100 584q6-8 12 0M118 584q6-8 12 0" stroke="rgba(0,0,0,.25)" stroke-width="2" fill="none"/>
-      <path d="M178 590C178 574 208 568 240 572C262 574 278 580 280 590C281 598 274 602 262 602L190 602C182 602 178 598 178 590Z" fill="var(--hand)"/>
-      <path d="M186 602q7-9 14 0M206 602q7-9 14 0" stroke="rgba(0,0,0,.25)" stroke-width="2" fill="none"/>
+      <path d="M212 1088C212 1062 262 1056 320 1060C372 1064 402 1076 402 1096C402 1113 386 1120 360 1120L240 1120C222 1120 212 1106 212 1088Z" fill="var(--hand)"/><path d="M212 1088C212 1062 262 1056 320 1060C372 1064 402 1076 402 1096C402 1113 386 1120 360 1120L240 1120C222 1120 212 1106 212 1088Z" fill="url(#dark)"/>
+      <path d="M240 1120C244 1108 250 1104 256 1104M270 1120C272 1108 278 1104 284 1104" stroke="#000" stroke-opacity=".28" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M418 1152C418 1126 470 1120 530 1125C578 1129 598 1142 598 1162C598 1178 582 1186 556 1186L446 1186C428 1186 418 1172 418 1152Z" fill="var(--hand)"/><path d="M418 1152C418 1126 470 1120 530 1125C578 1129 598 1142 598 1162C598 1178 582 1186 556 1186L446 1186C428 1186 418 1172 418 1152Z" fill="url(#dark)"/>
+      <path d="M448 1186C452 1172 458 1168 465 1168M480 1186C482 1172 488 1168 495 1168" stroke="#000" stroke-opacity=".28" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+      <!-- far eye, peeking past the face -->
+      <ellipse cx="289" cy="212" rx="10" ry="18" fill="#111"/>
 
       <!-- body -->
-      <path d="M215 60C262 58 286 108 288 168C290 228 338 266 340 342C343 414 304 452 244 454L160 454C99 452 70 408 74 346C78 284 118 254 138 214C147 194 150 172 146 154C137 150 127 142 129 132C131 123 141 118 150 113C161 90 181 62 215 60Z" fill="var(--body)"/>
-      <!-- belly patch -->
+      <path d="M335 148C400 145 445 205 450 290C455 370 470 430 515 495C580 580 660 660 668 780C685 880 620 915 540 905C470 900 420 890 380 885C300 880 210 845 180 760C150 680 165 560 215 480C245 420 290 360 300 300C302 288 302 280 295 272C282 265 278 255 284 248C288 215 300 160 335 148Z" fill="var(--body)"/>
       <g clip-path="url(#bodyClip)">
-        <ellipse cx="148" cy="318" rx="84" ry="112" transform="rotate(-18 148 318)" fill="var(--belly)"/>
+        <path d="M200 492C258 450 362 440 424 452C474 474 502 562 506 640C470 702 380 748 290 748C220 744 178 702 170 650C166 590 178 532 200 492Z" fill="var(--belly)"/>
+        <path d="M335 148C400 145 445 205 450 290C455 370 470 430 515 495C580 580 660 660 668 780C685 880 620 915 540 905C470 900 420 890 380 885C300 880 210 845 180 760C150 680 165 560 215 480C245 420 290 360 300 300C302 288 302 280 295 272C282 265 278 255 284 248C288 215 300 160 335 148Z" fill="url(#hl)"/>
+        <!-- soft forms -->
+        <ellipse cx="335" cy="215" rx="28" ry="52" fill="#fff" opacity=".35" filter="url(#soft)"/>
+        <ellipse cx="250" cy="560" rx="45" ry="70" fill="#fff" opacity=".28" filter="url(#soft)"/>
+        <ellipse cx="345" cy="300" rx="40" ry="12" fill="#7a3b00" opacity=".1" filter="url(#soft2)"/>
+        <ellipse cx="660" cy="760" rx="60" ry="160" fill="#7a3b00" opacity=".25" filter="url(#soft)"/>
+        <ellipse cx="400" cy="900" rx="230" ry="40" fill="#7a3b00" opacity=".25" filter="url(#soft)"/>
+        <!-- arm's shadow on body -->
+        <path d="M448 468C522 478 568 560 548 632C532 684 462 694 380 692L362 642C412 634 448 622 458 592C466 552 446 512 438 482Z" transform="translate(14 22)" fill="#7a3b00" opacity=".3" filter="url(#soft)"/>
+        <!-- hands' shadows -->
+        <ellipse cx="320" cy="668" rx="70" ry="30" fill="#000" opacity=".18" filter="url(#soft)"/>
       </g>
-      <path d="M215 60C262 58 286 108 288 168C290 228 338 266 340 342C343 414 304 452 244 454L160 454C99 452 70 408 74 346C78 284 118 254 138 214C147 194 150 172 146 154C137 150 127 142 129 132C131 123 141 118 150 113C161 90 181 62 215 60Z" fill="url(#shade)"/>
 
-      <!-- far hand (on belly front) -->
-      <g fill="var(--hand)">
-        <ellipse cx="92" cy="314" rx="16" ry="24" transform="rotate(-10 92 314)"/>
-        <ellipse cx="104" cy="296" rx="14" ry="7" transform="rotate(-20 104 296)"/>
-        <ellipse cx="106" cy="312" rx="13" ry="6.5" transform="rotate(-8 106 312)"/>
-        <ellipse cx="104" cy="327" rx="12" ry="6" transform="rotate(8 104 327)"/>
+      <g>
+        <ellipse cx="172" cy="640" rx="20" ry="46" fill="var(--hand)"/>
+        <path d="M182 600L206 594" stroke="var(--hand)" stroke-width="20" stroke-linecap="round"/><path d="M184 626L212 626" stroke="var(--hand)" stroke-width="21" stroke-linecap="round"/><path d="M184 654L210 660" stroke="var(--hand)" stroke-width="20" stroke-linecap="round"/><path d="M182 680L200 694" stroke="var(--hand)" stroke-width="18" stroke-linecap="round"/>
+        <ellipse cx="190" cy="640" rx="30" ry="56" fill="#000" opacity=".14"/>
       </g>
 
       <!-- near arm -->
-      <path d="M258 250C268 296 246 332 200 334" stroke="var(--body)" stroke-width="42" stroke-linecap="round" fill="none"/>
-      <path d="M258 250C268 296 246 332 200 334" stroke="url(#limbShade)" stroke-width="42" stroke-linecap="round" fill="none" opacity=".6"/>
-      <!-- near hand -->
-      <g fill="var(--hand)">
-        <ellipse cx="194" cy="332" rx="22" ry="17"/>
-        <ellipse cx="166" cy="320" rx="16" ry="7" transform="rotate(10 166 320)"/>
-        <ellipse cx="162" cy="334" rx="17" ry="7"/>
-        <ellipse cx="166" cy="348" rx="15" ry="6.5" transform="rotate(-10 166 348)"/>
-        <ellipse cx="184" cy="314" rx="11" ry="6" transform="rotate(-40 184 314)"/>
+      <path d="M448 468C522 478 568 560 548 632C532 684 462 694 380 692L362 642C412 634 448 622 458 592C466 552 446 512 438 482Z" fill="var(--body)"/>
+      <g clip-path="url(#armClip)">
+        <path d="M448 468C522 478 568 560 548 632C532 684 462 694 380 692L362 642C412 634 448 622 458 592C466 552 446 512 438 482Z" fill="url(#limb)"/>
+        <ellipse cx="470" cy="540" rx="18" ry="50" fill="#fff" opacity=".35" filter="url(#soft2)"/>
+        <ellipse cx="470" cy="700" rx="120" ry="25" fill="#7a3b00" opacity=".35" filter="url(#soft2)"/>
+      </g>
+      <g>
+        <path d="M336 628L314 606" stroke="var(--hand)" stroke-width="22" stroke-linecap="round"/><path d="M330 636L288 630" stroke="var(--hand)" stroke-width="24" stroke-linecap="round"/><path d="M330 656L284 660" stroke="var(--hand)" stroke-width="24" stroke-linecap="round"/><path d="M336 676L294 690" stroke="var(--hand)" stroke-width="22" stroke-linecap="round"/>
+        <ellipse cx="350" cy="654" rx="36" ry="32" fill="var(--hand)"/>
+        <path d="M290 643C305 644 318 645 330 646M288 671C305 669 318 666 332 664" stroke="#000" stroke-opacity=".18" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="330" cy="634" rx="30" ry="14" fill="#fff" opacity=".12" filter="url(#soft2)"/>
       </g>
 
-      <!-- far eye peeking -->
-      <ellipse cx="152" cy="104" rx="4" ry="8" fill="#111"/>
       <!-- mouth -->
-      <path d="M134 134C146 136 158 138 168 137" stroke="#3a2e10" stroke-opacity=".7" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      <path d="M284 254C300 261 318 264 336 262" stroke="#4b3608" stroke-opacity=".7" stroke-width="3" stroke-linecap="round" fill="none"/>
       <!-- eye -->
-      <circle cx="178" cy="106" r="17" fill="url(#eyeRing)"/>
+      <circle cx="372" cy="205" r="30" fill="#7a3b00" opacity=".18" filter="url(#soft2)"/>
+      <circle cx="372" cy="205" r="26" fill="url(#iris)"/>
       <g class="pupil">
-        <circle cx="180" cy="106" r="10" fill="#111"/>
-        <circle cx="183" cy="102" r="3" fill="#fff" opacity=".9"/>
+        <circle cx="378" cy="203" r="15.5" fill="#0c0c0c"/>
+        <circle cx="384" cy="196" r="4.5" fill="#fff" opacity=".9"/>
       </g>
-      <ellipse class="lid" cx="178" cy="106" rx="18" ry="18" fill="var(--body)"/>
+      <ellipse class="lid" cx="372" cy="205" rx="28" ry="28" fill="var(--body)"/>
     </g>
   </svg>
 </template>
@@ -239,13 +259,13 @@
 
 <section class="hero">
   <p class="eyebrow">全新登场</p>
-  <h1><span>小黄。</span></h1>
+  <h1><span>奶蛙。</span></h1>
   <p class="lede">抱紧肚子，站稳脚跟。<br>没什么烦恼是一个圆滚滚的肚子装不下的。</p>
   <div class="ctas">
     <button class="btn" id="poke">戳一下</button>
     <a class="link" href="#design">进一步了解</a>
   </div>
-  <div class="stage" id="hero" data-body="#F7C02B" data-belly="#EBC98E" data-hand="#6F6633"></div>
+  <div class="stage" id="hero" data-body="#F6BC2E" data-belly="#EDCB92" data-hand="#665B2E"></div>
 </section>
 
 <section class="alt" id="design">
@@ -279,7 +299,7 @@
   <p class="eyebrow reveal">配色</p>
   <h2 class="reveal">总有一只，是你的颜色。</h2>
   <div class="colors">
-    <figure class="reveal"><div data-body="#F7C02B" data-belly="#EBC98E" data-hand="#6F6633"></div><figcaption>原味黄</figcaption></figure>
+    <figure class="reveal"><div data-body="#F6BC2E" data-belly="#EDCB92" data-hand="#665B2E"></div><figcaption>原味黄</figcaption></figure>
     <figure class="reveal"><div data-body="#F48FB1" data-belly="#F9D3DF" data-hand="#7A3B52"></div><figcaption>樱花粉</figcaption></figure>
     <figure class="reveal"><div data-body="#7EC8E3" data-belly="#D6EEF7" data-hand="#2E5568"></div><figcaption>天空蓝</figcaption></figure>
     <figure class="reveal"><div data-body="#9CCC65" data-belly="#E2F0CB" data-hand="#3E5B22"></div><figcaption>抹茶绿</figcaption></figure>
@@ -303,7 +323,7 @@
 
 <footer>
   <p>Love &amp; Fun · loveandfuck.me</p>
-  <p style="margin-top:6px">用 SVG 一笔一笔画出来的小黄。</p>
+  <p style="margin-top:6px">用 SVG 一笔一笔画出来的奶蛙。</p>
 </footer>
 
 <script>
@@ -324,13 +344,12 @@
   // Pupils follow the pointer
   window.addEventListener('pointermove', e => {
     critters.forEach(svg => {
-      const r = svg.getBoundingClientRect();
-      const s = r.width / 400;
-      const ex = r.left + 178 * s, ey = r.top + 106 * (r.height / 620);
+      const m = svg.getScreenCTM(); if (!m) return;
+      const ex = m.a * 372 + m.e, ey = m.d * 205 + m.f;
       const a = Math.atan2(e.clientY - ey, e.clientX - ex);
       const d = Math.min(5, Math.hypot(e.clientX - ex, e.clientY - ey) / 40);
       svg.querySelector('.pupil').setAttribute('transform',
-        `translate(${(Math.cos(a) * d - 2).toFixed(2)} ${(Math.sin(a) * d).toFixed(2)})`);
+        `translate(${(Math.cos(a) * d * 1.6 - 4).toFixed(2)} ${(Math.sin(a) * d * 1.6 + 1).toFixed(2)})`);
     });
   });
 
