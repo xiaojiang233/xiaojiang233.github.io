@@ -3,706 +3,365 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>奶蛙 · loveandfuck.me</title>
-<meta name="description" content="奶蛙。抱紧肚子，稳住人生。">
-<meta name="theme-color" content="#f5f5f7">
+<title>奶蛙宇宙 · 奶蛙.space</title>
+<meta name="description" content="奶蛙宇宙官网。宇宙从一次抱肚子开始。">
+<meta name="theme-color" content="#05060f">
+<meta property="og:title" content="奶蛙宇宙 · 奶蛙.space">
+<meta property="og:description" content="宇宙从一次抱肚子开始。">
+<meta property="og:image" content="naiwa.png">
 <link rel="icon" href="naiwa.png">
 <style>
   :root {
-    --bg: #ffffff;
-    --bg-alt: #f5f5f7;
-    --text: #1d1d1f;
-    --muted: #6e6e73;
-    --faint: #86868b;
-    --card: #ffffff;
-    --line: #d2d2d7;
-    --link: #0066cc;
-    --blue: #0071e3;
+    --space: #05060f;
+    --space-2: #0b0d1f;
+    --text: #f5f5f7;
+    --muted: #a1a1b5;
+    --faint: #6e6e86;
+    --line: rgba(255,255,255,.12);
+    --card: rgba(255,255,255,.045);
     --gold-a: #ff9f0a;
     --gold-b: #ffd60a;
-    --localnav: rgba(255,255,255,.72);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #000;
-      --bg-alt: #161617;
-      --text: #f5f5f7;
-      --muted: #a1a1a6;
-      --faint: #86868b;
-      --card: #1d1d1f;
-      --line: #424245;
-      --link: #2997ff;
-      --localnav: rgba(22,22,23,.72);
-    }
+    --milk: #f3dcae;
+    --leaf: #5bbf5e;
+    --violet: #8e7dff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--bg); color: var(--text);
+    background: var(--space); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
-    font-size: 17px; line-height: 1.47; letter-spacing: -.022em;
+    font-size: 17px; line-height: 1.5; letter-spacing: -.015em;
     -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  a { color: var(--link); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  a { color: inherit; text-decoration: none; }
   img { display: block; max-width: 100%; }
-  sup { font-size: .55em; vertical-align: super; line-height: 0; color: inherit; }
-  sup a { color: inherit; }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
-
-  /* ---------- Global nav ---------- */
-  .gnav { background: rgba(22,22,23,.88); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); height: 44px; position: relative; z-index: 30; }
-  .gnav ul { max-width: 1024px; height: 100%; margin: 0 auto; padding: 0 22px; list-style: none; display: flex; align-items: center; justify-content: space-between; }
-  .gnav a { color: #e8e8ed; font-size: 12px; opacity: .85; transition: opacity .2s; letter-spacing: -.01em; }
-  .gnav a:hover { opacity: 1; text-decoration: none; }
-  .gnav .mark { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; }
-  .gnav .mark img { width: 14px; height: 24px; object-fit: contain; }
-  .gnav svg { width: 15px; height: 15px; fill: none; stroke: #e8e8ed; stroke-width: 1.4; display: block; }
-  @media (max-width: 760px) { .gnav li.hide-s { display: none; } }
-
-  /* ---------- Local nav ---------- */
-  .lnav { position: sticky; top: 0; z-index: 25; height: 52px; background: var(--localnav); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0,0,0,.08); }
-  @media (prefers-color-scheme: dark) { .lnav { border-bottom-color: rgba(255,255,255,.12); } }
-  .lnav .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; }
-  .lnav .title { font-size: 21px; font-weight: 600; letter-spacing: .011em; color: var(--text); }
-  .lnav .title:hover { text-decoration: none; }
-  .lnav nav { display: flex; align-items: center; gap: 24px; font-size: 12px; }
-  .lnav nav a:not(.pill) { color: var(--text); opacity: .8; }
-  .lnav nav a:not(.pill):hover { opacity: 1; text-decoration: none; color: var(--link); }
-  @media (max-width: 560px) { .lnav nav a:not(.pill) { display: none; } }
-
-  .pill {
-    display: inline-block; background: var(--blue); color: #fff !important; border-radius: 980px;
-    font-size: 12px; padding: 4px 11px; line-height: 1.33; border: 0; cursor: pointer; font-family: inherit;
-  }
-  .pill:hover { background: #0077ed; text-decoration: none; }
-  .btn {
-    display: inline-block; background: var(--blue); color: #fff; border-radius: 980px; border: 1px solid var(--blue);
-    font-size: 17px; padding: 11px 22px; cursor: pointer; font-family: inherit; letter-spacing: -.022em; transition: background .2s, color .2s;
-  }
-  .btn:hover { background: #0077ed; text-decoration: none; }
-  .btn.ghost { background: transparent; color: var(--blue); }
-  .btn.ghost:hover { background: var(--blue); color: #fff; }
-  .more { font-size: 17px; }
-  .more::after { content: " ›"; }
-
-  /* ---------- Typography ---------- */
-  .eyebrow { font-size: 21px; font-weight: 600; letter-spacing: .011em; }
-  .grad { background: linear-gradient(90deg, var(--gold-a), var(--gold-b) 60%, var(--gold-a)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .headline { font-size: clamp(40px, 7vw, 80px); line-height: 1.05; font-weight: 700; letter-spacing: -.015em; }
-  .h2 { font-size: clamp(32px, 5vw, 56px); line-height: 1.07; font-weight: 700; letter-spacing: -.005em; }
-  .h3 { font-size: clamp(24px, 3vw, 32px); line-height: 1.125; font-weight: 700; }
-  .lead { font-size: clamp(19px, 2vw, 21px); color: var(--muted); line-height: 1.38; font-weight: 400; }
-  .lead strong { color: var(--text); font-weight: 600; }
-  section { position: relative; }
+  rt { font-size: .45em; letter-spacing: 0; opacity: .8; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
   .pad { padding: 120px 0; }
-  @media (max-width: 734px) { .pad { padding: 80px 0; } }
+  @media (max-width: 640px) { .pad { padding: 84px 0; } }
+  .grad { background: linear-gradient(90deg, var(--gold-a), var(--gold-b) 55%, var(--milk)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .eyebrow { font-size: 13px; letter-spacing: .32em; text-transform: uppercase; color: var(--gold-b); font-weight: 600; }
+  .headline { font-size: clamp(36px, 6vw, 64px); line-height: 1.08; font-weight: 700; letter-spacing: -.02em; }
+  .sub { font-size: clamp(18px, 2.2vw, 24px); color: var(--muted); font-weight: 500; max-width: 720px; }
   .center { text-align: center; }
-  .alt { background: var(--bg-alt); }
+  .center .sub { margin-left: auto; margin-right: auto; }
+
+  /* ---------- Stars ---------- */
+  #sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .nebula { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(40% 35% at 78% 22%, rgba(142,125,255,.22), transparent 70%),
+      radial-gradient(35% 30% at 15% 70%, rgba(255,159,10,.14), transparent 70%),
+      radial-gradient(30% 25% at 60% 85%, rgba(91,191,94,.10), transparent 70%);
+  }
+  main, header, footer { position: relative; z-index: 1; }
+
+  /* ---------- Nav ---------- */
+  header { position: sticky; top: 0; z-index: 20; height: 52px; background: rgba(5,6,15,.6); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+  header .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px; }
+  .brand img { width: 16px; height: 28px; object-fit: contain; }
+  header nav { display: flex; align-items: center; gap: 26px; font-size: 13px; }
+  header nav a { opacity: .78; transition: opacity .2s; }
+  header nav a:hover { opacity: 1; }
+  .pill { display: inline-block; background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); color: #1d1300 !important; opacity: 1 !important; font-weight: 600; border-radius: 980px; padding: 5px 13px; font-size: 12px; }
+  @media (max-width: 680px) { header nav a:not(.pill) { display: none; } }
+
+  .btn { display: inline-block; border-radius: 980px; padding: 13px 26px; font-size: 17px; font-weight: 500; transition: transform .2s, box-shadow .2s, background .2s; }
+  .btn.gold { background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); color: #1d1300; box-shadow: 0 8px 30px rgba(255,180,10,.25); }
+  .btn.gold:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,180,10,.4); }
+  .btn.ghost { border: 1px solid rgba(255,255,255,.3); color: var(--text); }
+  .btn.ghost:hover { background: rgba(255,255,255,.08); }
 
   /* ---------- Hero ---------- */
-  .hero { text-align: center; padding-top: 56px; overflow: hidden; }
-  .hero .eyebrow { margin-bottom: 4px; }
-  .hero h1 { font-size: clamp(64px, 12vw, 128px); font-weight: 700; letter-spacing: -.03em; line-height: 1; }
-  .hero .tag { font-size: clamp(26px, 3.6vw, 40px); font-weight: 600; margin-top: 10px; letter-spacing: -.01em; line-height: 1.15; }
-  .hero .price { color: var(--muted); margin-top: 14px; font-size: 19px; }
-  .hero .ctas { margin-top: 26px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .hero-copy { will-change: opacity, transform; }
-  .hero-stage { position: relative; width: min(440px, 78vw); margin: 40px auto 0; will-change: transform; transform-origin: 50% 20%; }
-  .hero-stage::before {
-    content: ""; position: absolute; left: -40%; right: -40%; top: 5%; bottom: -5%; z-index: -1;
-    background: radial-gradient(closest-side, rgba(255,196,0,.32), transparent 70%);
-  }
-  .critter { cursor: pointer; transform-origin: 50% 100%; animation: bob 4.5s ease-in-out infinite; user-select: none; -webkit-user-drag: none; }
-  .critter.wiggle { animation: wiggle .7s ease-in-out; }
-  @keyframes bob { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-6px) rotate(-1deg); } }
-  @keyframes wiggle { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-5deg) } 40% { transform: rotate(4deg) } 60% { transform: rotate(-3deg) } 80% { transform: rotate(2deg) } }
-
-  /* colour variants of the one image */
-  .c-yellow { filter: none; }
-  .c-pink { filter: hue-rotate(-75deg) saturate(.75) brightness(1.08); }
-  .c-blue { filter: hue-rotate(150deg) saturate(.8) brightness(1.05); }
-  .c-green { filter: hue-rotate(50deg) saturate(.85); }
-
-  /* zoomable crop of the image */
-  .crop { position: relative; overflow: hidden; }
-  .crop img {
-    position: absolute; left: 50%; top: 50%; max-width: none; width: auto;
-    height: calc(var(--s, 1) * 100%);
-    transform: translate(calc(-1 * var(--x, 50%)), calc(-1 * var(--y, 50%)));
-    transition: height .9s cubic-bezier(.4,0,.2,1), transform .9s cubic-bezier(.4,0,.2,1), filter .5s;
+  .hero { min-height: calc(100vh - 52px); min-height: calc(100svh - 52px); display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 24px; padding-top: 40px; padding-bottom: 40px; }
+  .hero h1 { font-size: clamp(56px, 9vw, 112px); line-height: 1; font-weight: 800; letter-spacing: -.03em; margin: 18px 0 22px; }
+  .hero h1 small { display: block; font-size: .26em; letter-spacing: .5em; font-weight: 600; color: var(--muted); margin-top: 14px; }
+  .hero .sub { margin-bottom: 34px; }
+  .hero .ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .domain { margin-top: 26px; font-size: 13px; color: var(--faint); letter-spacing: .08em; }
+  .domain b { color: var(--muted); font-weight: 600; }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; text-align: center; padding-top: 24px; }
+    .hero .sub { margin-left: auto; margin-right: auto; }
+    .hero .ctas { justify-content: center; }
+    .stage { order: -1; }
+    .scroll-hint { display: none; }
   }
 
-  /* ---------- Highlights carousel ---------- */
-  .hl-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; }
-  .track {
-    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    padding: 40px max(22px, calc((100vw - 980px) / 2)) 30px; scroll-padding: 0 max(22px, calc((100vw - 980px) / 2));
-  }
-  .track::-webkit-scrollbar { display: none; }
-  .slide {
-    flex: 0 0 min(680px, 84vw); height: min(620px, 118vw); border-radius: 28px; overflow: hidden; scroll-snap-align: start;
-    position: relative; display: flex; flex-direction: column; background: var(--card);
-  }
-  .slide p { padding: 44px 44px 0; font-size: clamp(21px, 2.6vw, 28px); font-weight: 600; line-height: 1.14; letter-spacing: .007em; position: relative; z-index: 1; }
-  .slide p span { color: var(--muted); }
-  .slide .crop { flex: 1; }
-  .slide.dark { background: #000; color: #f5f5f7; }
-  .slide.dark p span { color: #86868b; }
-  .slide.sun { background: linear-gradient(160deg, #ffe58a, #ffb800); color: #1d1d1f; }
-  .slide.sun p span { color: rgba(29,29,31,.6); }
-  .slide .quad { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); align-items: end; padding: 0 20px 30px; gap: 4px; }
-  .slide .quad img { width: 100%; }
-  .slide .chipwrap { flex: 1; display: grid; place-items: center; }
-  .carousel-ctl { display: flex; justify-content: center; align-items: center; gap: 16px; }
-  .dots { display: flex; gap: 10px; background: rgba(0,0,0,.06); border-radius: 980px; padding: 12px 18px; }
-  @media (prefers-color-scheme: dark) { .dots, .arrow { background: rgba(255,255,255,.1) !important; } }
-  .dots button { width: 8px; height: 8px; border-radius: 99px; border: 0; background: var(--faint); opacity: .5; cursor: pointer; transition: width .4s, opacity .4s; padding: 0; }
-  .dots button.on { width: 32px; opacity: 1; background: var(--text); }
-  .arrow { width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(0,0,0,.06); color: var(--text); font-size: 20px; cursor: pointer; line-height: 1; }
-  .arrow:disabled { opacity: .35; cursor: default; }
+  .stage { position: relative; aspect-ratio: 1; width: min(100%, 520px); justify-self: center; }
+  .stage .glow { position: absolute; inset: 14%; border-radius: 50%; background: radial-gradient(circle, rgba(255,214,10,.35), rgba(255,159,10,.08) 55%, transparent 72%); filter: blur(10px); animation: pulse 6s ease-in-out infinite; }
+  .ring { position: absolute; left: 50%; top: 50%; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; transform: translate(-50%,-50%) rotateX(72deg); }
+  .ring.r1 { width: 92%; height: 92%; }
+  .ring.r2 { width: 68%; height: 68%; border-color: rgba(255,214,10,.22); }
+  .orbit { position: absolute; inset: 0; animation: spin 24s linear infinite; }
+  .orbit.o2 { animation-duration: 38s; animation-direction: reverse; }
+  .orbit .moon { position: absolute; width: 9%; animation: spin 24s linear infinite reverse; }
+  .orbit.o2 .moon { animation-duration: 38s; animation-direction: normal; }
+  .orbit .moon img { width: 100%; filter: drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
+  .m-pink img { filter: hue-rotate(-60deg) saturate(.9) brightness(1.08) drop-shadow(0 4px 10px rgba(0,0,0,.5)) !important; }
+  .m-blue img { filter: hue-rotate(160deg) saturate(.9) drop-shadow(0 4px 10px rgba(0,0,0,.5)) !important; }
+  .m-green img { filter: hue-rotate(55deg) saturate(.85) drop-shadow(0 4px 10px rgba(0,0,0,.5)) !important; }
+  .hero-naiwa { position: absolute; left: 50%; top: 50%; height: 74%; transform: translate(-50%,-50%); cursor: pointer; filter: drop-shadow(0 20px 40px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(255,200,40,.25)); animation: float 7s ease-in-out infinite; }
+  .hero-naiwa img { height: 100%; width: auto; max-width: none; }
+  .hero-naiwa.wiggle img { animation: wiggle .7s ease; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes float { 0%,100% { transform: translate(-50%,-50%) rotate(-3deg); } 50% { transform: translate(-50%,-55%) rotate(3deg); } }
+  @keyframes pulse { 0%,100% { opacity: .75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
+  @keyframes wiggle { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-9deg); } 40% { transform: rotate(8deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(3deg); } }
 
-  /* ---------- Statement reveal ---------- */
-  .statement { padding: 160px 0; }
-  .statement p { font-size: clamp(34px, 6vw, 64px); font-weight: 700; line-height: 1.12; letter-spacing: -.01em; max-width: 860px; }
-  .statement .w { opacity: .15; transition: opacity .25s; }
-  .statement .w.on { opacity: 1; }
+  .scroll-hint { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 12px; color: var(--faint); letter-spacing: .2em; }
+  .scroll-hint::after { content: ""; display: block; width: 1px; height: 28px; margin: 8px auto 0; background: linear-gradient(var(--faint), transparent); }
 
-  /* ---------- Scrollytelling ---------- */
-  .story { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 80px; }
-  .story-fig { position: sticky; top: 92px; height: min(640px, calc(100vh - 130px)); border-radius: 28px; background: var(--bg-alt); }
-  .alt .story-fig { background: var(--card); }
-  .story-fig img { filter: drop-shadow(0 30px 30px rgba(0,0,0,.12)); }
-  .steps { padding: 18vh 0 30vh; }
-  .step { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; opacity: .25; transition: opacity .5s; }
-  .step.on { opacity: 1; }
-  .step .k { font-size: 14px; color: var(--muted); font-weight: 600; margin-bottom: 8px; letter-spacing: 0; }
-  .step h3 { margin-bottom: 14px; }
-  .step .crop { display: none; }
-  @media (max-width: 834px) {
-    .story { grid-template-columns: 1fr; gap: 0; margin-top: 40px; }
-    .story-fig { display: none; }
-    .steps { padding: 0; }
-    .step { min-height: 0; opacity: 1; margin-bottom: 64px; }
-    .step .crop { display: block; height: 340px; border-radius: 24px; background: var(--card); margin-bottom: 24px; }
-  }
+  /* ---------- Lore ---------- */
+  .lore { font-size: clamp(26px, 4vw, 44px); font-weight: 700; line-height: 1.3; max-width: 900px; margin: 0 auto; text-align: center; }
+  .lore .w { opacity: .18; transition: opacity .4s; }
+  .lore .w.on { opacity: 1; }
 
-  /* ---------- Chip ---------- */
-  .dark-band { background: #000; color: #f5f5f7; }
-  .dark-band .lead { color: #86868b; }
-  .dark-band .lead strong { color: #f5f5f7; }
-  .chip {
-    width: 200px; height: 200px; border-radius: 34px; position: relative; display: grid; place-items: center; margin: 0 auto;
-    background: linear-gradient(145deg, #2c2c2e, #0b0b0c 60%, #1c1c1e);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 0 120px rgba(255,190,0,.28);
-  }
-  .chip::before { content: ""; position: absolute; inset: -18px; border: 8px dashed #3a3a3c; border-radius: 46px; }
-  .chip::after { content: ""; position: absolute; inset: 10px; border-radius: 26px; border: 1px solid rgba(255,214,10,.25); }
-  .chip .n { font-size: 84px; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
-  .chip .brand { position: absolute; top: 34px; font-size: 13px; letter-spacing: .3em; color: #a1a1a6; font-weight: 600; }
-  .chip.sm { transform: scale(.8); }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px 30px; margin-top: 90px; text-align: left; }
-  .stat { border-top: 1px solid #333336; padding-top: 22px; }
-  .stat b { display: block; font-size: clamp(44px, 5vw, 64px); line-height: 1.05; font-weight: 700; letter-spacing: -.02em; }
-  .stat b small { font-size: .45em; letter-spacing: 0; }
-  .stat span { color: #86868b; font-size: 17px; }
+  /* ---------- Stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 80px; }
+  .stat { text-align: center; padding: 28px 10px; border-top: 1px solid var(--line); }
+  .stat b { display: block; font-size: clamp(40px, 5vw, 60px); font-weight: 800; line-height: 1.05; }
+  .stat span { color: var(--muted); font-size: 15px; }
+  @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
 
-  /* ---------- Bento ---------- */
-  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; margin-top: 60px; }
-  .tile { background: var(--card); border-radius: 28px; padding: 36px 32px; grid-column: span 2; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; overflow: hidden; position: relative; }
-  .tile.w3 { grid-column: span 3; }
-  .tile.w4 { grid-column: span 4; }
-  .tile .label { font-size: 17px; font-weight: 600; color: var(--muted); }
-  .tile .big { font-size: clamp(40px, 5vw, 64px); font-weight: 700; line-height: 1.05; letter-spacing: -.02em; }
-  .tile p { color: var(--muted); font-size: 17px; margin-top: 10px; }
-  .tile p strong { color: var(--text); }
-  .tile .ico { width: 52px; height: 52px; }
-  .tile.dark { background: #000; color: #f5f5f7; }
-  .tile.dark p, .tile.dark .label { color: #86868b; }
-  .tile.dark p strong { color: #f5f5f7; }
-  .tile.sun { background: linear-gradient(150deg, #ffe58a, #ffb800); color: #1d1d1f; }
-  .tile.sun p, .tile.sun .label { color: rgba(29,29,31,.65); }
-  .tile .peek { position: absolute; right: 4%; top: 28px; width: 34%; max-width: 210px; }
-  .tile.has-peek > div { max-width: 62%; position: relative; z-index: 1; }
-  @media (max-width: 834px) { .bento { grid-template-columns: 1fr 1fr; } .tile, .tile.w3, .tile.w4 { grid-column: span 2; } .tile.half { grid-column: span 1; } }
-  @media (max-width: 480px) { .tile.half { grid-column: span 2; } }
+  /* ---------- Planets ---------- */
+  .planets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
+  @media (max-width: 760px) { .planets { grid-template-columns: 1fr; } }
+  .planet { position: relative; overflow: hidden; border-radius: 28px; padding: 36px 32px 32px; min-height: 340px; background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; transition: transform .35s, border-color .35s; }
+  .planet:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.25); }
+  .planet .orb { position: absolute; right: -60px; bottom: -60px; width: 240px; height: 240px; border-radius: 50%; }
+  .planet .tag { font-size: 12px; letter-spacing: .2em; color: var(--muted); font-weight: 600; }
+  .planet h3 { font-size: 32px; font-weight: 700; margin: 10px 0 10px; letter-spacing: -.02em; }
+  .planet p { color: var(--muted); max-width: 300px; }
+  .planet .go { margin-top: auto; padding-top: 24px; font-size: 15px; font-weight: 600; color: var(--gold-b); position: relative; }
+  .planet .go.soon { color: var(--faint); }
+  .planet .peek { position: absolute; right: 30px; bottom: 26px; height: 58%; filter: drop-shadow(0 12px 24px rgba(0,0,0,.5)); transition: transform .4s; }
+  .planet:hover .peek { transform: translateY(-8px) rotate(-4deg); }
+  .p-shop { background: linear-gradient(150deg, rgba(255,159,10,.20), rgba(255,214,10,.04) 60%), var(--card); }
+  .p-shop .orb { background: radial-gradient(circle at 35% 30%, #ffe27a, #ff9f0a 60%, #8a4b00); box-shadow: 0 0 80px rgba(255,159,10,.4); }
+  .p-daze .orb { background: radial-gradient(circle at 35% 30%, #c9f2c9, #5bbf5e 60%, #1e4d20); box-shadow: 0 0 80px rgba(91,191,94,.3); }
+  .p-nebula .orb { width: 320px; height: 320px; right: -110px; bottom: -110px; background: radial-gradient(circle, rgba(243,220,174,.6), rgba(142,125,255,.35) 45%, transparent 70%); filter: blur(6px); }
+  .p-nap .orb { background: radial-gradient(circle, #000 42%, #8e7dff 47%, rgba(142,125,255,.15) 60%, transparent 70%); box-shadow: 0 0 80px rgba(142,125,255,.35); animation: spin 30s linear infinite; }
 
-  /* ---------- Buy / configurator ---------- */
-  .buy { display: grid; grid-template-columns: 1.1fr 1fr; gap: 50px; align-items: center; margin-top: 60px; }
-  .buy-fig { background: var(--bg-alt); border-radius: 28px; aspect-ratio: 1 / 1.05; position: relative; overflow: hidden; }
-  #buyScale { position: absolute; inset: 15% 0 6%; display: flex; justify-content: center; align-items: flex-end; transition: transform .6s cubic-bezier(.4,0,.2,1); transform-origin: 50% 100%; }
-  .buy-fig img { height: 100%; width: auto; transition: filter .5s; }
-  .opt h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
-  .opt h4 > span:last-child { color: var(--muted); font-weight: 400; }
-  .swatches { display: flex; gap: 14px; }
-  .sw { width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
-  .sw.on::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--blue); }
-  .models { display: grid; gap: 12px; }
-  .model { text-align: left; background: transparent; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: flex; justify-content: space-between; cursor: pointer; font: inherit; color: var(--text); }
-  .model.on { border: 2px solid var(--blue); padding: 15px 17px; }
-  .model b { font-weight: 600; }
-  .model small { display: block; color: var(--muted); font-size: 14px; }
-  .total { margin-top: 26px; font-size: 24px; font-weight: 600; }
-  .total small { display: block; font-size: 14px; color: var(--muted); font-weight: 400; }
-  .buy .btn { margin-top: 20px; width: 100%; }
-  @media (max-width: 834px) { .buy { grid-template-columns: 1fr; } }
+  /* ---------- Residents ---------- */
+  .residents { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 56px; }
+  @media (max-width: 760px) { .residents { grid-template-columns: repeat(2, 1fr); } }
+  .res { text-align: center; padding: 26px 12px 22px; border-radius: 24px; background: var(--card); border: 1px solid var(--line); cursor: pointer; }
+  .res .fig { height: 180px; display: flex; justify-content: center; align-items: flex-end; }
+  .res .fig img { height: 100%; width: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,.45)); transition: transform .3s; }
+  .res:hover .fig img { transform: translateY(-6px); }
+  .res.wiggle .fig img { animation: wiggle .7s ease; }
+  .res h4 { font-size: 19px; margin-top: 18px; }
+  .res p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .res.c-pink .fig img { filter: hue-rotate(-60deg) saturate(.9) brightness(1.08) drop-shadow(0 10px 20px rgba(0,0,0,.45)); }
+  .res.c-blue .fig img { filter: hue-rotate(160deg) saturate(.9) drop-shadow(0 10px 20px rgba(0,0,0,.45)); }
+  .res.c-green .fig img { filter: hue-rotate(55deg) saturate(.85) drop-shadow(0 10px 20px rgba(0,0,0,.45)); }
 
-  /* ---------- Compare ---------- */
-  .compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; text-align: center; }
-  .compare .col { display: flex; flex-direction: column; align-items: center; }
-  .compare .imgbox { height: 280px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 30px; }
-  .compare .imgbox img { width: auto; }
-  .compare h3 { font-size: 24px; font-weight: 600; }
-  .compare .from { color: var(--muted); font-size: 14px; margin: 6px 0 18px; }
-  .compare .row { border-top: 1px solid var(--line); padding: 20px 6px; width: 100%; font-size: 14px; }
-  .compare .row .t { font-size: 17px; font-weight: 600; display: block; color: var(--text); }
-  .compare .row .d { color: var(--muted); }
-  .compare .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin: 0 2px 16px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
-  @media (max-width: 640px) {
-    .compare { gap: 10px; } .compare .imgbox { height: 160px; } .compare h3 { font-size: 17px; }
-    .compare .row .t { font-size: 15px; } .compare .row { font-size: 12px; padding: 14px 2px; }
-  }
+  /* ---------- Timeline ---------- */
+  .timeline { position: relative; max-width: 760px; margin: 56px auto 0; padding-left: 34px; }
+  .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--gold-b), var(--violet), transparent); }
+  .ev { position: relative; padding-bottom: 44px; }
+  .ev::before { content: ""; position: absolute; left: -33px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--space); border: 2px solid var(--gold-b); box-shadow: 0 0 14px rgba(255,214,10,.6); }
+  .ev time { font-size: 13px; letter-spacing: .14em; color: var(--gold-b); font-weight: 600; }
+  .ev h4 { font-size: 24px; margin: 4px 0 6px; }
+  .ev p { color: var(--muted); }
 
-  /* ---------- Environment ---------- */
-  .env { background: linear-gradient(180deg, var(--bg-alt), var(--bg)); }
-  .leaf { width: 56px; height: 56px; margin: 0 auto 18px; }
-  .env .h2 { color: #00a33a; }
-  @media (prefers-color-scheme: dark) { .env .h2 { color: #30d158; } }
-  .env-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 60px; }
-  .env-grid div { background: var(--card); border-radius: 22px; padding: 30px; text-align: left; }
-  .env-grid b { display: block; font-size: 44px; font-weight: 700; letter-spacing: -.02em; color: #00a33a; }
-  @media (prefers-color-scheme: dark) { .env-grid b { color: #30d158; } }
-  .env-grid span { color: var(--muted); }
-
-  /* ---------- Specs ---------- */
-  .specs { margin-top: 50px; border-top: 1px solid var(--line); }
-  .spec { display: grid; grid-template-columns: 220px 1fr; gap: 20px; padding: 32px 0; border-bottom: 1px solid var(--line); }
-  .spec h4 { font-size: 21px; font-weight: 600; }
-  .spec p, .spec li { color: var(--text); }
-  .spec ul { list-style: none; display: grid; gap: 6px; }
-  .spec .note { color: var(--muted); font-size: 14px; margin-top: 6px; }
-  .spec .sw-row { display: flex; gap: 22px; flex-wrap: wrap; }
-  .spec .sw-row div { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
-  .spec .sw-row i { width: 22px; height: 22px; border-radius: 50%; display: block; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
-  @media (max-width: 640px) { .spec { grid-template-columns: 1fr; gap: 12px; } }
-
-  /* ---------- FAQ ---------- */
-  .faq { margin-top: 40px; border-top: 1px solid var(--line); }
-  .faq details { border-bottom: 1px solid var(--line); }
-  .faq summary { list-style: none; cursor: pointer; padding: 24px 44px 24px 0; font-size: 21px; font-weight: 600; display: block; position: relative; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; position: absolute; right: 4px; top: 50%; margin-top: -14px; font-weight: 300; font-size: 28px; line-height: 1; color: var(--muted); transition: transform .3s; }
-  .faq details[open] summary::after { transform: rotate(45deg); }
-  .faq details p { color: var(--muted); padding: 0 0 26px; max-width: 760px; }
+  /* ---------- Signal ---------- */
+  .signal { text-align: center; }
+  .signal .box { max-width: 680px; margin: 40px auto 0; padding: 40px 28px; border-radius: 28px; border: 1px solid var(--line); background: linear-gradient(160deg, rgba(142,125,255,.12), rgba(255,159,10,.06)), var(--card); }
+  .signal .count { font-size: clamp(48px, 8vw, 80px); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .signal .box p { color: var(--muted); margin: 10px 0 26px; }
+  .signal button { font: inherit; cursor: pointer; border: 0; }
 
   /* ---------- Closing ---------- */
-  .closing { text-align: center; overflow: hidden; }
-  .closing img { width: min(240px, 50vw); margin: 50px auto 0; }
+  .closing img { height: 280px; width: auto; margin: 48px auto 0; filter: drop-shadow(0 20px 40px rgba(0,0,0,.6)); animation: bob 5s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
   /* ---------- Footer ---------- */
-  footer { background: var(--bg-alt); color: var(--muted); font-size: 12px; line-height: 1.33; letter-spacing: -.01em; padding: 30px 0 40px; }
-  footer a { color: var(--text); opacity: .8; }
-  .notes { border-bottom: 1px solid var(--line); padding-bottom: 18px; }
-  .notes ol { padding-left: 16px; display: grid; gap: 8px; }
-  .crumb { padding: 16px 0; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
-  .crumb img { width: 12px; height: 20px; object-fit: contain; }
-  .fcols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 22px 0; }
-  .fcols h5 { font-size: 12px; color: var(--text); font-weight: 600; margin-bottom: 10px; }
-  .fcols ul { list-style: none; display: grid; gap: 8px; }
-  @media (max-width: 640px) { .fcols { grid-template-columns: 1fr 1fr; } }
-  .legal { border-top: 1px solid var(--line); padding-top: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  .legal span a + a::before { content: "|"; margin: 0 8px; color: var(--line); }
-
-  /* ---------- Language ---------- */
-  html:lang(ja) body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", Meiryo, sans-serif; }
-  html:lang(en) body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif; }
-  html:lang(ja) .headline { font-size: clamp(36px, 6vw, 68px); }
-  html:lang(ja) .hero .tag { font-size: clamp(21px, 3.4vw, 38px); }
-  html:lang(en) .statement p { letter-spacing: -.02em; }
-  .lang-switch { display: flex; gap: 2px; }
-  .lang-switch button { background: none; border: 0; color: #e8e8ed; opacity: .55; font: inherit; font-size: 12px; padding: 4px 6px; cursor: pointer; border-radius: 6px; }
-  .lang-switch button:hover { opacity: .9; }
-  .lang-switch button.on { opacity: 1; background: rgba(255,255,255,.14); }
-  rt { font-size: max(.42em, 8px); font-weight: 500; letter-spacing: 0; opacity: .75; }
-  .grad rt { color: var(--gold-a); -webkit-text-fill-color: var(--gold-a); }
-  .langs a + a::before { content: "|"; margin: 0 8px; color: var(--line); }
-  .langs a.on { color: var(--text); opacity: 1; font-weight: 600; }
+  footer { border-top: 1px solid var(--line); padding: 40px 0 48px; font-size: 12px; color: var(--faint); background: rgba(5,6,15,.7); }
+  footer .row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  footer .links, footer .langs { display: flex; gap: 18px; flex-wrap: wrap; }
+  footer a:hover { color: var(--text); }
+  footer .langs a.on { color: var(--text); }
+  footer .fine { margin-top: 18px; line-height: 1.7; }
 
   /* ---------- Toast ---------- */
-  .toast { position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, calc(100% + 40px)); background: rgba(29,29,31,.92); color: #fff; padding: 14px 22px; border-radius: 16px; font-size: 15px; z-index: 50; transition: transform .45s cubic-bezier(.2,.8,.2,1); backdrop-filter: blur(20px); display: flex; gap: 10px; align-items: center; max-width: calc(100vw - 32px); }
-  .toast { visibility: hidden; }
-  .toast.show { transform: translate(-50%, 0); visibility: visible; }
-  .toast img { width: 22px; height: 36px; object-fit: contain; }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, calc(100% + 48px)); z-index: 40; display: flex; align-items: center; gap: 10px; padding: 10px 18px 10px 12px; border-radius: 980px; background: rgba(30,30,45,.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line); font-size: 14px; transition: transform .45s cubic-bezier(.2,.9,.3,1.2); max-width: calc(100vw - 32px); }
+  .toast.show { transform: translate(-50%, 0); }
+  .toast img { width: 16px; height: 28px; object-fit: contain; }
 
   /* ---------- Reveal ---------- */
-  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .9s ease, transform .9s ease; }
   .reveal.in { opacity: 1; transform: none; }
+
   @media (prefers-reduced-motion: reduce) {
-    .critter { animation: none; } .reveal { opacity: 1; transform: none; transition: none; }
-    .crop img { transition: none; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+    .hero-naiwa { transform: translate(-50%,-50%); }
   }
 </style>
 </head>
 <body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="nebula" aria-hidden="true"></div>
 
-<header class="gnav">
-  <ul>
-    <li><a class="mark" href="#top"><img src="naiwa.png" alt=""><span data-i18n>奶蛙</span></a></li>
-    <li class="hide-s"><a href="#highlights" data-i18n>亮点</a></li>
-    <li class="hide-s"><a href="#design" data-i18n>设计</a></li>
-    <li class="hide-s"><a href="#chip" data-i18n>N1 奶芯片</a></li>
-    <li class="hide-s"><a href="#compare" data-i18n>对比</a></li>
-    <li class="hide-s"><a href="#env" data-i18n>环境</a></li>
-    <li class="hide-s"><a href="#faq" data-i18n>支持</a></li>
-    <li class="lang-switch"><button data-lang="zh">中</button><button data-lang="en">EN</button><button data-lang="ja">日</button></li>
-    <li><a href="#buy" aria-label="购物袋"><svg viewBox="0 0 15 15"><path d="M2.5 4.5h10l-.8 9h-8.4z"/><path d="M5 6V3.8a2.5 2.5 0 0 1 5 0V6"/></svg></a></li>
-  </ul>
-</header>
-
-<div class="lnav">
+<header>
   <div class="wrap">
-    <a class="title" href="#top" data-i18n>奶蛙</a>
+    <a class="brand" href="#top"><img src="naiwa.png" alt=""><span data-i18n>奶蛙宇宙</span></a>
     <nav>
-      <a href="#highlights" data-i18n>概览</a>
-      <a href="#specs" data-i18n>技术规格</a>
-      <a href="#compare" data-i18n>对比</a>
-      <a class="pill" href="#buy" data-i18n>购买</a>
+      <a href="#lore" data-i18n>起源</a>
+      <a href="#planets" data-i18n>星球</a>
+      <a href="#residents" data-i18n>居民</a>
+      <a href="#timeline" data-i18n>大事记</a>
+      <a class="pill" href="shopping/" data-i18n>奶蛙商店</a>
     </nav>
   </div>
-</div>
+</header>
 
 <main id="top">
 
 <!-- ================= HERO ================= -->
-<section class="hero">
+<section class="wrap hero" style="position:relative">
   <div class="hero-copy">
-    <p class="eyebrow grad" data-i18n>全新</p>
-    <h1 data-i18n>奶蛙</h1>
-    <p class="tag" data-i18n>抱紧肚子。稳住人生。</p>
-    <p class="price" data-i18n>¥0 起<sup><a href="#fn1">1</a></sup>，可爱无价。</p>
+    <p class="eyebrow">Naiwa Universe</p>
+    <h1><span class="grad" data-i18n>奶蛙宇宙</span><small>NAIWA · SPACE</small></h1>
+    <p class="sub" data-i18n>宇宙从一次抱肚子开始。<br>欢迎来到奶蛙居住的地方。</p>
     <div class="ctas">
-      <a class="btn" href="#highlights" data-i18n>进一步了解</a>
-      <a class="btn ghost" href="#buy" data-i18n>购买</a>
+      <a class="btn gold" href="#planets" data-i18n>开始探索</a>
+      <a class="btn ghost" href="shopping/" data-i18n>前往奶蛙商店</a>
     </div>
+    <p class="domain"><b>奶蛙.space</b> · xn--yus296h.space</p>
   </div>
-  <div class="hero-stage">
-    <img class="critter" src="naiwa.png" alt="奶蛙：一只抱着肚子、站得笔直的黄色小家伙">
-  </div>
-</section>
-
-<!-- ================= HIGHLIGHTS ================= -->
-<section class="alt pad" id="highlights" style="padding-bottom:60px">
-  <div class="wrap hl-head">
-    <h2 class="h2 reveal" data-i18n>获取亮点。</h2>
-    <a class="more reveal" href="#design" data-i18n>观看设计细节</a>
-  </div>
-  <div class="track" id="track">
-    <article class="slide dark">
-      <p data-i18n>全新「无所谓」表情。<span>面对一切，都是同一张脸。</span></p>
-      <div class="crop" style="--x:45%;--y:9%;--s:2.6"><img src="naiwa.png" alt="奶蛙的绿眼睛特写" loading="lazy"></div>
-    </article>
-    <article class="slide sun">
-      <p data-i18n>双手抱肚设计。<span>安全感，直接拉满。</span></p>
-      <div class="crop" style="--x:36%;--y:46%;--s:1.9"><img src="naiwa.png" alt="奶蛙双手抱肚特写" loading="lazy"></div>
-    </article>
-    <article class="slide">
-      <p data-i18n>超大脚掌。<span>稳稳站好，每一天。</span></p>
-      <div class="crop" style="--x:52%;--y:90%;--s:2.6"><img src="naiwa.png" alt="奶蛙大脚掌特写" loading="lazy"></div>
-    </article>
-    <article class="slide">
-      <p data-i18n>四款配色。<span>总有一只，懂你的心情。</span></p>
-      <div class="quad">
-        <img class="c-yellow" src="naiwa.png" alt="原味黄" loading="lazy">
-        <img class="c-pink" src="naiwa.png" alt="樱花粉" loading="lazy">
-        <img class="c-blue" src="naiwa.png" alt="天空蓝" loading="lazy">
-        <img class="c-green" src="naiwa.png" alt="抹茶绿" loading="lazy">
-      </div>
-    </article>
-    <article class="slide dark">
-      <p data-i18n>N1 奶芯片。<span>情绪稳定的秘密，全在这里。</span></p>
-      <div class="chipwrap"><div class="chip sm"><span class="brand">NAIWA</span><span class="n grad">N1</span></div></div>
-    </article>
-  </div>
-  <div class="carousel-ctl">
-    <button class="arrow" id="prev" aria-label="上一张">‹</button>
-    <div class="dots" id="dots"></div>
-    <button class="arrow" id="next" aria-label="下一张">›</button>
-  </div>
-</section>
-
-<!-- ================= STATEMENT ================= -->
-<section class="statement">
-  <div class="wrap">
-    <p id="reveal-text">这不是一只青蛙。这也不是一只奶龙。这是一种生活态度：吃饱了，抱一抱；累了，站一会儿；烦恼来了，就当没看见。</p>
-  </div>
-</section>
-
-<!-- ================= DESIGN STORY ================= -->
-<section class="alt pad" id="design">
-  <div class="wrap">
-    <p class="eyebrow grad reveal" data-i18n>设计</p>
-    <h2 class="headline reveal" data-i18n>从头到脚，<br>都是刚刚好。</h2>
-    <div class="story">
-      <div class="story-fig crop" id="storyFig" style="--x:50%;--y:50%;--s:.92">
-        <img class="critter-still" src="naiwa.png" alt="奶蛙">
-      </div>
-      <div class="steps">
-        <div class="step" data-x="50%" data-y="50%" data-s=".92">
-          <p class="k" data-i18n>一体成型</p>
-          <h3 class="h3" data-i18n>梨形机身，<br>圆润到底。</h3>
-          <p class="lead" data-i18n>从头顶一路滑到肚子，没有一个多余的棱角。<strong>重心低、肚子大、站得稳</strong>，这是经过数千次（想象中的）跌倒测试后得出的最优解。</p>
-        </div>
-        <div class="step" data-x="45%" data-y="8%" data-s="2.6">
-          <p class="k" data-i18n>绿宝石之眼</p>
-          <h3 class="h3" data-i18n>一只看你，<br>一只看远方。</h3>
-          <p class="lead" data-i18n>一圈清澈的绿，一点深邃的黑。侧置双眼带来<strong>近乎 360° 的视野</strong>，却只选择安静地看着你。</p>
-        </div>
-        <div class="step" data-x="34%" data-y="12%" data-s="2.4">
-          <p class="k" data-i18n>一字嘴</p>
-          <h3 class="h3" data-i18n>不笑，不哭，<br>不评价。</h3>
-          <p class="lead" data-i18n>一条线，就是它对这个世界的全部看法。<strong>没有情绪，就没有情绪内耗。</strong></p>
-        </div>
-        <div class="step" data-x="36%" data-y="46%" data-s="2">
-          <p class="k" data-i18n>双手抱肚</p>
-          <h3 class="h3" data-i18n>标志性姿势，<br>全天候在线。</h3>
-          <p class="lead" data-i18n>米色肚皮，搭配橄榄色小手。吃饱了抱，饿了也抱。<strong>这是核心功能，不支持关闭。</strong></p>
-        </div>
-        <div class="step" data-x="52%" data-y="90%" data-s="2.6">
-          <p class="k" data-i18n>大脚掌</p>
-          <h3 class="h3" data-i18n>接地面积，<br>同级最大。</h3>
-          <p class="lead" data-i18n>扁平宽大的脚掌，配合三趾防滑设计。<strong>走得慢，但从不摔倒。</strong>也从不着急。</p>
-        </div>
-      </div>
+  <div class="stage" aria-label="奶蛙在宇宙中央漂浮，四只小奶蛙绕着它转圈">
+    <div class="glow"></div>
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="orbit">
+      <span class="moon m-pink" style="left:2%;top:46%"><img src="naiwa.png" alt=""></span>
+      <span class="moon m-blue" style="right:2%;top:46%"><img src="naiwa.png" alt=""></span>
     </div>
+    <div class="orbit o2">
+      <span class="moon m-green" style="left:46%;top:6%"><img src="naiwa.png" alt=""></span>
+      <span class="moon" style="left:46%;bottom:6%"><img src="naiwa.png" alt=""></span>
+    </div>
+    <div class="hero-naiwa" id="heroNaiwa" role="button" tabindex="0" aria-label="戳一下奶蛙"><img src="naiwa.png" alt="奶蛙：一只抱着肚子、站得笔直的黄色小家伙"></div>
   </div>
+  <div class="scroll-hint" data-i18n>向下滚动</div>
 </section>
 
-<!-- ================= CHIP ================= -->
-<section class="dark-band pad center" id="chip">
+<!-- ================= LORE ================= -->
+<section class="pad" id="lore">
   <div class="wrap">
-    <div class="chip reveal"><span class="brand">NAIWA</span><span class="n grad">N1</span></div>
-    <h2 class="headline reveal" style="margin-top:70px" data-i18n>N1 奶芯片。<br><span class="grad">专为发呆打造。</span></h2>
-    <p class="lead reveal" style="max-width:640px;margin:22px auto 0" data-i18n>全新 N1 奶芯片采用<strong>第一代「无所谓」架构</strong>，把所有烦恼都交给神经引擎在后台默默忽略。性能强，能耗低，表情稳。</p>
+    <p class="eyebrow center reveal" style="margin-bottom:28px" data-i18n>起源</p>
+    <p class="lore" id="lore-text" data-i18n>很久很久以前，宇宙一片寂静。直到有一只黄色的小家伙，轻轻抱住了自己的肚子。那一刻，第一颗星星亮了。</p>
     <div class="stats">
-      <div class="stat reveal"><b class="grad" data-i18n>16 <small>核</small></b><span data-i18n>神经引擎，专门识别「算了」</span></div>
-      <div class="stat reveal"><b class="grad" data-i18n>0 <small>毫秒</small></b><span data-i18n>情绪波动延迟，因为根本没有波动</span></div>
-      <div class="stat reveal"><b class="grad" data-i18n>2 <small>倍</small></b><span data-i18n>抱肚子效率提升<sup><a href="#fn2">2</a></sup></span></div>
-      <div class="stat reveal"><b class="grad">∞</b><span data-i18n>可爱续航</span></div>
+      <div class="stat reveal"><b class="grad">1</b><span data-i18n>只奶蛙</span></div>
+      <div class="stat reveal"><b class="grad">∞</b><span data-i18n>份喜欢</span></div>
+      <div class="stat reveal"><b class="grad">0</b><span data-i18n>次生气</span></div>
+      <div class="stat reveal"><b class="grad">24h</b><span data-i18n>不间断发呆</span></div>
     </div>
   </div>
 </section>
 
-<!-- ================= BENTO ================= -->
-<section class="alt pad" id="features">
+<!-- ================= PLANETS ================= -->
+<section class="pad" id="planets">
   <div class="wrap">
-    <h2 class="headline reveal center" data-i18n>强大，<br>但很松弛。</h2>
-    <div class="bento">
-      <div class="tile w4 sun reveal has-peek">
-        <span class="label" data-i18n>电池续航</span>
-        <div>
-          <div class="big" data-i18n>48 小时</div>
-          <p data-i18n>连续发呆<sup><a href="#fn3">3</a></sup>。睡一觉，又是满格。</p>
-        </div>
+    <div class="center">
+      <p class="eyebrow reveal" data-i18n>星球</p>
+      <h2 class="headline reveal" style="margin:14px 0 18px" data-i18n>四颗星球，<span class="grad">一种心情。</span></h2>
+      <p class="sub reveal" data-i18n>奶蛙宇宙不大，但每个角落都很软。</p>
+    </div>
+    <div class="planets">
+      <a class="planet p-shop reveal" href="shopping/">
+        <div class="orb"></div>
+        <span class="tag" data-i18n>01 · 已开放</span>
+        <h3 data-i18n>奶蛙商店</h3>
+        <p data-i18n>奶蛙、奶蛙 mini、奶蛙 Pro Max，全部在这里。可以加入购物袋，也可以直接加入你的心里。</p>
+        <span class="go" data-i18n>进入商店 ›</span>
         <img class="peek" src="naiwa.png" alt="" loading="lazy">
+      </a>
+      <div class="planet p-daze reveal">
+        <div class="orb"></div>
+        <span class="tag" data-i18n>02 · 建设中</span>
+        <h3 data-i18n>发呆星</h3>
+        <p data-i18n>宇宙中最安静的星球。一天有 25 个小时，多出来的那一个专门用来发呆。</p>
+        <span class="go soon" data-i18n>即将开放</span>
       </div>
-      <div class="tile reveal half">
-        <svg class="ico" viewBox="0 0 52 52"><path d="M26 6c8 10 14 17 14 25a14 14 0 0 1-28 0c0-8 6-15 14-25z" fill="#0a84ff"/></svg>
-        <div><div class="big" style="font-size:40px">IP68</div><p data-i18n>级防烦恼。<strong>烦心事泼过来，滴水不沾。</strong></p></div>
+      <div class="planet p-nebula reveal">
+        <div class="orb"></div>
+        <span class="tag" data-i18n>03 · 建设中</span>
+        <h3 data-i18n>抱肚星云</h3>
+        <p data-i18n>由无数个抱肚子的瞬间凝结而成。靠近它，你会不自觉地也抱住自己的肚子。</p>
+        <span class="go soon" data-i18n>即将开放</span>
       </div>
-      <div class="tile dark reveal half">
-        <svg class="ico" viewBox="0 0 52 52"><rect x="12" y="22" width="28" height="22" rx="5" fill="#ffd60a"/><path d="M18 22v-6a8 8 0 0 1 16 0v6" stroke="#ffd60a" stroke-width="4" fill="none"/></svg>
-        <div><span class="label" data-i18n>隐私</span><p data-i18n><strong>你说的话，它绝不外传。</strong>毕竟它不会说话。</p></div>
-      </div>
-      <div class="tile reveal half">
-        <svg class="ico" viewBox="0 0 52 52"><circle cx="26" cy="26" r="20" fill="none" stroke="#bf5af2" stroke-width="4"/><circle cx="26" cy="26" r="11" fill="none" stroke="#bf5af2" stroke-width="4" opacity=".5"/><circle cx="26" cy="26" r="4" fill="#bf5af2"/></svg>
-        <div><span class="label" data-i18n>空间感知</span><p data-i18n><strong>永远站在属于自己的位置。</strong>不挤，不抢，不内卷。</p></div>
-      </div>
-      <div class="tile reveal half">
-        <svg class="ico" viewBox="0 0 52 52"><path d="M10 30v-8M18 36V16M26 40V12M34 36V16M42 30v-8" stroke="#ff9f0a" stroke-width="4" stroke-linecap="round"/><path d="M6 46L46 6" stroke="var(--text)" stroke-width="3.5" stroke-linecap="round"/></svg>
-        <div><span class="label" data-i18n>主动降噪</span><p data-i18n><strong>世界很吵，它听不见。</strong>通透模式？不存在的。</p></div>
-      </div>
-      <div class="tile w3 dark reveal">
-        <span class="label" data-i18n>无线自由</span>
-        <div><div class="big" data-i18n>无需充电。<br>无需联网。<br><span class="grad">无需理由。</span></div></div>
-      </div>
-      <div class="tile w3 reveal has-peek">
-        <span class="label" data-i18n>戳一戳感应</span>
-        <div>
-          <div class="big" data-i18n>试试看。</div>
-          <p data-i18n>页面上的每一只奶蛙都支持<strong>轻点互动</strong>。戳一下，它会晃一晃。</p>
-        </div>
-        <img class="peek critter" src="naiwa.png" alt="可以戳的奶蛙" loading="lazy" style="right:20px;bottom:20px;width:30%">
+      <div class="planet p-nap reveal">
+        <div class="orb"></div>
+        <span class="tag" data-i18n>04 · 建设中</span>
+        <h3 data-i18n>午睡黑洞</h3>
+        <p data-i18n>万物终将被吸进午觉。目前没有任何东西逃出来过，也没有谁想逃出来。</p>
+        <span class="go soon" data-i18n>即将开放</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= BUY ================= -->
-<section class="pad" id="buy">
+<!-- ================= RESIDENTS ================= -->
+<section class="pad" id="residents">
   <div class="wrap">
-    <h2 class="headline reveal" data-i18n>选购你的奶蛙。</h2>
-    <div class="buy">
-      <div class="buy-fig reveal"><div id="buyScale"><img id="buyImg" class="critter" src="naiwa.png" alt="当前选择的奶蛙"></div></div>
-      <div class="reveal">
-        <div class="opt">
-          <h4 data-i18n>型号。<span>哪款最适合你？</span></h4>
-          <div class="models" id="models">
-            <button class="model" data-scale=".72" data-price="0" data-name="奶蛙 mini"><span><b data-i18n>奶蛙 mini</b><small data-i18n>掌心大小，口袋里的松弛感</small></span><span>¥0</span></button>
-            <button class="model on" data-scale="1" data-price="0" data-name="奶蛙"><span><b data-i18n>奶蛙</b><small data-i18n>刚好一抱</small></span><span>¥0</span></button>
-            <button class="model" data-scale="1.12" data-price="0" data-name="奶蛙 Pro Max"><span><b data-i18n>奶蛙 Pro Max</b><small data-i18n>更大的肚子，更多的安全感</small></span><span>¥0</span></button>
-          </div>
-        </div>
-        <div class="opt">
-          <h4><span data-i18n>颜色。</span><span id="colorName" data-i18n>原味黄</span></h4>
-          <div class="swatches" id="swatches">
-            <button class="sw on" data-c="c-yellow" data-n="原味黄" style="background:#f6bc2e" aria-label="原味黄"></button>
-            <button class="sw" data-c="c-pink" data-n="樱花粉" style="background:#f48fb1" aria-label="樱花粉"></button>
-            <button class="sw" data-c="c-blue" data-n="天空蓝" style="background:#7ec8e3" aria-label="天空蓝"></button>
-            <button class="sw" data-c="c-green" data-n="抹茶绿" style="background:#9ccc65" aria-label="抹茶绿"></button>
-          </div>
-        </div>
-        <p class="total">¥0<small data-i18n>免费送货。免费拥抱。终身质保（只要你还喜欢它）。</small></p>
-        <button class="btn" id="addBag" data-i18n>加入购物袋</button>
-      </div>
+    <div class="center">
+      <p class="eyebrow reveal" data-i18n>居民</p>
+      <h2 class="headline reveal" style="margin:14px 0 18px" data-i18n>同一只奶蛙，<span class="grad">四种颜色。</span></h2>
+      <p class="sub reveal" data-i18n>点一下，打个招呼。</p>
+    </div>
+    <div class="residents">
+      <div class="res reveal" data-hi="原味黄向你挥了挥（抱着肚子的）手。"><div class="fig"><img src="naiwa.png" alt="原味黄奶蛙" loading="lazy"></div><h4 data-i18n>原味黄</h4><p data-i18n>宇宙第一只奶蛙</p></div>
+      <div class="res c-pink reveal" data-hi="樱花粉害羞地看向了别处。"><div class="fig"><img src="naiwa.png" alt="樱花粉奶蛙" loading="lazy"></div><h4 data-i18n>樱花粉</h4><p data-i18n>负责春天</p></div>
+      <div class="res c-blue reveal" data-hi="天空蓝正在发呆，暂时没有回应。"><div class="fig"><img src="naiwa.png" alt="天空蓝奶蛙" loading="lazy"></div><h4 data-i18n>天空蓝</h4><p data-i18n>发呆星常驻居民</p></div>
+      <div class="res c-green reveal" data-hi="抹茶绿把肚子抱得更紧了一点。"><div class="fig"><img src="naiwa.png" alt="抹茶绿奶蛙" loading="lazy"></div><h4 data-i18n>抹茶绿</h4><p data-i18n>和眼睛同色</p></div>
     </div>
   </div>
 </section>
 
-<!-- ================= COMPARE ================= -->
-<section class="alt pad" id="compare">
-  <div class="wrap center">
-    <h2 class="headline reveal" data-i18n>哪款奶蛙<br>适合你？</h2>
-    <div class="compare">
-      <div class="col reveal">
-        <div class="imgbox"><img class="critter" src="naiwa.png" alt="奶蛙 mini" style="height:62%" loading="lazy"></div>
-        <div><i class="dot" style="background:#f6bc2e"></i><i class="dot" style="background:#f48fb1"></i></div>
-        <h3 data-i18n>奶蛙 mini</h3><p class="from" data-i18n>¥0 起</p>
-        <div class="row"><span class="t" data-i18n>掌心大小</span><span class="d" data-i18n>身高</span></div>
-        <div class="row"><span class="t" data-i18n>一小份烦恼</span><span class="d" data-i18n>肚子容量</span></div>
-        <div class="row"><span class="t">N1 mini</span><span class="d" data-i18n>芯片</span></div>
-        <div class="row"><span class="t" data-i18n>稳定</span><span class="d" data-i18n>情绪稳定性</span></div>
-        <a class="more" href="#buy" style="margin-top:20px" data-i18n>购买</a>
-      </div>
-      <div class="col reveal">
-        <div class="imgbox"><img class="critter" src="naiwa.png" alt="奶蛙" style="height:84%" loading="lazy"></div>
-        <div><i class="dot" style="background:#f6bc2e"></i><i class="dot" style="background:#f48fb1"></i><i class="dot" style="background:#7ec8e3"></i><i class="dot" style="background:#9ccc65"></i></div>
-        <h3 data-i18n>奶蛙</h3><p class="from" data-i18n>¥0 起</p>
-        <div class="row"><span class="t" data-i18n>刚好一抱</span><span class="d" data-i18n>身高</span></div>
-        <div class="row"><span class="t" data-i18n>一整天的烦恼</span><span class="d" data-i18n>肚子容量</span></div>
-        <div class="row"><span class="t">N1</span><span class="d" data-i18n>芯片</span></div>
-        <div class="row"><span class="t" data-i18n>非常稳定</span><span class="d" data-i18n>情绪稳定性</span></div>
-        <a class="more" href="#buy" style="margin-top:20px" data-i18n>购买</a>
-      </div>
-      <div class="col reveal">
-        <div class="imgbox"><img class="critter" src="naiwa.png" alt="奶蛙 Pro Max" style="height:100%" loading="lazy"></div>
-        <div><i class="dot" style="background:#f6bc2e"></i><i class="dot" style="background:#7ec8e3"></i><i class="dot" style="background:#9ccc65"></i></div>
-        <h3 data-i18n>奶蛙 Pro Max</h3><p class="from" data-i18n>¥0 起</p>
-        <div class="row"><span class="t" data-i18n>比你想的更高</span><span class="d" data-i18n>身高</span></div>
-        <div class="row"><span class="t" data-i18n>全部烦恼</span><span class="d" data-i18n>肚子容量</span></div>
-        <div class="row"><span class="t">N1 Max</span><span class="d" data-i18n>芯片</span></div>
-        <div class="row"><span class="t" data-i18n>稳如泰山</span><span class="d" data-i18n>情绪稳定性</span></div>
-        <a class="more" href="#buy" style="margin-top:20px" data-i18n>购买</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= ENVIRONMENT ================= -->
-<section class="env pad center" id="env">
+<!-- ================= TIMELINE ================= -->
+<section class="pad" id="timeline">
   <div class="wrap">
-    <svg class="leaf reveal" viewBox="0 0 56 56"><path d="M46 8C20 8 8 22 10 44c22 2 36-10 36-36z" fill="#00a33a"/><path d="M12 44C20 32 28 24 40 16" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
-    <h2 class="h2 reveal" data-i18n>奶蛙与环境。</h2>
-    <p class="lead reveal" style="max-width:640px;margin:18px auto 0" data-i18n>我们相信，可爱不应该以地球为代价。所以奶蛙从设计之初就<strong>只消耗一样东西：你的注意力。</strong></p>
-    <div class="env-grid">
-      <div class="reveal"><b>100%</b><span data-i18n>可回收的可爱。用完了还能再爱一次。</span></div>
-      <div class="reveal"><b>0</b><span data-i18n>塑料包装。直接抱走就行。</span></div>
-      <div class="reveal"><b data-i18n>碳中和</b><span data-i18n>它连碳都懒得排。</span></div>
+    <div class="center">
+      <p class="eyebrow reveal" data-i18n>大事记</p>
+      <h2 class="headline reveal" style="margin-top:14px" data-i18n>奶蛙宇宙简史</h2>
+    </div>
+    <div class="timeline">
+      <div class="ev reveal"><time data-i18n>第 0 秒</time><h4 data-i18n>奶蛙大爆炸</h4><p data-i18n>一只奶蛙抱住了肚子，宇宙随之诞生。科学家至今没搞清楚是先有肚子还是先有奶蛙。</p></div>
+      <div class="ev reveal"><time data-i18n>第 1 天</time><h4 data-i18n>第一次发呆</h4><p data-i18n>持续时长未知，因为没人忍心打断。</p></div>
+      <div class="ev reveal"><time data-i18n>第 3 天</time><h4 data-i18n>颜色分化</h4><p data-i18n>奶蛙在阳光、樱花、天空和抹茶的影响下，出现了四种颜色。性格完全一样。</p></div>
+      <div class="ev reveal"><time>2026</time><h4 data-i18n>奶蛙.space 上线</h4><p data-i18n>奶蛙宇宙首次向地球开放，奶蛙商店同步开业。</p></div>
+      <div class="ev reveal"><time data-i18n>现在</time><h4 data-i18n>你来了</h4><p data-i18n>欢迎。找个舒服的姿势，抱住肚子，待一会儿。</p></div>
     </div>
   </div>
 </section>
 
-<!-- ================= SPECS ================= -->
-<section class="pad" id="specs">
+<!-- ================= SIGNAL ================= -->
+<section class="pad signal">
   <div class="wrap">
-    <h2 class="headline reveal" data-i18n>技术规格</h2>
-    <div class="specs">
-      <div class="spec reveal">
-        <h4 data-i18n>颜色</h4>
-        <div class="sw-row">
-          <div><i style="background:#f6bc2e"></i><span data-i18n>原味黄</span></div>
-          <div><i style="background:#f48fb1"></i><span data-i18n>樱花粉</span></div>
-          <div><i style="background:#7ec8e3"></i><span data-i18n>天空蓝</span></div>
-          <div><i style="background:#9ccc65"></i><span data-i18n>抹茶绿</span></div>
-        </div>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>尺寸与重量</h4>
-        <ul>
-          <li data-i18n>高度：刚好一抱</li>
-          <li data-i18n>肚围：大于身高（主观感受）</li>
-          <li data-i18n>重量：取决于今天吃了什么</li>
-        </ul>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>显示屏</h4>
-        <div><p data-i18n>无。</p><p class="note" data-i18n>它只用眼睛看你。</p></div>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>芯片</h4>
-        <ul>
-          <li data-i18n>N1 奶芯片</li>
-          <li data-i18n>16 核神经引擎（「算了」识别专用）</li>
-          <li data-i18n>第一代「无所谓」架构</li>
-        </ul>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>摄像头</h4>
-        <div><p data-i18n>双眼侧置系统</p><p class="note" data-i18n>绿宝石虹膜，一只看你，一只看远方。</p></div>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>音频</h4>
-        <div><p data-i18n>不发声。</p><p class="note" data-i18n>静音模式默认开启，且无法关闭。</p></div>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>传感器</h4>
-        <ul><li data-i18n>抱抱感应</li><li data-i18n>戳戳感应（试试点它）</li><li data-i18n>饱腹感应器</li></ul>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>系统要求</h4>
-        <p data-i18n>一颗愿意放松的心</p>
-      </div>
-      <div class="spec reveal">
-        <h4 data-i18n>包装内容</h4>
-        <ul><li data-i18n>奶蛙 ×1</li><li data-i18n>说明书 ×0（不需要）</li></ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FAQ ================= -->
-<section class="alt pad" id="faq">
-  <div class="wrap">
-    <h2 class="h2 reveal" data-i18n>常见问题</h2>
-    <div class="faq reveal">
-      <details><summary data-i18n>奶蛙是青蛙，还是奶龙？</summary><p data-i18n>都不是。名字里有蛙，但它不是青蛙；长得像奶龙，但它也不是奶龙。抱起来像枕头。它就是奶蛙，不需要被归类。</p></details>
-      <details><summary data-i18n>为什么它一直抱着肚子？</summary><p data-i18n>吃饱了要抱，饿了也要抱，开心不开心都抱一抱。这是奶蛙的核心功能，目前不支持关闭，未来也不会。</p></details>
-      <details><summary data-i18n>可以戳它吗？</summary><p data-i18n>可以。页面上的每一只奶蛙都支持戳一戳，它会晃一晃，然后继续保持同一个表情。</p></details>
-      <details><summary data-i18n>奶蛙会生气吗？</summary><p data-i18n>截至发稿，尚未观测到。</p></details>
-      <details><summary data-i18n>真的可以买吗？</summary><p data-i18n>不可以。奶蛙不能被购买，只能被喜欢。但「加入购物袋」按钮是真的可以按的。</p></details>
-      <details><summary data-i18n>售后怎么办？</summary><p data-i18n>奶蛙享受终身质保，条件只有一个：你还喜欢它。</p></details>
+    <p class="eyebrow reveal" data-i18n>宇宙信号</p>
+    <h2 class="headline reveal" style="margin-top:14px" data-i18n>向奶蛙发送一份喜欢。</h2>
+    <div class="box reveal">
+      <div class="count grad" id="likeCount">0</div>
+      <p data-i18n>是你本次访问发出的喜欢。每一份都会变成一颗星星。</p>
+      <button class="btn gold" id="likeBtn" type="button" data-i18n>发送喜欢 ✦</button>
     </div>
   </div>
 </section>
 
 <!-- ================= CLOSING ================= -->
-<section class="closing pad">
+<section class="pad closing center">
   <div class="wrap">
-    <h2 class="headline reveal" data-i18n>世界很吵。<br><span class="grad">抱紧肚子，站一会儿。</span></h2>
-    <div class="reveal" style="margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-      <a class="btn" href="#buy" data-i18n>购买</a>
+    <h2 class="headline reveal" data-i18n>宇宙很大。<br><span class="grad">抱紧肚子，慢慢逛。</span></h2>
+    <div class="reveal" style="margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a class="btn gold" href="shopping/" data-i18n>前往奶蛙商店</a>
       <a class="btn ghost" href="#top" data-i18n>回到顶部</a>
     </div>
-    <img class="critter reveal" src="naiwa.png" alt="奶蛙" loading="lazy">
+    <img class="reveal" src="naiwa.png" alt="奶蛙" loading="lazy">
   </div>
 </section>
 
@@ -710,174 +369,236 @@
 
 <footer>
   <div class="wrap">
-    <div class="notes">
-      <ol>
-        <li id="fn1" data-i18n>价格仅供娱乐。奶蛙无法被购买，只能被喜欢。</li>
-        <li id="fn2" data-i18n>与站着不动、双手下垂的对照组相比。测试于 2026 年 10 月，由一只奶蛙独立完成，样本量为 1。</li>
-        <li id="fn3" data-i18n>续航时间因心情、天气和午饭质量而异。</li>
-      </ol>
+    <div class="row">
+      <div class="links">
+        <a href="#lore" data-i18n>起源</a>
+        <a href="#planets" data-i18n>星球</a>
+        <a href="#residents" data-i18n>居民</a>
+        <a href="#timeline" data-i18n>大事记</a>
+        <a href="shopping/" data-i18n>奶蛙商店</a>
+      </div>
+      <div class="langs"><a href="?lang=zh" data-lang="zh">简体中文</a><a href="?lang=en" data-lang="en">English</a><a href="?lang=ja" data-lang="ja">日本語</a></div>
     </div>
-    <div class="crumb"><img src="naiwa.png" alt=""> › <span data-i18n>奶蛙</span></div>
-    <div class="fcols">
-      <div><h5 data-i18n>选购与了解</h5><ul><li><a href="#buy" data-i18n>奶蛙</a></li><li><a href="#buy" data-i18n>奶蛙 mini</a></li><li><a href="#buy" data-i18n>奶蛙 Pro Max</a></li><li><a href="#compare" data-i18n>机型对比</a></li></ul></div>
-      <div><h5 data-i18n>技术</h5><ul><li><a href="#chip" data-i18n>N1 奶芯片</a></li><li><a href="#design" data-i18n>设计</a></li><li><a href="#specs" data-i18n>技术规格</a></li></ul></div>
-      <div><h5 data-i18n>价值观</h5><ul><li><a href="#env" data-i18n>环境</a></li><li><a href="#features" data-i18n>隐私</a></li><li><a href="#features" data-i18n>无障碍抱抱</a></li></ul></div>
-      <div><h5 data-i18n>关于</h5><ul><li><a href="#faq" data-i18n>常见问题</a></li><li><a href="#top">loveandfuck.me</a></li></ul></div>
-    </div>
-    <div class="legal">
-      <p data-i18n>Copyright © 2026 loveandfuck.me。保留所有权利。</p>
-      <span><a href="#faq" data-i18n>隐私政策</a><a href="#faq" data-i18n>使用条款</a><a href="#faq" data-i18n>销售政策</a><a href="#top" data-i18n>网站地图</a></span>
-      <span class="langs"><a href="?lang=zh" data-lang="zh">简体中文</a><a href="?lang=en" data-lang="en">English</a><a href="?lang=ja" data-lang="ja">日本語</a></span>
-    </div>
+    <p class="fine" data-i18n>Copyright © 2026 奶蛙.space。保留所有权利。<br>奶蛙不是青蛙，也不是奶龙。奶蛙就是奶蛙。</p>
   </div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><img src="naiwa.png" alt=""><span id="toastText"></span></div>
 
-<script src="i18n.js"></script>
 <script>
-  // Language state (strings live in i18n.js)
+  // ---------- Strings (keyed by the Chinese source text) ----------
+  const I18N = {
+    "奶蛙宇宙": { en: "Naiwa Universe", ja: "ナイワ<ruby>宇宙<rt>うちゅう</rt></ruby>" },
+    "起源": { en: "Origin", ja: "<ruby>起源<rt>きげん</rt></ruby>" },
+    "星球": { en: "Planets", ja: "<ruby>惑星<rt>わくせい</rt></ruby>" },
+    "居民": { en: "Residents", ja: "<ruby>住人<rt>じゅうにん</rt></ruby>" },
+    "大事记": { en: "Timeline", ja: "<ruby>年表<rt>ねんぴょう</rt></ruby>" },
+    "奶蛙商店": { en: "Naiwa Store", ja: "ナイワストア" },
+    "宇宙从一次抱肚子开始。<br>欢迎来到奶蛙居住的地方。": { en: "The universe began with a belly hug.<br>Welcome to where Naiwa lives.", ja: "<ruby>宇宙<rt>うちゅう</rt></ruby>は、ひとつのお<ruby>腹<rt>なか</rt></ruby>ハグから<ruby>始<rt>はじ</rt></ruby>まった。<br>ナイワの<ruby>住<rt>す</rt></ruby>む<ruby>場所<rt>ばしょ</rt></ruby>へようこそ。" },
+    "开始探索": { en: "Start exploring", ja: "<ruby>探検<rt>たんけん</rt></ruby>する" },
+    "前往奶蛙商店": { en: "Visit the Naiwa Store", ja: "ナイワストアへ" },
+    "向下滚动": { en: "SCROLL", ja: "スクロール" },
+    "很久很久以前，宇宙一片寂静。直到有一只黄色的小家伙，轻轻抱住了自己的肚子。那一刻，第一颗星星亮了。": {
+      en: "Long, long ago, the universe was silent. Then a little yellow someone gently hugged its own belly. At that moment, the first star lit up.",
+      ja: "むかしむかし、<ruby>宇宙<rt>うちゅう</rt></ruby>はしんと<ruby>静<rt>しず</rt></ruby>まりかえっていた。ある<ruby>日<rt>ひ</rt></ruby>、<ruby>黄色<rt>きいろ</rt></ruby>い<ruby>小<rt>ちい</rt></ruby>さな<ruby>子<rt>こ</rt></ruby>が、そっと<ruby>自分<rt>じぶん</rt></ruby>のお<ruby>腹<rt>なか</rt></ruby>を<ruby>抱<rt>かか</rt></ruby>えた。その<ruby>瞬間<rt>しゅんかん</rt></ruby>、<ruby>最初<rt>さいしょ</rt></ruby>の<ruby>星<rt>ほし</rt></ruby>が<ruby>灯<rt>とも</rt></ruby>った。" },
+    "只奶蛙": { en: "Naiwa", ja: "ナイワ" },
+    "份喜欢": { en: "love", ja: "<ruby>大好<rt>だいす</rt></ruby>き" },
+    "次生气": { en: "tantrums", ja: "<ruby>怒<rt>おこ</rt></ruby>った<ruby>回数<rt>かいすう</rt></ruby>" },
+    "不间断发呆": { en: "nonstop zoning out", ja: "ノンストップぼーっと" },
+    "四颗星球，<span class=\"grad\">一种心情。</span>": { en: "Four planets. <span class=\"grad\">One mood.</span>", ja: "<ruby>四<rt>よっ</rt></ruby>つの<ruby>惑星<rt>わくせい</rt></ruby>、<span class=\"grad\">ひとつの<ruby>気分<rt>きぶん</rt></ruby>。</span>" },
+    "奶蛙宇宙不大，但每个角落都很软。": { en: "The Naiwa Universe isn’t big, but every corner is soft.", ja: "ナイワ<ruby>宇宙<rt>うちゅう</rt></ruby>は<ruby>広<rt>ひろ</rt></ruby>くない。でも、どこもやわらかい。" },
+    "01 · 已开放": { en: "01 · OPEN", ja: "01 · オープン" },
+    "02 · 建设中": { en: "02 · UNDER CONSTRUCTION", ja: "02 · <ruby>建設中<rt>けんせつちゅう</rt></ruby>" },
+    "03 · 建设中": { en: "03 · UNDER CONSTRUCTION", ja: "03 · <ruby>建設中<rt>けんせつちゅう</rt></ruby>" },
+    "04 · 建设中": { en: "04 · UNDER CONSTRUCTION", ja: "04 · <ruby>建設中<rt>けんせつちゅう</rt></ruby>" },
+    "奶蛙、奶蛙 mini、奶蛙 Pro Max，全部在这里。可以加入购物袋，也可以直接加入你的心里。": { en: "Naiwa, Naiwa mini and Naiwa Pro Max, all in one place. Add one to your bag, or straight to your heart.", ja: "ナイワ、ナイワ mini、ナイワ Pro Max、ぜんぶここに。バッグに<ruby>入<rt>い</rt></ruby>れても、<ruby>心<rt>こころ</rt></ruby>に<ruby>入<rt>い</rt></ruby>れてもOK。" },
+    "进入商店 ›": { en: "Enter the store ›", ja: "ストアに<ruby>入<rt>はい</rt></ruby>る ›" },
+    "发呆星": { en: "Planet Daze", ja: "ぼーっと<ruby>星<rt>ぼし</rt></ruby>" },
+    "宇宙中最安静的星球。一天有 25 个小时，多出来的那一个专门用来发呆。": { en: "The quietest planet in the universe. A day here has 25 hours; the extra one is reserved for zoning out.", ja: "<ruby>宇宙<rt>うちゅう</rt></ruby>でいちばん<ruby>静<rt>しず</rt></ruby>かな<ruby>星<rt>ほし</rt></ruby>。<ruby>一日<rt>いちにち</rt></ruby>は 25 <ruby>時間<rt>じかん</rt></ruby>、<ruby>増<rt>ふ</rt></ruby>えた１<ruby>時間<rt>じかん</rt></ruby>はぼーっとする<ruby>専用<rt>せんよう</rt></ruby>。" },
+    "即将开放": { en: "Coming soon", ja: "まもなくオープン" },
+    "抱肚星云": { en: "Belly-Hug Nebula", ja: "お<ruby>腹<rt>なか</rt></ruby>ハグ<ruby>星雲<rt>せいうん</rt></ruby>" },
+    "由无数个抱肚子的瞬间凝结而成。靠近它，你会不自觉地也抱住自己的肚子。": { en: "Condensed from countless belly-hugging moments. Get close and you’ll find yourself hugging your belly too.", ja: "<ruby>無数<rt>むすう</rt></ruby>のお<ruby>腹<rt>なか</rt></ruby>ハグの<ruby>瞬間<rt>しゅんかん</rt></ruby>が<ruby>固<rt>かた</rt></ruby>まってできた。<ruby>近<rt>ちか</rt></ruby>づくと、つい<ruby>自分<rt>じぶん</rt></ruby>のお<ruby>腹<rt>なか</rt></ruby>も<ruby>抱<rt>かか</rt></ruby>えてしまう。" },
+    "午睡黑洞": { en: "The Nap Black Hole", ja: "お<ruby>昼寝<rt>ひるね</rt></ruby>ブラックホール" },
+    "万物终将被吸进午觉。目前没有任何东西逃出来过，也没有谁想逃出来。": { en: "Everything is eventually pulled into a nap. Nothing has ever escaped, and nobody has wanted to.", ja: "すべてはいずれお<ruby>昼寝<rt>ひるね</rt></ruby>に<ruby>吸<rt>す</rt></ruby>い<ruby>込<rt>こ</rt></ruby>まれる。<ruby>抜<rt>ぬ</rt></ruby>け<ruby>出<rt>だ</rt></ruby>したものはまだいないし、<ruby>抜<rt>ぬ</rt></ruby>け<ruby>出<rt>だ</rt></ruby>したい<ruby>者<rt>もの</rt></ruby>もいない。" },
+    "同一只奶蛙，<span class=\"grad\">四种颜色。</span>": { en: "One Naiwa. <span class=\"grad\">Four colors.</span>", ja: "<ruby>同<rt>おな</rt></ruby>じナイワ、<span class=\"grad\"><ruby>四<rt>よっ</rt></ruby>つの<ruby>色<rt>いろ</rt></ruby>。</span>" },
+    "点一下，打个招呼。": { en: "Tap one to say hi.", ja: "タップして、あいさつしよう。" },
+    "原味黄": { en: "Original Yellow", ja: "オリジナルイエロー" },
+    "宇宙第一只奶蛙": { en: "The universe’s first Naiwa", ja: "<ruby>宇宙<rt>うちゅう</rt></ruby><ruby>最初<rt>さいしょ</rt></ruby>のナイワ" },
+    "樱花粉": { en: "Sakura Pink", ja: "サクラピンク" },
+    "负责春天": { en: "In charge of spring", ja: "<ruby>春<rt>はる</rt></ruby><ruby>担当<rt>たんとう</rt></ruby>" },
+    "天空蓝": { en: "Sky Blue", ja: "スカイブルー" },
+    "发呆星常驻居民": { en: "Permanent resident of Planet Daze", ja: "ぼーっと<ruby>星<rt>ぼし</rt></ruby>の<ruby>住人<rt>じゅうにん</rt></ruby>" },
+    "抹茶绿": { en: "Matcha Green", ja: "<ruby>抹茶<rt>まっちゃ</rt></ruby>グリーン" },
+    "和眼睛同色": { en: "Matches the eyes", ja: "<ruby>目<rt>め</rt></ruby>とおそろいの<ruby>色<rt>いろ</rt></ruby>" },
+    "原味黄向你挥了挥（抱着肚子的）手。": { en: "Original Yellow waves at you (with a belly-hugging hand).", ja: "オリジナルイエローが（お腹を抱えたまま）手を振った。" },
+    "樱花粉害羞地看向了别处。": { en: "Sakura Pink shyly looks away.", ja: "サクラピンクは恥ずかしそうに目をそらした。" },
+    "天空蓝正在发呆，暂时没有回应。": { en: "Sky Blue is zoning out and can’t respond right now.", ja: "スカイブルーはぼーっとしていて、返事がない。" },
+    "抹茶绿把肚子抱得更紧了一点。": { en: "Matcha Green hugs its belly a little tighter.", ja: "抹茶グリーンはお腹を少しだけ強く抱えた。" },
+    "奶蛙宇宙简史": { en: "A Brief History of the Naiwa Universe", ja: "ナイワ<ruby>宇宙<rt>うちゅう</rt></ruby><ruby>小史<rt>しょうし</rt></ruby>" },
+    "第 0 秒": { en: "SECOND 0", ja: "0 <ruby>秒目<rt>びょうめ</rt></ruby>" },
+    "奶蛙大爆炸": { en: "The Big Naiwa Bang", ja: "ナイワ・ビッグバン" },
+    "一只奶蛙抱住了肚子，宇宙随之诞生。科学家至今没搞清楚是先有肚子还是先有奶蛙。": { en: "A Naiwa hugged its belly and the universe was born. Scientists still can’t tell whether the belly or the Naiwa came first.", ja: "ナイワがお<ruby>腹<rt>なか</rt></ruby>を<ruby>抱<rt>かか</rt></ruby>え、<ruby>宇宙<rt>うちゅう</rt></ruby>が<ruby>生<rt>う</rt></ruby>まれた。お<ruby>腹<rt>なか</rt></ruby>が<ruby>先<rt>さき</rt></ruby>かナイワが<ruby>先<rt>さき</rt></ruby>か、<ruby>科学者<rt>かがくしゃ</rt></ruby>にもまだわからない。" },
+    "第 1 天": { en: "DAY 1", ja: "1 <ruby>日目<rt>にちめ</rt></ruby>" },
+    "第一次发呆": { en: "The First Daze", ja: "はじめてのぼーっと" },
+    "持续时长未知，因为没人忍心打断。": { en: "Duration unknown, because no one had the heart to interrupt.", ja: "<ruby>長<rt>なが</rt></ruby>さは<ruby>不明<rt>ふめい</rt></ruby>。だれも<ruby>邪魔<rt>じゃま</rt></ruby>できなかったから。" },
+    "第 3 天": { en: "DAY 3", ja: "3 <ruby>日目<rt>にちめ</rt></ruby>" },
+    "颜色分化": { en: "The Color Split", ja: "<ruby>色<rt>いろ</rt></ruby>の<ruby>分化<rt>ぶんか</rt></ruby>" },
+    "奶蛙在阳光、樱花、天空和抹茶的影响下，出现了四种颜色。性格完全一样。": { en: "Under the influence of sunshine, sakura, sky and matcha, Naiwa came in four colors. Personalities: identical.", ja: "<ruby>太陽<rt>たいよう</rt></ruby>、<ruby>桜<rt>さくら</rt></ruby>、<ruby>空<rt>そら</rt></ruby>、<ruby>抹茶<rt>まっちゃ</rt></ruby>の<ruby>影響<rt>えいきょう</rt></ruby>で、ナイワは<ruby>四色<rt>よんしょく</rt></ruby>に。<ruby>性格<rt>せいかく</rt></ruby>はまったく<ruby>同<rt>おな</rt></ruby>じ。" },
+    "奶蛙.space 上线": { en: "奶蛙.space goes live", ja: "奶蛙.space <ruby>公開<rt>こうかい</rt></ruby>" },
+    "奶蛙宇宙首次向地球开放，奶蛙商店同步开业。": { en: "The Naiwa Universe opens to Earth for the first time, and the Naiwa Store opens with it.", ja: "ナイワ<ruby>宇宙<rt>うちゅう</rt></ruby>が<ruby>地球<rt>ちきゅう</rt></ruby>に<ruby>初<rt>はじ</rt></ruby>めて<ruby>公開<rt>こうかい</rt></ruby>。ナイワストアも<ruby>同時<rt>どうじ</rt></ruby>オープン。" },
+    "现在": { en: "NOW", ja: "いま" },
+    "你来了": { en: "You arrived", ja: "あなたが<ruby>来<rt>き</rt></ruby>た" },
+    "欢迎。找个舒服的姿势，抱住肚子，待一会儿。": { en: "Welcome. Get comfortable, hug your belly, and stay a while.", ja: "ようこそ。<ruby>楽<rt>らく</rt></ruby>な<ruby>姿勢<rt>しせい</rt></ruby>で、お<ruby>腹<rt>なか</rt></ruby>を<ruby>抱<rt>かか</rt></ruby>えて、ゆっくりしていって。" },
+    "宇宙信号": { en: "Cosmic Signal", ja: "<ruby>宇宙<rt>うちゅう</rt></ruby>シグナル" },
+    "向奶蛙发送一份喜欢。": { en: "Send Naiwa some love.", ja: "ナイワに「<ruby>好<rt>す</rt></ruby>き」を<ruby>送<rt>おく</rt></ruby>ろう。" },
+    "是你本次访问发出的喜欢。每一份都会变成一颗星星。": { en: "is how much love you’ve sent this visit. Each one becomes a star.", ja: "は、<ruby>今回<rt>こんかい</rt></ruby>あなたが<ruby>送<rt>おく</rt></ruby>った「<ruby>好<rt>す</rt></ruby>き」の<ruby>数<rt>かず</rt></ruby>。ひとつひとつが<ruby>星<rt>ほし</rt></ruby>になる。" },
+    "发送喜欢 ✦": { en: "Send love ✦", ja: "「<ruby>好<rt>す</rt></ruby>き」を<ruby>送<rt>おく</rt></ruby>る ✦" },
+    "宇宙很大。<br><span class=\"grad\">抱紧肚子，慢慢逛。</span>": { en: "The universe is big.<br><span class=\"grad\">Hug your belly and take your time.</span>", ja: "<ruby>宇宙<rt>うちゅう</rt></ruby>は<ruby>広<rt>ひろ</rt></ruby>い。<br><span class=\"grad\">お<ruby>腹<rt>なか</rt></ruby>を<ruby>抱<rt>かか</rt></ruby>えて、ゆっくりどうぞ。</span>" },
+    "回到顶部": { en: "Back to top", ja: "トップへ<ruby>戻<rt>もど</rt></ruby>る" },
+    "Copyright © 2026 奶蛙.space。保留所有权利。<br>奶蛙不是青蛙，也不是奶龙。奶蛙就是奶蛙。": { en: "Copyright © 2026 奶蛙.space. All rights reserved.<br>Naiwa is not a frog, and not Nailong either. Naiwa is just Naiwa.", ja: "Copyright © 2026 奶蛙.space. All rights reserved.<br>ナイワはカエルでも、ナイロンでもない。ナイワはナイワ。" },
+    "奶蛙宇宙 · 奶蛙.space": { en: "Naiwa Universe · 奶蛙.space", ja: "ナイワ宇宙 · 奶蛙.space" },
+    "奶蛙宇宙官网。宇宙从一次抱肚子开始。": { en: "The official site of the Naiwa Universe. It all began with a belly hug.", ja: "ナイワ宇宙公式サイト。宇宙は、ひとつのお腹ハグから始まった。" },
+    "戳一下奶蛙": { en: "Poke Naiwa", ja: "ナイワをつつく" },
+    "奶蛙：一只抱着肚子、站得笔直的黄色小家伙": { en: "Naiwa: a little yellow someone standing up straight, hugging its belly", ja: "ナイワ：お腹を抱えてまっすぐ立つ、黄色い小さな子" },
+    "奶蛙在宇宙中央漂浮，四只小奶蛙绕着它转圈": { en: "Naiwa floats at the center of the universe while four little Naiwa orbit around it", ja: "宇宙の真ん中に浮かぶナイワと、そのまわりを回る四匹の小さなナイワ" },
+    "奶蛙": { en: "Naiwa", ja: "ナイワ" },
+  };
   const LANGS = ['zh', 'en', 'ja'];
   let lang = 'zh';
-  const tr = zh => (lang !== 'zh' && window.I18N[zh] && window.I18N[zh][lang]) || zh;
+  const tr = zh => (lang !== 'zh' && I18N[zh] && I18N[zh][lang]) || zh;
   const plain = html => html.replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]+>/g, '');
-
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Poke any critter to make it wiggle
-  const wiggle = el => {
-    el.classList.remove('wiggle'); void el.offsetWidth; el.classList.add('wiggle');
-    setTimeout(() => el.classList.remove('wiggle'), 700);
+  // ---------- Starfield ----------
+  const sky = document.getElementById('sky');
+  const ctx = sky.getContext('2d');
+  let W, H, DPR, stars = [], bursts = [];
+  const mkStar = (x, y, bright) => ({
+    x: x ?? Math.random() * W, y: y ?? Math.random() * H,
+    r: (bright ? 1.4 : .3 + Math.random() * 1.1) * DPR,
+    tw: Math.random() * Math.PI * 2, sp: .6 + Math.random() * 1.6,
+    depth: .2 + Math.random() * .8,
+    gold: bright || Math.random() < .12
+  });
+  const resize = () => {
+    DPR = Math.min(2, devicePixelRatio || 1);
+    W = sky.width = innerWidth * DPR; H = sky.height = innerHeight * DPR;
+    const n = Math.round(innerWidth * innerHeight / 3200);
+    const kept = stars.filter(s => s.born);
+    stars = Array.from({ length: n }, () => mkStar()).concat(kept);
   };
-  document.querySelectorAll('.critter').forEach((el, i) => {
-    el.style.animationDelay = (-i * .7) + 's';
-    el.addEventListener('click', () => wiggle(el));
+  resize(); addEventListener('resize', resize);
+  let t0 = performance.now();
+  const draw = now => {
+    const t = (now - t0) / 1000;
+    ctx.clearRect(0, 0, W, H);
+    const sy = scrollY * DPR;
+    for (const s of stars) {
+      const y = ((s.y - sy * s.depth * .15) % H + H) % H;
+      const a = .35 + .65 * (.5 + .5 * Math.sin(s.tw + t * s.sp));
+      ctx.globalAlpha = a;
+      ctx.fillStyle = s.gold ? '#ffe08a' : '#ffffff';
+      ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, Math.PI * 2); ctx.fill();
+    }
+    bursts = bursts.filter(b => b.life > 0);
+    for (const b of bursts) {
+      b.x += b.vx; b.y += b.vy; b.vy += .02 * DPR; b.life -= .016;
+      ctx.globalAlpha = Math.max(0, b.life);
+      ctx.fillStyle = b.c;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (!reduce || bursts.length) requestAnimationFrame(draw);
+  };
+  requestAnimationFrame(draw);
+  const burst = (cx, cy) => {
+    const cols = ['#ffd60a', '#ff9f0a', '#f3dcae', '#ffffff', '#8e7dff'];
+    for (let i = 0; i < 28; i++) {
+      const a = Math.random() * Math.PI * 2, v = (1 + Math.random() * 3) * DPR;
+      bursts.push({ x: cx * DPR, y: cy * DPR, vx: Math.cos(a) * v, vy: Math.sin(a) * v - DPR, r: (1 + Math.random() * 1.8) * DPR, life: 1, c: cols[i % cols.length] });
+    }
+    if (reduce) requestAnimationFrame(draw);
+  };
+  const newStar = (cx, cy) => {
+    const s = mkStar(cx * DPR, cy * DPR + scrollY * DPR * .15, true);
+    s.depth = 1; s.born = true; stars.push(s);
+  };
+
+  // ---------- Toast ----------
+  const toast = document.getElementById('toast'), toastText = document.getElementById('toastText');
+  let tt;
+  const say = html => { toastText.innerHTML = html; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2600); };
+
+  // ---------- Poke the hero ----------
+  const hero = document.getElementById('heroNaiwa');
+  const pokes = {
+    zh: ['奶蛙抱紧了肚子。', '奶蛙看了你一眼。', '奶蛙继续发呆。', '一颗新星星诞生了。'],
+    en: ['Naiwa hugs its belly tighter.', 'Naiwa glances at you.', 'Naiwa goes back to zoning out.', 'A new star is born.'],
+    ja: ['ナイワはお腹をぎゅっと抱えた。', 'ナイワがこちらをちらっと見た。', 'ナイワはまたぼーっとしはじめた。', '新しい星が生まれた。']
+  };
+  let pokeN = 0;
+  const poke = () => {
+    hero.classList.remove('wiggle'); void hero.offsetWidth; hero.classList.add('wiggle');
+    const r = hero.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height * .45);
+    say(pokes[lang][pokeN++ % 4]);
+  };
+  hero.addEventListener('click', poke);
+  hero.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); } });
+
+  // ---------- Residents ----------
+  document.querySelectorAll('.res').forEach(el => el.addEventListener('click', () => {
+    el.classList.remove('wiggle'); void el.offsetWidth; el.classList.add('wiggle');
+    say(tr(el.dataset.hi));
+  }));
+
+  // ---------- Send love ----------
+  let likes = 0;
+  const likeCount = document.getElementById('likeCount');
+  document.getElementById('likeBtn').addEventListener('click', e => {
+    likes++; likeCount.textContent = likes;
+    const r = e.currentTarget.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top);
+    newStar(Math.random() * innerWidth, Math.random() * innerHeight * .6);
   });
 
-  // Hero: copy fades and the image grows as you scroll
-  const heroCopy = document.querySelector('.hero-copy');
-  const heroStage = document.querySelector('.hero-stage');
-  // Statement: characters light up as you scroll
-  const rt = document.getElementById('reveal-text');
-  const statementZh = rt.textContent;
-  let chars = [];
-  const buildStatement = (text, byWord) => {
-    // English lights up word by word; CJK character by character (a <ruby> word counts as one)
-    const parts = byWord ? text.split(/(?<= )/) : text.match(/<ruby>.*?<\/ruby>|[\s\S]/g);
-    rt.innerHTML = parts.map(t => `<span class="w">${t}</span>`).join('');
-    chars = [...rt.children];
+  // ---------- Lore lights up as you scroll ----------
+  const lore = document.getElementById('lore-text');
+  const loreZh = lore.innerHTML;
+  let words = [];
+  const buildLore = (html, byWord) => {
+    const parts = byWord ? html.split(/(?<= )/) : html.match(/<ruby>.*?<\/ruby>|[\s\S]/g);
+    lore.innerHTML = parts.map(p => `<span class="w">${p}</span>`).join('');
+    words = [...lore.children];
   };
-  buildStatement(statementZh, false);
-
   let ticking = false;
   const onScroll = () => {
     ticking = false;
-    const vh = innerHeight;
-    if (!reduce) {
-      const p = Math.min(1, Math.max(0, scrollY / (vh * .7)));
-      heroCopy.style.opacity = 1 - p * 1.2;
-      heroCopy.style.transform = `translateY(${p * -40}px) scale(${1 - p * .06})`;
-      heroStage.style.transform = `scale(${1 + p * .18})`;
-    }
-    const r = rt.getBoundingClientRect();
-    const prog = Math.min(1, Math.max(0, (vh * .85 - r.top) / (r.height + vh * .35)));
-    const n = Math.round(prog * chars.length);
-    chars.forEach((c, i) => c.classList.toggle('on', i < n));
+    const vh = innerHeight, r = lore.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (vh * .85 - r.top) / (r.height + vh * .35)));
+    const n = reduce ? words.length : Math.round(p * words.length);
+    words.forEach((w, i) => w.classList.toggle('on', i < n));
   };
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-  onScroll();
 
-  // Carousel
-  const track = document.getElementById('track');
-  const slides = [...track.children];
-  const dots = document.getElementById('dots');
-  slides.forEach((_, i) => {
-    const b = document.createElement('button');
-    b.onclick = () => go(i);
-    dots.appendChild(b);
-  });
-  const step = () => slides[1].offsetLeft - slides[0].offsetLeft;
-  const current = () => Math.round(track.scrollLeft / step());
-  const go = i => track.scrollTo({ left: i * step(), behavior: 'smooth' });
-  const sync = () => {
-    const c = Math.min(slides.length - 1, current());
-    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === c));
-    document.getElementById('prev').disabled = track.scrollLeft < 4;
-    document.getElementById('next').disabled = track.scrollLeft > track.scrollWidth - track.clientWidth - 4;
-  };
-  track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
-  document.getElementById('prev').onclick = () => go(Math.max(0, current() - 1));
-  document.getElementById('next').onclick = () => go(Math.min(slides.length - 1, current() + 1));
-  sync();
-
-  // Design story: zoom into each part as its step scrolls into view
-  const fig = document.getElementById('storyFig');
-  const steps = [...document.querySelectorAll('.step')];
-  const so = new IntersectionObserver(entries => entries.forEach(en => {
-    if (!en.isIntersecting) return;
-    steps.forEach(s => s.classList.toggle('on', s === en.target));
-    const d = en.target.dataset;
-    fig.style.setProperty('--x', d.x); fig.style.setProperty('--y', d.y); fig.style.setProperty('--s', d.s);
-  }), { rootMargin: '-45% 0px -45% 0px' });
-  steps.forEach(s => {
-    so.observe(s);
-    // inline close-up for the single-column (mobile) layout
-    const c = document.createElement('div');
-    c.className = 'crop';
-    c.style.cssText = `--x:${s.dataset.x};--y:${s.dataset.y};--s:${s.dataset.s}`;
-    c.innerHTML = '<img src="naiwa.png" alt="" loading="lazy">';
-    s.prepend(c);
-  });
-  steps[0].classList.add('on');
-
-  // Configurator
-  const buyImg = document.getElementById('buyImg');
-  const state = { c: 'c-yellow', cn: '原味黄', scale: 1, name: '奶蛙' };
-  const render = () => {
-    buyImg.className = 'critter ' + state.c;
-    document.getElementById('buyScale').style.transform = `scale(${state.scale})`;
-    document.getElementById('colorName').innerHTML = tr(state.cn);
-  };
-  document.querySelectorAll('#swatches .sw').forEach(b => b.onclick = () => {
-    document.querySelectorAll('#swatches .sw').forEach(x => x.classList.toggle('on', x === b));
-    state.c = b.dataset.c; state.cn = b.dataset.n; render();
-  });
-  document.querySelectorAll('#models .model').forEach(b => b.onclick = () => {
-    document.querySelectorAll('#models .model').forEach(x => x.classList.toggle('on', x === b));
-    state.scale = +b.dataset.scale; state.name = b.dataset.name; render();
-  });
-  render();
-  const toast = document.getElementById('toast');
-  let tt;
-  document.getElementById('addBag').onclick = () => {
-    const cn = tr(state.cn), name = tr(state.name);
-    document.getElementById('toastText').innerHTML =
-      lang === 'en' ? `${name} in ${cn} has been added to your heart.` :
-      lang === 'ja' ? `${cn}の${name}が、あなたの心に追加されました。` :
-      `${cn}${name} 已加入你的心里。`;
-    toast.classList.add('show'); clearTimeout(tt);
-    tt = setTimeout(() => toast.classList.remove('show'), 2600);
-  };
-
-  // ---------- Language: 中文 / English / 日本語 ----------
-  const i18nEls = [...document.querySelectorAll('[data-i18n]')].map(el => [el, el.innerHTML]);
+  // ---------- Language ----------
+  const i18nEls = [...document.querySelectorAll('[data-i18n]')].filter(el => el !== lore).map(el => [el, el.innerHTML]);
   const attrEls = [];
   document.querySelectorAll('[alt],[aria-label]').forEach(el => ['alt', 'aria-label'].forEach(a => {
     const v = el.getAttribute(a);
-    if (v && window.I18N[v]) attrEls.push([el, a, v]);
+    if (v && I18N[v]) attrEls.push([el, a, v]);
   }));
   const setLang = (l, save) => {
     lang = LANGS.includes(l) ? l : 'zh';
     document.documentElement.lang = { zh: 'zh-CN', en: 'en', ja: 'ja' }[lang];
     i18nEls.forEach(([el, zh]) => { el.innerHTML = tr(zh); });
     attrEls.forEach(([el, a, zh]) => el.setAttribute(a, plain(tr(zh))));
-    document.title = plain(tr('奶蛙 · loveandfuck.me'));
-    document.querySelector('meta[name=description]').content = plain(tr('奶蛙。抱紧肚子，稳住人生。'));
-    buildStatement(tr(statementZh), lang === 'en');
-    [...dots.children].forEach((d, i) => d.setAttribute('aria-label',
-      lang === 'en' ? `Slide ${i + 1}` : lang === 'ja' ? `${i + 1}枚目` : `第 ${i + 1} 张`));
+    document.title = plain(tr('奶蛙宇宙 · 奶蛙.space'));
+    document.querySelector('meta[name=description]').content = plain(tr('奶蛙宇宙官网。宇宙从一次抱肚子开始。'));
+    buildLore(tr(loreZh), lang === 'en');
     document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
-    render();
+    // Carry the language over to the store
+    document.querySelectorAll('a[href^="shopping/"]').forEach(a => a.setAttribute('href', 'shopping/?lang=' + lang));
     onScroll();
     if (save) { try { localStorage.setItem('lang', lang); } catch (e) {} }
   };
@@ -890,16 +611,15 @@
     const q = new URLSearchParams(location.search).get('lang');
     if (LANGS.includes(q)) return q;
     try { const s = localStorage.getItem('lang'); if (LANGS.includes(s)) return s; } catch (e) {}
-    const nav = (navigator.languages || [navigator.language || 'zh']).join(',').toLowerCase();
-    const first = nav.split(',')[0];
+    const first = ((navigator.languages || [navigator.language || 'zh'])[0] || 'zh').toLowerCase();
     return first.startsWith('zh') ? 'zh' : first.startsWith('ja') ? 'ja' : 'en';
   };
   setLang(pick(), false);
 
-  // Scroll reveal
+  // ---------- Scroll reveal ----------
   const io = new IntersectionObserver(entries => entries.forEach(en => {
     if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-  }), { threshold: .12 });
+  }), { threshold: .15, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
 </body>
