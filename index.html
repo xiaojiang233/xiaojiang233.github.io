@@ -233,7 +233,7 @@
   #buyScale { position: absolute; inset: 15% 0 6%; display: flex; justify-content: center; align-items: flex-end; transition: transform .6s cubic-bezier(.4,0,.2,1); transform-origin: 50% 100%; }
   .buy-fig img { height: 100%; width: auto; transition: filter .5s; }
   .opt h4 { font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
-  .opt h4 span { color: var(--muted); font-weight: 400; }
+  .opt h4 > span:last-child { color: var(--muted); font-weight: 400; }
   .swatches { display: flex; gap: 14px; }
   .sw { width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
   .sw.on::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--blue); }
@@ -289,9 +289,9 @@
   /* ---------- FAQ ---------- */
   .faq { margin-top: 40px; border-top: 1px solid var(--line); }
   .faq details { border-bottom: 1px solid var(--line); }
-  .faq summary { list-style: none; cursor: pointer; padding: 24px 0; font-size: 21px; font-weight: 600; display: flex; justify-content: space-between; gap: 20px; }
+  .faq summary { list-style: none; cursor: pointer; padding: 24px 44px 24px 0; font-size: 21px; font-weight: 600; display: block; position: relative; }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; font-weight: 300; font-size: 28px; line-height: .9; color: var(--muted); transition: transform .3s; }
+  .faq summary::after { content: "+"; position: absolute; right: 4px; top: 50%; margin-top: -14px; font-weight: 300; font-size: 28px; line-height: 1; color: var(--muted); transition: transform .3s; }
   .faq details[open] summary::after { transform: rotate(45deg); }
   .faq details p { color: var(--muted); padding: 0 0 26px; max-width: 760px; }
 
@@ -313,6 +313,21 @@
   .legal { border-top: 1px solid var(--line); padding-top: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .legal span a + a::before { content: "|"; margin: 0 8px; color: var(--line); }
 
+  /* ---------- Language ---------- */
+  html:lang(ja) body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", Meiryo, sans-serif; }
+  html:lang(en) body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  html:lang(ja) .headline { font-size: clamp(36px, 6vw, 68px); }
+  html:lang(ja) .hero .tag { font-size: clamp(21px, 3.4vw, 38px); }
+  html:lang(en) .statement p { letter-spacing: -.02em; }
+  .lang-switch { display: flex; gap: 2px; }
+  .lang-switch button { background: none; border: 0; color: #e8e8ed; opacity: .55; font: inherit; font-size: 12px; padding: 4px 6px; cursor: pointer; border-radius: 6px; }
+  .lang-switch button:hover { opacity: .9; }
+  .lang-switch button.on { opacity: 1; background: rgba(255,255,255,.14); }
+  rt { font-size: max(.42em, 8px); font-weight: 500; letter-spacing: 0; opacity: .75; }
+  .grad rt { color: var(--gold-a); -webkit-text-fill-color: var(--gold-a); }
+  .langs a + a::before { content: "|"; margin: 0 8px; color: var(--line); }
+  .langs a.on { color: var(--text); opacity: 1; font-weight: 600; }
+
   /* ---------- Toast ---------- */
   .toast { position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, calc(100% + 40px)); background: rgba(29,29,31,.92); color: #fff; padding: 14px 22px; border-radius: 16px; font-size: 15px; z-index: 50; transition: transform .45s cubic-bezier(.2,.8,.2,1); backdrop-filter: blur(20px); display: flex; gap: 10px; align-items: center; max-width: calc(100vw - 32px); }
   .toast { visibility: hidden; }
@@ -332,25 +347,26 @@
 
 <header class="gnav">
   <ul>
-    <li><a class="mark" href="#top"><img src="naiwa.png" alt="">奶蛙</a></li>
-    <li class="hide-s"><a href="#highlights">亮点</a></li>
-    <li class="hide-s"><a href="#design">设计</a></li>
-    <li class="hide-s"><a href="#chip">N1 奶芯片</a></li>
-    <li class="hide-s"><a href="#compare">对比</a></li>
-    <li class="hide-s"><a href="#env">环境</a></li>
-    <li class="hide-s"><a href="#faq">支持</a></li>
+    <li><a class="mark" href="#top"><img src="naiwa.png" alt=""><span data-i18n>奶蛙</span></a></li>
+    <li class="hide-s"><a href="#highlights" data-i18n>亮点</a></li>
+    <li class="hide-s"><a href="#design" data-i18n>设计</a></li>
+    <li class="hide-s"><a href="#chip" data-i18n>N1 奶芯片</a></li>
+    <li class="hide-s"><a href="#compare" data-i18n>对比</a></li>
+    <li class="hide-s"><a href="#env" data-i18n>环境</a></li>
+    <li class="hide-s"><a href="#faq" data-i18n>支持</a></li>
+    <li class="lang-switch"><button data-lang="zh">中</button><button data-lang="en">EN</button><button data-lang="ja">日</button></li>
     <li><a href="#buy" aria-label="购物袋"><svg viewBox="0 0 15 15"><path d="M2.5 4.5h10l-.8 9h-8.4z"/><path d="M5 6V3.8a2.5 2.5 0 0 1 5 0V6"/></svg></a></li>
   </ul>
 </header>
 
 <div class="lnav">
   <div class="wrap">
-    <a class="title" href="#top">奶蛙</a>
+    <a class="title" href="#top" data-i18n>奶蛙</a>
     <nav>
-      <a href="#highlights">概览</a>
-      <a href="#specs">技术规格</a>
-      <a href="#compare">对比</a>
-      <a class="pill" href="#buy">购买</a>
+      <a href="#highlights" data-i18n>概览</a>
+      <a href="#specs" data-i18n>技术规格</a>
+      <a href="#compare" data-i18n>对比</a>
+      <a class="pill" href="#buy" data-i18n>购买</a>
     </nav>
   </div>
 </div>
@@ -360,13 +376,13 @@
 <!-- ================= HERO ================= -->
 <section class="hero">
   <div class="hero-copy">
-    <p class="eyebrow grad">全新</p>
-    <h1>奶蛙</h1>
-    <p class="tag">抱紧肚子。稳住人生。</p>
-    <p class="price">¥0 起<sup><a href="#fn1">1</a></sup>，可爱无价。</p>
+    <p class="eyebrow grad" data-i18n>全新</p>
+    <h1 data-i18n>奶蛙</h1>
+    <p class="tag" data-i18n>抱紧肚子。稳住人生。</p>
+    <p class="price" data-i18n>¥0 起<sup><a href="#fn1">1</a></sup>，可爱无价。</p>
     <div class="ctas">
-      <a class="btn" href="#highlights">进一步了解</a>
-      <a class="btn ghost" href="#buy">购买</a>
+      <a class="btn" href="#highlights" data-i18n>进一步了解</a>
+      <a class="btn ghost" href="#buy" data-i18n>购买</a>
     </div>
   </div>
   <div class="hero-stage">
@@ -377,24 +393,24 @@
 <!-- ================= HIGHLIGHTS ================= -->
 <section class="alt pad" id="highlights" style="padding-bottom:60px">
   <div class="wrap hl-head">
-    <h2 class="h2 reveal">获取亮点。</h2>
-    <a class="more reveal" href="#design">观看设计细节</a>
+    <h2 class="h2 reveal" data-i18n>获取亮点。</h2>
+    <a class="more reveal" href="#design" data-i18n>观看设计细节</a>
   </div>
   <div class="track" id="track">
     <article class="slide dark">
-      <p>全新「无所谓」表情。<span>面对一切，都是同一张脸。</span></p>
+      <p data-i18n>全新「无所谓」表情。<span>面对一切，都是同一张脸。</span></p>
       <div class="crop" style="--x:45%;--y:9%;--s:2.6"><img src="naiwa.png" alt="奶蛙的绿眼睛特写" loading="lazy"></div>
     </article>
     <article class="slide sun">
-      <p>双手抱肚设计。<span>安全感，直接拉满。</span></p>
+      <p data-i18n>双手抱肚设计。<span>安全感，直接拉满。</span></p>
       <div class="crop" style="--x:36%;--y:46%;--s:1.9"><img src="naiwa.png" alt="奶蛙双手抱肚特写" loading="lazy"></div>
     </article>
     <article class="slide">
-      <p>超大脚掌。<span>稳稳站好，每一天。</span></p>
+      <p data-i18n>超大脚掌。<span>稳稳站好，每一天。</span></p>
       <div class="crop" style="--x:52%;--y:90%;--s:2.6"><img src="naiwa.png" alt="奶蛙大脚掌特写" loading="lazy"></div>
     </article>
     <article class="slide">
-      <p>四款配色。<span>总有一只，懂你的心情。</span></p>
+      <p data-i18n>四款配色。<span>总有一只，懂你的心情。</span></p>
       <div class="quad">
         <img class="c-yellow" src="naiwa.png" alt="原味黄" loading="lazy">
         <img class="c-pink" src="naiwa.png" alt="樱花粉" loading="lazy">
@@ -403,7 +419,7 @@
       </div>
     </article>
     <article class="slide dark">
-      <p>N1 奶芯片。<span>情绪稳定的秘密，全在这里。</span></p>
+      <p data-i18n>N1 奶芯片。<span>情绪稳定的秘密，全在这里。</span></p>
       <div class="chipwrap"><div class="chip sm"><span class="brand">NAIWA</span><span class="n grad">N1</span></div></div>
     </article>
   </div>
@@ -424,37 +440,37 @@
 <!-- ================= DESIGN STORY ================= -->
 <section class="alt pad" id="design">
   <div class="wrap">
-    <p class="eyebrow grad reveal">设计</p>
-    <h2 class="headline reveal">从头到脚，<br>都是刚刚好。</h2>
+    <p class="eyebrow grad reveal" data-i18n>设计</p>
+    <h2 class="headline reveal" data-i18n>从头到脚，<br>都是刚刚好。</h2>
     <div class="story">
       <div class="story-fig crop" id="storyFig" style="--x:50%;--y:50%;--s:.92">
         <img class="critter-still" src="naiwa.png" alt="奶蛙">
       </div>
       <div class="steps">
         <div class="step" data-x="50%" data-y="50%" data-s=".92">
-          <p class="k">一体成型</p>
-          <h3 class="h3">梨形机身，<br>圆润到底。</h3>
-          <p class="lead">从头顶一路滑到肚子，没有一个多余的棱角。<strong>重心低、肚子大、站得稳</strong>，这是经过数千次（想象中的）跌倒测试后得出的最优解。</p>
+          <p class="k" data-i18n>一体成型</p>
+          <h3 class="h3" data-i18n>梨形机身，<br>圆润到底。</h3>
+          <p class="lead" data-i18n>从头顶一路滑到肚子，没有一个多余的棱角。<strong>重心低、肚子大、站得稳</strong>，这是经过数千次（想象中的）跌倒测试后得出的最优解。</p>
         </div>
         <div class="step" data-x="45%" data-y="8%" data-s="2.6">
-          <p class="k">绿宝石之眼</p>
-          <h3 class="h3">一只看你，<br>一只看远方。</h3>
-          <p class="lead">一圈清澈的绿，一点深邃的黑。侧置双眼带来<strong>近乎 360° 的视野</strong>，却只选择安静地看着你。</p>
+          <p class="k" data-i18n>绿宝石之眼</p>
+          <h3 class="h3" data-i18n>一只看你，<br>一只看远方。</h3>
+          <p class="lead" data-i18n>一圈清澈的绿，一点深邃的黑。侧置双眼带来<strong>近乎 360° 的视野</strong>，却只选择安静地看着你。</p>
         </div>
         <div class="step" data-x="34%" data-y="12%" data-s="2.4">
-          <p class="k">一字嘴</p>
-          <h3 class="h3">不笑，不哭，<br>不评价。</h3>
-          <p class="lead">一条线，就是它对这个世界的全部看法。<strong>没有情绪，就没有情绪内耗。</strong></p>
+          <p class="k" data-i18n>一字嘴</p>
+          <h3 class="h3" data-i18n>不笑，不哭，<br>不评价。</h3>
+          <p class="lead" data-i18n>一条线，就是它对这个世界的全部看法。<strong>没有情绪，就没有情绪内耗。</strong></p>
         </div>
         <div class="step" data-x="36%" data-y="46%" data-s="2">
-          <p class="k">双手抱肚</p>
-          <h3 class="h3">标志性姿势，<br>全天候在线。</h3>
-          <p class="lead">米色肚皮，搭配橄榄色小手。吃饱了抱，饿了也抱。<strong>这是核心功能，不支持关闭。</strong></p>
+          <p class="k" data-i18n>双手抱肚</p>
+          <h3 class="h3" data-i18n>标志性姿势，<br>全天候在线。</h3>
+          <p class="lead" data-i18n>米色肚皮，搭配橄榄色小手。吃饱了抱，饿了也抱。<strong>这是核心功能，不支持关闭。</strong></p>
         </div>
         <div class="step" data-x="52%" data-y="90%" data-s="2.6">
-          <p class="k">大脚掌</p>
-          <h3 class="h3">接地面积，<br>同级最大。</h3>
-          <p class="lead">扁平宽大的脚掌，配合三趾防滑设计。<strong>走得慢，但从不摔倒。</strong>也从不着急。</p>
+          <p class="k" data-i18n>大脚掌</p>
+          <h3 class="h3" data-i18n>接地面积，<br>同级最大。</h3>
+          <p class="lead" data-i18n>扁平宽大的脚掌，配合三趾防滑设计。<strong>走得慢，但从不摔倒。</strong>也从不着急。</p>
         </div>
       </div>
     </div>
@@ -465,13 +481,13 @@
 <section class="dark-band pad center" id="chip">
   <div class="wrap">
     <div class="chip reveal"><span class="brand">NAIWA</span><span class="n grad">N1</span></div>
-    <h2 class="headline reveal" style="margin-top:70px">N1 奶芯片。<br><span class="grad">专为发呆打造。</span></h2>
-    <p class="lead reveal" style="max-width:640px;margin:22px auto 0">全新 N1 奶芯片采用<strong>第一代「无所谓」架构</strong>，把所有烦恼都交给神经引擎在后台默默忽略。性能强，能耗低，表情稳。</p>
+    <h2 class="headline reveal" style="margin-top:70px" data-i18n>N1 奶芯片。<br><span class="grad">专为发呆打造。</span></h2>
+    <p class="lead reveal" style="max-width:640px;margin:22px auto 0" data-i18n>全新 N1 奶芯片采用<strong>第一代「无所谓」架构</strong>，把所有烦恼都交给神经引擎在后台默默忽略。性能强，能耗低，表情稳。</p>
     <div class="stats">
-      <div class="stat reveal"><b class="grad">16 <small>核</small></b><span>神经引擎，专门识别「算了」</span></div>
-      <div class="stat reveal"><b class="grad">0 <small>毫秒</small></b><span>情绪波动延迟，因为根本没有波动</span></div>
-      <div class="stat reveal"><b class="grad">2 <small>倍</small></b><span>抱肚子效率提升<sup><a href="#fn2">2</a></sup></span></div>
-      <div class="stat reveal"><b class="grad">∞</b><span>可爱续航</span></div>
+      <div class="stat reveal"><b class="grad" data-i18n>16 <small>核</small></b><span data-i18n>神经引擎，专门识别「算了」</span></div>
+      <div class="stat reveal"><b class="grad" data-i18n>0 <small>毫秒</small></b><span data-i18n>情绪波动延迟，因为根本没有波动</span></div>
+      <div class="stat reveal"><b class="grad" data-i18n>2 <small>倍</small></b><span data-i18n>抱肚子效率提升<sup><a href="#fn2">2</a></sup></span></div>
+      <div class="stat reveal"><b class="grad">∞</b><span data-i18n>可爱续航</span></div>
     </div>
   </div>
 </section>
@@ -479,41 +495,41 @@
 <!-- ================= BENTO ================= -->
 <section class="alt pad" id="features">
   <div class="wrap">
-    <h2 class="headline reveal center">强大，<br>但很松弛。</h2>
+    <h2 class="headline reveal center" data-i18n>强大，<br>但很松弛。</h2>
     <div class="bento">
       <div class="tile w4 sun reveal has-peek">
-        <span class="label">电池续航</span>
+        <span class="label" data-i18n>电池续航</span>
         <div>
-          <div class="big">48 小时</div>
-          <p>连续发呆<sup><a href="#fn3">3</a></sup>。睡一觉，又是满格。</p>
+          <div class="big" data-i18n>48 小时</div>
+          <p data-i18n>连续发呆<sup><a href="#fn3">3</a></sup>。睡一觉，又是满格。</p>
         </div>
         <img class="peek" src="naiwa.png" alt="" loading="lazy">
       </div>
       <div class="tile reveal half">
         <svg class="ico" viewBox="0 0 52 52"><path d="M26 6c8 10 14 17 14 25a14 14 0 0 1-28 0c0-8 6-15 14-25z" fill="#0a84ff"/></svg>
-        <div><div class="big" style="font-size:40px">IP68</div><p>级防烦恼。<strong>烦心事泼过来，滴水不沾。</strong></p></div>
+        <div><div class="big" style="font-size:40px">IP68</div><p data-i18n>级防烦恼。<strong>烦心事泼过来，滴水不沾。</strong></p></div>
       </div>
       <div class="tile dark reveal half">
         <svg class="ico" viewBox="0 0 52 52"><rect x="12" y="22" width="28" height="22" rx="5" fill="#ffd60a"/><path d="M18 22v-6a8 8 0 0 1 16 0v6" stroke="#ffd60a" stroke-width="4" fill="none"/></svg>
-        <div><span class="label">隐私</span><p><strong>你说的话，它绝不外传。</strong>毕竟它不会说话。</p></div>
+        <div><span class="label" data-i18n>隐私</span><p data-i18n><strong>你说的话，它绝不外传。</strong>毕竟它不会说话。</p></div>
       </div>
       <div class="tile reveal half">
         <svg class="ico" viewBox="0 0 52 52"><circle cx="26" cy="26" r="20" fill="none" stroke="#bf5af2" stroke-width="4"/><circle cx="26" cy="26" r="11" fill="none" stroke="#bf5af2" stroke-width="4" opacity=".5"/><circle cx="26" cy="26" r="4" fill="#bf5af2"/></svg>
-        <div><span class="label">空间感知</span><p><strong>永远站在属于自己的位置。</strong>不挤，不抢，不内卷。</p></div>
+        <div><span class="label" data-i18n>空间感知</span><p data-i18n><strong>永远站在属于自己的位置。</strong>不挤，不抢，不内卷。</p></div>
       </div>
       <div class="tile reveal half">
         <svg class="ico" viewBox="0 0 52 52"><path d="M10 30v-8M18 36V16M26 40V12M34 36V16M42 30v-8" stroke="#ff9f0a" stroke-width="4" stroke-linecap="round"/><path d="M6 46L46 6" stroke="var(--text)" stroke-width="3.5" stroke-linecap="round"/></svg>
-        <div><span class="label">主动降噪</span><p><strong>世界很吵，它听不见。</strong>通透模式？不存在的。</p></div>
+        <div><span class="label" data-i18n>主动降噪</span><p data-i18n><strong>世界很吵，它听不见。</strong>通透模式？不存在的。</p></div>
       </div>
       <div class="tile w3 dark reveal">
-        <span class="label">无线自由</span>
-        <div><div class="big">无需充电。<br>无需联网。<br><span class="grad">无需理由。</span></div></div>
+        <span class="label" data-i18n>无线自由</span>
+        <div><div class="big" data-i18n>无需充电。<br>无需联网。<br><span class="grad">无需理由。</span></div></div>
       </div>
       <div class="tile w3 reveal has-peek">
-        <span class="label">戳一戳感应</span>
+        <span class="label" data-i18n>戳一戳感应</span>
         <div>
-          <div class="big">试试看。</div>
-          <p>页面上的每一只奶蛙都支持<strong>轻点互动</strong>。戳一下，它会晃一晃。</p>
+          <div class="big" data-i18n>试试看。</div>
+          <p data-i18n>页面上的每一只奶蛙都支持<strong>轻点互动</strong>。戳一下，它会晃一晃。</p>
         </div>
         <img class="peek critter" src="naiwa.png" alt="可以戳的奶蛙" loading="lazy" style="right:20px;bottom:20px;width:30%">
       </div>
@@ -524,20 +540,20 @@
 <!-- ================= BUY ================= -->
 <section class="pad" id="buy">
   <div class="wrap">
-    <h2 class="headline reveal">选购你的奶蛙。</h2>
+    <h2 class="headline reveal" data-i18n>选购你的奶蛙。</h2>
     <div class="buy">
       <div class="buy-fig reveal"><div id="buyScale"><img id="buyImg" class="critter" src="naiwa.png" alt="当前选择的奶蛙"></div></div>
       <div class="reveal">
         <div class="opt">
-          <h4>型号。<span>哪款最适合你？</span></h4>
+          <h4 data-i18n>型号。<span>哪款最适合你？</span></h4>
           <div class="models" id="models">
-            <button class="model" data-scale=".72" data-price="0" data-name="奶蛙 mini"><span><b>奶蛙 mini</b><small>掌心大小，口袋里的松弛感</small></span><span>¥0</span></button>
-            <button class="model on" data-scale="1" data-price="0" data-name="奶蛙"><span><b>奶蛙</b><small>刚好一抱</small></span><span>¥0</span></button>
-            <button class="model" data-scale="1.12" data-price="0" data-name="奶蛙 Pro Max"><span><b>奶蛙 Pro Max</b><small>更大的肚子，更多的安全感</small></span><span>¥0</span></button>
+            <button class="model" data-scale=".72" data-price="0" data-name="奶蛙 mini"><span><b data-i18n>奶蛙 mini</b><small data-i18n>掌心大小，口袋里的松弛感</small></span><span>¥0</span></button>
+            <button class="model on" data-scale="1" data-price="0" data-name="奶蛙"><span><b data-i18n>奶蛙</b><small data-i18n>刚好一抱</small></span><span>¥0</span></button>
+            <button class="model" data-scale="1.12" data-price="0" data-name="奶蛙 Pro Max"><span><b data-i18n>奶蛙 Pro Max</b><small data-i18n>更大的肚子，更多的安全感</small></span><span>¥0</span></button>
           </div>
         </div>
         <div class="opt">
-          <h4>颜色。<span id="colorName">原味黄</span></h4>
+          <h4><span data-i18n>颜色。</span><span id="colorName" data-i18n>原味黄</span></h4>
           <div class="swatches" id="swatches">
             <button class="sw on" data-c="c-yellow" data-n="原味黄" style="background:#f6bc2e" aria-label="原味黄"></button>
             <button class="sw" data-c="c-pink" data-n="樱花粉" style="background:#f48fb1" aria-label="樱花粉"></button>
@@ -545,8 +561,8 @@
             <button class="sw" data-c="c-green" data-n="抹茶绿" style="background:#9ccc65" aria-label="抹茶绿"></button>
           </div>
         </div>
-        <p class="total">¥0<small>免费送货。免费拥抱。终身质保（只要你还喜欢它）。</small></p>
-        <button class="btn" id="addBag">加入购物袋</button>
+        <p class="total">¥0<small data-i18n>免费送货。免费拥抱。终身质保（只要你还喜欢它）。</small></p>
+        <button class="btn" id="addBag" data-i18n>加入购物袋</button>
       </div>
     </div>
   </div>
@@ -555,37 +571,37 @@
 <!-- ================= COMPARE ================= -->
 <section class="alt pad" id="compare">
   <div class="wrap center">
-    <h2 class="headline reveal">哪款奶蛙<br>适合你？</h2>
+    <h2 class="headline reveal" data-i18n>哪款奶蛙<br>适合你？</h2>
     <div class="compare">
       <div class="col reveal">
         <div class="imgbox"><img class="critter" src="naiwa.png" alt="奶蛙 mini" style="height:62%" loading="lazy"></div>
         <div><i class="dot" style="background:#f6bc2e"></i><i class="dot" style="background:#f48fb1"></i></div>
-        <h3>奶蛙 mini</h3><p class="from">¥0 起</p>
-        <div class="row"><span class="t">掌心大小</span><span class="d">身高</span></div>
-        <div class="row"><span class="t">一小份烦恼</span><span class="d">肚子容量</span></div>
-        <div class="row"><span class="t">N1 mini</span><span class="d">芯片</span></div>
-        <div class="row"><span class="t">稳定</span><span class="d">情绪稳定性</span></div>
-        <a class="more" href="#buy" style="margin-top:20px">购买</a>
+        <h3 data-i18n>奶蛙 mini</h3><p class="from" data-i18n>¥0 起</p>
+        <div class="row"><span class="t" data-i18n>掌心大小</span><span class="d" data-i18n>身高</span></div>
+        <div class="row"><span class="t" data-i18n>一小份烦恼</span><span class="d" data-i18n>肚子容量</span></div>
+        <div class="row"><span class="t">N1 mini</span><span class="d" data-i18n>芯片</span></div>
+        <div class="row"><span class="t" data-i18n>稳定</span><span class="d" data-i18n>情绪稳定性</span></div>
+        <a class="more" href="#buy" style="margin-top:20px" data-i18n>购买</a>
       </div>
       <div class="col reveal">
         <div class="imgbox"><img class="critter" src="naiwa.png" alt="奶蛙" style="height:84%" loading="lazy"></div>
         <div><i class="dot" style="background:#f6bc2e"></i><i class="dot" style="background:#f48fb1"></i><i class="dot" style="background:#7ec8e3"></i><i class="dot" style="background:#9ccc65"></i></div>
-        <h3>奶蛙</h3><p class="from">¥0 起</p>
-        <div class="row"><span class="t">刚好一抱</span><span class="d">身高</span></div>
-        <div class="row"><span class="t">一整天的烦恼</span><span class="d">肚子容量</span></div>
-        <div class="row"><span class="t">N1</span><span class="d">芯片</span></div>
-        <div class="row"><span class="t">非常稳定</span><span class="d">情绪稳定性</span></div>
-        <a class="more" href="#buy" style="margin-top:20px">购买</a>
+        <h3 data-i18n>奶蛙</h3><p class="from" data-i18n>¥0 起</p>
+        <div class="row"><span class="t" data-i18n>刚好一抱</span><span class="d" data-i18n>身高</span></div>
+        <div class="row"><span class="t" data-i18n>一整天的烦恼</span><span class="d" data-i18n>肚子容量</span></div>
+        <div class="row"><span class="t">N1</span><span class="d" data-i18n>芯片</span></div>
+        <div class="row"><span class="t" data-i18n>非常稳定</span><span class="d" data-i18n>情绪稳定性</span></div>
+        <a class="more" href="#buy" style="margin-top:20px" data-i18n>购买</a>
       </div>
       <div class="col reveal">
         <div class="imgbox"><img class="critter" src="naiwa.png" alt="奶蛙 Pro Max" style="height:100%" loading="lazy"></div>
         <div><i class="dot" style="background:#f6bc2e"></i><i class="dot" style="background:#7ec8e3"></i><i class="dot" style="background:#9ccc65"></i></div>
-        <h3>奶蛙 Pro Max</h3><p class="from">¥0 起</p>
-        <div class="row"><span class="t">比你想的更高</span><span class="d">身高</span></div>
-        <div class="row"><span class="t">全部烦恼</span><span class="d">肚子容量</span></div>
-        <div class="row"><span class="t">N1 Max</span><span class="d">芯片</span></div>
-        <div class="row"><span class="t">稳如泰山</span><span class="d">情绪稳定性</span></div>
-        <a class="more" href="#buy" style="margin-top:20px">购买</a>
+        <h3 data-i18n>奶蛙 Pro Max</h3><p class="from" data-i18n>¥0 起</p>
+        <div class="row"><span class="t" data-i18n>比你想的更高</span><span class="d" data-i18n>身高</span></div>
+        <div class="row"><span class="t" data-i18n>全部烦恼</span><span class="d" data-i18n>肚子容量</span></div>
+        <div class="row"><span class="t">N1 Max</span><span class="d" data-i18n>芯片</span></div>
+        <div class="row"><span class="t" data-i18n>稳如泰山</span><span class="d" data-i18n>情绪稳定性</span></div>
+        <a class="more" href="#buy" style="margin-top:20px" data-i18n>购买</a>
       </div>
     </div>
   </div>
@@ -595,12 +611,12 @@
 <section class="env pad center" id="env">
   <div class="wrap">
     <svg class="leaf reveal" viewBox="0 0 56 56"><path d="M46 8C20 8 8 22 10 44c22 2 36-10 36-36z" fill="#00a33a"/><path d="M12 44C20 32 28 24 40 16" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
-    <h2 class="h2 reveal">奶蛙与环境。</h2>
-    <p class="lead reveal" style="max-width:640px;margin:18px auto 0">我们相信，可爱不应该以地球为代价。所以奶蛙从设计之初就<strong>只消耗一样东西：你的注意力。</strong></p>
+    <h2 class="h2 reveal" data-i18n>奶蛙与环境。</h2>
+    <p class="lead reveal" style="max-width:640px;margin:18px auto 0" data-i18n>我们相信，可爱不应该以地球为代价。所以奶蛙从设计之初就<strong>只消耗一样东西：你的注意力。</strong></p>
     <div class="env-grid">
-      <div class="reveal"><b>100%</b><span>可回收的可爱。用完了还能再爱一次。</span></div>
-      <div class="reveal"><b>0</b><span>塑料包装。直接抱走就行。</span></div>
-      <div class="reveal"><b>碳中和</b><span>它连碳都懒得排。</span></div>
+      <div class="reveal"><b>100%</b><span data-i18n>可回收的可爱。用完了还能再爱一次。</span></div>
+      <div class="reveal"><b>0</b><span data-i18n>塑料包装。直接抱走就行。</span></div>
+      <div class="reveal"><b data-i18n>碳中和</b><span data-i18n>它连碳都懒得排。</span></div>
     </div>
   </div>
 </section>
@@ -608,56 +624,56 @@
 <!-- ================= SPECS ================= -->
 <section class="pad" id="specs">
   <div class="wrap">
-    <h2 class="headline reveal">技术规格</h2>
+    <h2 class="headline reveal" data-i18n>技术规格</h2>
     <div class="specs">
       <div class="spec reveal">
-        <h4>颜色</h4>
+        <h4 data-i18n>颜色</h4>
         <div class="sw-row">
-          <div><i style="background:#f6bc2e"></i>原味黄</div>
-          <div><i style="background:#f48fb1"></i>樱花粉</div>
-          <div><i style="background:#7ec8e3"></i>天空蓝</div>
-          <div><i style="background:#9ccc65"></i>抹茶绿</div>
+          <div><i style="background:#f6bc2e"></i><span data-i18n>原味黄</span></div>
+          <div><i style="background:#f48fb1"></i><span data-i18n>樱花粉</span></div>
+          <div><i style="background:#7ec8e3"></i><span data-i18n>天空蓝</span></div>
+          <div><i style="background:#9ccc65"></i><span data-i18n>抹茶绿</span></div>
         </div>
       </div>
       <div class="spec reveal">
-        <h4>尺寸与重量</h4>
+        <h4 data-i18n>尺寸与重量</h4>
         <ul>
-          <li>高度：刚好一抱</li>
-          <li>肚围：大于身高（主观感受）</li>
-          <li>重量：取决于今天吃了什么</li>
+          <li data-i18n>高度：刚好一抱</li>
+          <li data-i18n>肚围：大于身高（主观感受）</li>
+          <li data-i18n>重量：取决于今天吃了什么</li>
         </ul>
       </div>
       <div class="spec reveal">
-        <h4>显示屏</h4>
-        <div><p>无。</p><p class="note">它只用眼睛看你。</p></div>
+        <h4 data-i18n>显示屏</h4>
+        <div><p data-i18n>无。</p><p class="note" data-i18n>它只用眼睛看你。</p></div>
       </div>
       <div class="spec reveal">
-        <h4>芯片</h4>
+        <h4 data-i18n>芯片</h4>
         <ul>
-          <li>N1 奶芯片</li>
-          <li>16 核神经引擎（「算了」识别专用）</li>
-          <li>第一代「无所谓」架构</li>
+          <li data-i18n>N1 奶芯片</li>
+          <li data-i18n>16 核神经引擎（「算了」识别专用）</li>
+          <li data-i18n>第一代「无所谓」架构</li>
         </ul>
       </div>
       <div class="spec reveal">
-        <h4>摄像头</h4>
-        <div><p>双眼侧置系统</p><p class="note">绿宝石虹膜，一只看你，一只看远方。</p></div>
+        <h4 data-i18n>摄像头</h4>
+        <div><p data-i18n>双眼侧置系统</p><p class="note" data-i18n>绿宝石虹膜，一只看你，一只看远方。</p></div>
       </div>
       <div class="spec reveal">
-        <h4>音频</h4>
-        <div><p>不发声。</p><p class="note">静音模式默认开启，且无法关闭。</p></div>
+        <h4 data-i18n>音频</h4>
+        <div><p data-i18n>不发声。</p><p class="note" data-i18n>静音模式默认开启，且无法关闭。</p></div>
       </div>
       <div class="spec reveal">
-        <h4>传感器</h4>
-        <ul><li>抱抱感应</li><li>戳戳感应（试试点它）</li><li>饱腹感应器</li></ul>
+        <h4 data-i18n>传感器</h4>
+        <ul><li data-i18n>抱抱感应</li><li data-i18n>戳戳感应（试试点它）</li><li data-i18n>饱腹感应器</li></ul>
       </div>
       <div class="spec reveal">
-        <h4>系统要求</h4>
-        <p>一颗愿意放松的心</p>
+        <h4 data-i18n>系统要求</h4>
+        <p data-i18n>一颗愿意放松的心</p>
       </div>
       <div class="spec reveal">
-        <h4>包装内容</h4>
-        <ul><li>奶蛙 ×1</li><li>说明书 ×0（不需要）</li></ul>
+        <h4 data-i18n>包装内容</h4>
+        <ul><li data-i18n>奶蛙 ×1</li><li data-i18n>说明书 ×0（不需要）</li></ul>
       </div>
     </div>
   </div>
@@ -666,14 +682,14 @@
 <!-- ================= FAQ ================= -->
 <section class="alt pad" id="faq">
   <div class="wrap">
-    <h2 class="h2 reveal">常见问题</h2>
+    <h2 class="h2 reveal" data-i18n>常见问题</h2>
     <div class="faq reveal">
-      <details><summary>奶蛙是青蛙，还是奶龙？</summary><p>都不是。名字里有蛙，但它不是青蛙；长得像奶龙，但它也不是奶龙。抱起来像枕头。它就是奶蛙，不需要被归类。</p></details>
-      <details><summary>为什么它一直抱着肚子？</summary><p>吃饱了要抱，饿了也要抱，开心不开心都抱一抱。这是奶蛙的核心功能，目前不支持关闭，未来也不会。</p></details>
-      <details><summary>可以戳它吗？</summary><p>可以。页面上的每一只奶蛙都支持戳一戳，它会晃一晃，然后继续保持同一个表情。</p></details>
-      <details><summary>奶蛙会生气吗？</summary><p>截至发稿，尚未观测到。</p></details>
-      <details><summary>真的可以买吗？</summary><p>不可以。奶蛙不能被购买，只能被喜欢。但「加入购物袋」按钮是真的可以按的。</p></details>
-      <details><summary>售后怎么办？</summary><p>奶蛙享受终身质保，条件只有一个：你还喜欢它。</p></details>
+      <details><summary data-i18n>奶蛙是青蛙，还是奶龙？</summary><p data-i18n>都不是。名字里有蛙，但它不是青蛙；长得像奶龙，但它也不是奶龙。抱起来像枕头。它就是奶蛙，不需要被归类。</p></details>
+      <details><summary data-i18n>为什么它一直抱着肚子？</summary><p data-i18n>吃饱了要抱，饿了也要抱，开心不开心都抱一抱。这是奶蛙的核心功能，目前不支持关闭，未来也不会。</p></details>
+      <details><summary data-i18n>可以戳它吗？</summary><p data-i18n>可以。页面上的每一只奶蛙都支持戳一戳，它会晃一晃，然后继续保持同一个表情。</p></details>
+      <details><summary data-i18n>奶蛙会生气吗？</summary><p data-i18n>截至发稿，尚未观测到。</p></details>
+      <details><summary data-i18n>真的可以买吗？</summary><p data-i18n>不可以。奶蛙不能被购买，只能被喜欢。但「加入购物袋」按钮是真的可以按的。</p></details>
+      <details><summary data-i18n>售后怎么办？</summary><p data-i18n>奶蛙享受终身质保，条件只有一个：你还喜欢它。</p></details>
     </div>
   </div>
 </section>
@@ -681,10 +697,10 @@
 <!-- ================= CLOSING ================= -->
 <section class="closing pad">
   <div class="wrap">
-    <h2 class="headline reveal">世界很吵。<br><span class="grad">抱紧肚子，站一会儿。</span></h2>
+    <h2 class="headline reveal" data-i18n>世界很吵。<br><span class="grad">抱紧肚子，站一会儿。</span></h2>
     <div class="reveal" style="margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-      <a class="btn" href="#buy">购买</a>
-      <a class="btn ghost" href="#top">回到顶部</a>
+      <a class="btn" href="#buy" data-i18n>购买</a>
+      <a class="btn ghost" href="#top" data-i18n>回到顶部</a>
     </div>
     <img class="critter reveal" src="naiwa.png" alt="奶蛙" loading="lazy">
   </div>
@@ -696,29 +712,36 @@
   <div class="wrap">
     <div class="notes">
       <ol>
-        <li id="fn1">价格仅供娱乐。奶蛙无法被购买，只能被喜欢。</li>
-        <li id="fn2">与站着不动、双手下垂的对照组相比。测试于 2026 年 10 月，由一只奶蛙独立完成，样本量为 1。</li>
-        <li id="fn3">续航时间因心情、天气和午饭质量而异。</li>
+        <li id="fn1" data-i18n>价格仅供娱乐。奶蛙无法被购买，只能被喜欢。</li>
+        <li id="fn2" data-i18n>与站着不动、双手下垂的对照组相比。测试于 2026 年 10 月，由一只奶蛙独立完成，样本量为 1。</li>
+        <li id="fn3" data-i18n>续航时间因心情、天气和午饭质量而异。</li>
       </ol>
     </div>
-    <div class="crumb"><img src="naiwa.png" alt=""> › 奶蛙</div>
+    <div class="crumb"><img src="naiwa.png" alt=""> › <span data-i18n>奶蛙</span></div>
     <div class="fcols">
-      <div><h5>选购与了解</h5><ul><li><a href="#buy">奶蛙</a></li><li><a href="#buy">奶蛙 mini</a></li><li><a href="#buy">奶蛙 Pro Max</a></li><li><a href="#compare">机型对比</a></li></ul></div>
-      <div><h5>技术</h5><ul><li><a href="#chip">N1 奶芯片</a></li><li><a href="#design">设计</a></li><li><a href="#specs">技术规格</a></li></ul></div>
-      <div><h5>价值观</h5><ul><li><a href="#env">环境</a></li><li><a href="#features">隐私</a></li><li><a href="#features">无障碍抱抱</a></li></ul></div>
-      <div><h5>关于</h5><ul><li><a href="#faq">常见问题</a></li><li><a href="#top">loveandfuck.me</a></li></ul></div>
+      <div><h5 data-i18n>选购与了解</h5><ul><li><a href="#buy" data-i18n>奶蛙</a></li><li><a href="#buy" data-i18n>奶蛙 mini</a></li><li><a href="#buy" data-i18n>奶蛙 Pro Max</a></li><li><a href="#compare" data-i18n>机型对比</a></li></ul></div>
+      <div><h5 data-i18n>技术</h5><ul><li><a href="#chip" data-i18n>N1 奶芯片</a></li><li><a href="#design" data-i18n>设计</a></li><li><a href="#specs" data-i18n>技术规格</a></li></ul></div>
+      <div><h5 data-i18n>价值观</h5><ul><li><a href="#env" data-i18n>环境</a></li><li><a href="#features" data-i18n>隐私</a></li><li><a href="#features" data-i18n>无障碍抱抱</a></li></ul></div>
+      <div><h5 data-i18n>关于</h5><ul><li><a href="#faq" data-i18n>常见问题</a></li><li><a href="#top">loveandfuck.me</a></li></ul></div>
     </div>
     <div class="legal">
-      <p>Copyright © 2026 loveandfuck.me。保留所有权利。</p>
-      <span><a href="#faq">隐私政策</a><a href="#faq">使用条款</a><a href="#faq">销售政策</a><a href="#top">网站地图</a></span>
-      <p>中国大陆</p>
+      <p data-i18n>Copyright © 2026 loveandfuck.me。保留所有权利。</p>
+      <span><a href="#faq" data-i18n>隐私政策</a><a href="#faq" data-i18n>使用条款</a><a href="#faq" data-i18n>销售政策</a><a href="#top" data-i18n>网站地图</a></span>
+      <span class="langs"><a href="?lang=zh" data-lang="zh">简体中文</a><a href="?lang=en" data-lang="en">English</a><a href="?lang=ja" data-lang="ja">日本語</a></span>
     </div>
   </div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><img src="naiwa.png" alt=""><span id="toastText"></span></div>
 
+<script src="i18n.js"></script>
 <script>
+  // Language state (strings live in i18n.js)
+  const LANGS = ['zh', 'en', 'ja'];
+  let lang = 'zh';
+  const tr = zh => (lang !== 'zh' && window.I18N[zh] && window.I18N[zh][lang]) || zh;
+  const plain = html => html.replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]+>/g, '');
+
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Poke any critter to make it wiggle
@@ -736,8 +759,15 @@
   const heroStage = document.querySelector('.hero-stage');
   // Statement: characters light up as you scroll
   const rt = document.getElementById('reveal-text');
-  rt.innerHTML = [...rt.textContent].map(ch => `<span class="w">${ch}</span>`).join('');
-  const chars = [...rt.children];
+  const statementZh = rt.textContent;
+  let chars = [];
+  const buildStatement = (text, byWord) => {
+    // English lights up word by word; CJK character by character (a <ruby> word counts as one)
+    const parts = byWord ? text.split(/(?<= )/) : text.match(/<ruby>.*?<\/ruby>|[\s\S]/g);
+    rt.innerHTML = parts.map(t => `<span class="w">${t}</span>`).join('');
+    chars = [...rt.children];
+  };
+  buildStatement(statementZh, false);
 
   let ticking = false;
   const onScroll = () => {
@@ -763,7 +793,6 @@
   const dots = document.getElementById('dots');
   slides.forEach((_, i) => {
     const b = document.createElement('button');
-    b.setAttribute('aria-label', `第 ${i + 1} 张`);
     b.onclick = () => go(i);
     dots.appendChild(b);
   });
@@ -807,7 +836,7 @@
   const render = () => {
     buyImg.className = 'critter ' + state.c;
     document.getElementById('buyScale').style.transform = `scale(${state.scale})`;
-    document.getElementById('colorName').textContent = state.cn;
+    document.getElementById('colorName').innerHTML = tr(state.cn);
   };
   document.querySelectorAll('#swatches .sw').forEach(b => b.onclick = () => {
     document.querySelectorAll('#swatches .sw').forEach(x => x.classList.toggle('on', x === b));
@@ -821,10 +850,51 @@
   const toast = document.getElementById('toast');
   let tt;
   document.getElementById('addBag').onclick = () => {
-    document.getElementById('toastText').textContent = `${state.cn}${state.name} 已加入你的心里。`;
+    const cn = tr(state.cn), name = tr(state.name);
+    document.getElementById('toastText').innerHTML =
+      lang === 'en' ? `${name} in ${cn} has been added to your heart.` :
+      lang === 'ja' ? `${cn}の${name}が、あなたの心に追加されました。` :
+      `${cn}${name} 已加入你的心里。`;
     toast.classList.add('show'); clearTimeout(tt);
     tt = setTimeout(() => toast.classList.remove('show'), 2600);
   };
+
+  // ---------- Language: 中文 / English / 日本語 ----------
+  const i18nEls = [...document.querySelectorAll('[data-i18n]')].map(el => [el, el.innerHTML]);
+  const attrEls = [];
+  document.querySelectorAll('[alt],[aria-label]').forEach(el => ['alt', 'aria-label'].forEach(a => {
+    const v = el.getAttribute(a);
+    if (v && window.I18N[v]) attrEls.push([el, a, v]);
+  }));
+  const setLang = (l, save) => {
+    lang = LANGS.includes(l) ? l : 'zh';
+    document.documentElement.lang = { zh: 'zh-CN', en: 'en', ja: 'ja' }[lang];
+    i18nEls.forEach(([el, zh]) => { el.innerHTML = tr(zh); });
+    attrEls.forEach(([el, a, zh]) => el.setAttribute(a, plain(tr(zh))));
+    document.title = plain(tr('奶蛙 · loveandfuck.me'));
+    document.querySelector('meta[name=description]').content = plain(tr('奶蛙。抱紧肚子，稳住人生。'));
+    buildStatement(tr(statementZh), lang === 'en');
+    [...dots.children].forEach((d, i) => d.setAttribute('aria-label',
+      lang === 'en' ? `Slide ${i + 1}` : lang === 'ja' ? `${i + 1}枚目` : `第 ${i + 1} 张`));
+    document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+    render();
+    onScroll();
+    if (save) { try { localStorage.setItem('lang', lang); } catch (e) {} }
+  };
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', e => {
+    e.preventDefault();
+    setLang(b.dataset.lang, true);
+    history.replaceState(null, '', '?lang=' + lang + location.hash);
+  }));
+  const pick = () => {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (LANGS.includes(q)) return q;
+    try { const s = localStorage.getItem('lang'); if (LANGS.includes(s)) return s; } catch (e) {}
+    const nav = (navigator.languages || [navigator.language || 'zh']).join(',').toLowerCase();
+    const first = nav.split(',')[0];
+    return first.startsWith('zh') ? 'zh' : first.startsWith('ja') ? 'ja' : 'en';
+  };
+  setLang(pick(), false);
 
   // Scroll reveal
   const io = new IntersectionObserver(entries => entries.forEach(en => {
