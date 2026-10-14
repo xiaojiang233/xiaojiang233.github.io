@@ -11,7 +11,6 @@ const $ = id => document.getElementById(id);
 const qs = new URLSearchParams(location.search);
 const touch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const TS = +qs.get('ts') || 1;                       // time scale, for testing: ?ts=60 makes a minute pass per second
-const IDLE_DREAM_MS = (+qs.get('idle') || 40) * 1000; // how long you must sit still in a nap before you fall asleep into the dream
 const YEARS_PER_MIN = 15;
 const store = {
   get(k, d) { try { const v = localStorage.getItem('wushui-' + k); return v === null ? d : v; } catch (e) { return d; } },
@@ -20,7 +19,7 @@ const store = {
 
 // ------------------------------------------------------------------ state
 const S = {
-  phase: 'idle', dur: +store.get('dur', 20) || 20, sound: store.get('sound', 'drone'), vol: +store.get('vol', .6), chime: store.get('chime', '1') === '1',
+  phase: 'idle', dur: +store.get('dur', 20) || 20, sound: store.get('sound', 'drone'), vol: +store.get('vol', .6), chime: store.get('chime', '1') === '1', qqq: store.get('qqq', '1') === '1', dreamAt: null,
   napStart: 0, total: 0, worries: 0, dreamed: false, dreaming: false, lastInput: performance.now(), feed: 0, hintI: 0, pokes: [], seed: 1,
 };
 if (!['drone', 'rain', 'sea', 'white', 'off'].includes(S.sound)) S.sound = 'drone';
@@ -92,6 +91,8 @@ $('sounds').addEventListener('click', e => {
 });
 $('vol').value = S.vol;
 $('vol').addEventListener('input', e => { S.vol = +e.target.value; store.set('vol', S.vol); sound.unlock(); sound.setVolume(S.vol); });
+$('qqqCk').checked = S.qqq;
+$('qqqCk').addEventListener('change', e => { S.qqq = e.target.checked; store.set('qqq', S.qqq ? '1' : '0'); });
 $('chimeCk').checked = S.chime;
 $('chimeCk').addEventListener('change', e => { S.chime = e.target.checked; store.set('chime', S.chime ? '1' : '0'); });
 
@@ -123,7 +124,10 @@ function startNap() {
   touchInput(); hideReport();
   setPhase('nap');
   lockScreen(true);
-  if (qs.get('dream') === '1') setTimeout(() => enterDream(true), 1500);
+  // "？？？": a random event. It may or may not happen, and if it does it comes at a random point of the nap.
+  S.dreamAt = null;
+  if (S.qqq && Math.random() < .65) S.dreamAt = S.total * (.15 + Math.random() * .55);
+  if (qs.get('dream') === '1') S.dreamAt = 1;
 }
 const elapsed = () => Math.min(S.total, (Date.now() - S.napStart) / 1000 * TS);
 function endNap(early) {
@@ -151,7 +155,7 @@ setInterval(() => {
   document.title = mmss(left) + ' · ' + trp('午睡黑洞');
   const idle = performance.now() - S.lastInput;
   if (idle > 9000 && !S.dreaming) document.body.classList.add('deep');
-  if (!S.dreamed && !S.dreaming && idle > IDLE_DREAM_MS && left > 20) { S.dreamed = true; enterDream(true); }
+  if (S.dreamAt !== null && !S.dreamed && !S.dreaming && el >= S.dreamAt && left > 20 / TS) { S.dreamed = true; enterDream(true); }
 }, 250);
 
 // ------------------------------------------------------------------ throwing worries into the hole
