@@ -6,7 +6,7 @@ import naiwa from '../../naiwa.png';
 import { BAR, BEAT, BREAK, DROP, FPS, SONG_START, TOTAL, bar, pulse } from './beat';
 import { FONT } from './fonts';
 
-const C = {
+export const C = {
   space: '#05060f', text: '#f5f5f7', muted: '#a1a1b5', gold: 'linear-gradient(100deg,#ff9f0a,#ffd60a)',
   goldA: '#ff9f0a', goldB: '#ffd60a', milk: '#f3dcae', leaf: '#5bbf5e', violet: '#8e7dff',
 };
@@ -15,7 +15,7 @@ const ease = Easing.bezier(0.2, 0.7, 0.2, 1);
 
 // ------------------------------------------------------------------ building blocks
 
-const Stars: React.FC<{ n?: number; drift?: number; opacity?: number }> = ({ n = 220, drift = 0.15, opacity = 1 }) => {
+export const Stars: React.FC<{ n?: number; drift?: number; opacity?: number }> = ({ n = 220, drift = 0.15, opacity = 1 }) => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ opacity }}>
@@ -34,7 +34,7 @@ const Stars: React.FC<{ n?: number; drift?: number; opacity?: number }> = ({ n =
   );
 };
 
-const Space: React.FC<{ glow?: number; children?: React.ReactNode }> = ({ glow = 1, children }) => (
+export const Space: React.FC<{ glow?: number; children?: React.ReactNode }> = ({ glow = 1, children }) => (
   <AbsoluteFill style={{ background: C.space }}>
     <AbsoluteFill style={{
       opacity: glow,
@@ -56,11 +56,11 @@ const Rise: React.FC<{ at: number; children: React.ReactNode; style?: React.CSSP
   );
 };
 
-const GoldText: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => (
+export const GoldText: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => (
   <span style={{ background: C.gold, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', ...style }}>{children}</span>
 );
 
-const Frog: React.FC<{ h: number; style?: React.CSSProperties }> = ({ h, style }) => (
+export const Frog: React.FC<{ h: number; style?: React.CSSProperties }> = ({ h, style }) => (
   <Img src={naiwa} style={{ height: h, width: 'auto', ...style }} />
 );
 
@@ -71,10 +71,11 @@ const Flash: React.FC<{ at: number; len?: number; color?: string; peak?: number 
 };
 
 // recorded page footage: 80 frames of a real page at 30 fps, stretched over `len` frames
-type Clip = { name: string; zoom?: number; origin?: string };
-const Footage: React.FC<{ clip: Clip; len: number; frames?: number; zoom?: number }> = ({ clip, len, frames = 80, zoom = 1 }) => {
+type Clip = { name: string; zoom?: number; origin?: string; frames?: number };
+export const Footage: React.FC<{ clip: Clip; len: number; frames?: number; zoom?: number }> = ({ clip, len, frames = 80, zoom = 1 }) => {
   const f = useCurrentFrame();
-  const i = Math.min(frames - 1, Math.max(0, Math.floor((f * frames) / len)));
+  const n = clip.frames || frames;
+  const i = Math.min(n - 1, Math.max(0, Math.floor((f * n) / len)));
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
       <Img src={staticFile(`footage/${clip.name}/${String(i).padStart(4, '0')}.jpg`)}
@@ -104,7 +105,7 @@ const BrowserFrame: React.FC<{ children: React.ReactNode; url: string; style?: R
 );
 
 // the four planets, drawn (no emoji, no icons): same palette as the site's planet cards
-const Planet: React.FC<{ kind: number; size: number; spin?: number }> = ({ kind, size, spin = 0 }) => {
+export const Planet: React.FC<{ kind: number; size: number; spin?: number }> = ({ kind, size, spin = 0 }) => {
   const base: React.CSSProperties = { width: size, height: size, borderRadius: '50%', position: 'relative' };
   if (kind === 0) return (
     <div style={{ ...base, background: 'radial-gradient(circle at 35% 30%, #fff3c4, #ffd60a 40%, #ff9f0a 75%, #a65a00)', boxShadow: '0 0 120px rgba(255,190,10,.45)' }}>
@@ -131,9 +132,9 @@ const Planet: React.FC<{ kind: number; size: number; spin?: number }> = ({ kind,
 // tops of the shop page's sections (page px in footage/shop-full.jpg), one per beat
 const SHOP_STOPS = [0, 1300, 2950, 7250, 8300, 9740, 10660, 14900];
 
-const PLANETS = [
+export const PLANETS = [
   { name: '奶蛙商店', en: 'NAIWA STORE', path: '/shopping', line: '奶蛙、奶蛙 mini、奶蛙 Pro Max，全部在这里。', clips: [] as Clip[] },
-  { name: '发呆星', en: 'PLANET DAZE', path: '/daidai', line: '一天有 25 个小时，多出来的那一个专门用来发呆。', clips: [{ name: 'daidai-ride', zoom: 1.12, origin: '35% 40%' }, { name: 'daidai-fp', zoom: 1.12, origin: '35% 40%' }] },
+  { name: '发呆星', en: 'PLANET DAZE', path: '/daidai', line: '一天有 25 个小时，多出来的那一个专门用来发呆。', clips: [{ name: 'daidai-ride', zoom: 1.12, origin: '35% 40%' }, { name: 'daidai-fp', zoom: 1.12, origin: '35% 40%', frames: 48 }] },
   { name: '抱肚星云', en: 'BELLY NEBULA', path: '/baodu', line: '亲手生成银河。每一颗星星，都住着一个文明。', clips: [{ name: 'baodu-naiwa', zoom: 1.45 }, { name: 'baodu-war' }] },
   { name: '午睡黑洞', en: 'NAP HOLE', path: '/wushui', line: '万物终将被吸进午觉。没有谁想逃出来。', clips: [{ name: 'wushui-hole', zoom: 1.45, origin: '50% 18%' }, { name: 'wushui-dream' }] },
 ];
