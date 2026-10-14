@@ -34,11 +34,14 @@ function ramp(e, stops) { // stops: [[elevDeg, Color|number], ...] ascending
 export class SkySystem {
   constructor(scene, renderer, { low = false } = {}) {
     this.scene = scene; this.renderer = renderer;
+    // everything "at infinity" lives in one group that rides along with the camera
+    const far = this.far = new THREE.Group();
+    scene.add(far);
     const sky = this.sky = new THREE.Sky();
     sky.scale.setScalar(4500);
     sky.renderOrder = -10;
     sky.frustumCulled = false;
-    scene.add(sky);
+    far.add(sky);
     const u = this.u = sky.material.uniforms;
     u.turbidity.value = 4; u.rayleigh.value = 1.6; u.mieCoefficient.value = 0.004; u.mieDirectionalG.value = 0.86;
     u.cloudCoverage.value = 0.32; u.cloudDensity.value = 0.45; u.cloudElevation.value = 0.55; u.cloudScale.value = 0.00022; u.cloudSpeed.value = 0.00003;
@@ -51,7 +54,7 @@ export class SkySystem {
       fragmentShader: 'varying vec3 vP; uniform float k; void main(){ float h = clamp(vP.y, 0.0, 1.0); vec3 top = vec3(0.004,0.008,0.03); vec3 hor = vec3(0.035,0.05,0.12); vec3 c = mix(hor, top, pow(h, 0.45)); gl_FragColor = vec4(c * k, 1.0); }',
     }));
     this.nightDome.renderOrder = -9; this.nightDome.frustumCulled = false;
-    scene.add(this.nightDome);
+    far.add(this.nightDome);
 
     const r = rng(77), N = low ? 1400 : 2600;
     const sp = new Float32Array(N * 3), ss = new Float32Array(N), sc = new Float32Array(N * 3), sph = new Float32Array(N);
@@ -72,7 +75,7 @@ export class SkySystem {
     sg.setAttribute('position', new THREE.BufferAttribute(sp, 3)); sg.setAttribute('size', new THREE.BufferAttribute(ss, 1));
     sg.setAttribute('col', new THREE.BufferAttribute(sc, 3)); sg.setAttribute('ph', new THREE.BufferAttribute(sph, 1));
     this.stars = new THREE.Points(sg, this.starMat); this.stars.frustumCulled = false; this.stars.renderOrder = -8;
-    scene.add(this.stars);
+    far.add(this.stars);
     // stars the player collected: bigger, golden, they stay
     const MAXG = 600;
     this.gold = { n: 0, max: MAXG, pos: new Float32Array(MAXG * 3), size: new Float32Array(MAXG), ph: new Float32Array(MAXG), col: new Float32Array(MAXG * 3) };
@@ -82,7 +85,7 @@ export class SkySystem {
     gg.setDrawRange(0, 0);
     this.goldMat = this.starMat.clone();
     this.goldPts = new THREE.Points(gg, this.goldMat); this.goldPts.frustumCulled = false; this.goldPts.renderOrder = -7;
-    scene.add(this.goldPts);
+    far.add(this.goldPts);
 
     // the moon
     const moonTex = canvasTex(256, 256, (g, w, h) => {
@@ -93,10 +96,10 @@ export class SkySystem {
     });
     this.moon = new THREE.Mesh(new THREE.SphereGeometry(70, 32, 16), new THREE.MeshBasicMaterial({ map: moonTex, fog: false, transparent: true }));
     this.moon.renderOrder = -6;
-    scene.add(this.moon);
+    far.add(this.moon);
     this.glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: canvasTex(128, 128, (g, w, h) => { const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, 'rgba(220,230,255,.6)'); gr.addColorStop(1, 'rgba(220,230,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); }), blending: THREE.AdditiveBlending, depthWrite: false, fog: false, transparent: true }));
     this.glow.scale.setScalar(520); this.glow.renderOrder = -6;
-    scene.add(this.glow);
+    far.add(this.glow);
 
     // a big ringed neighbour planet low over the sea (milk + violet, like the homepage nebula)
     const bands = canvasTex(64, 512, (g, w, h) => {
@@ -117,7 +120,7 @@ export class SkySystem {
     this.planet.position.copy(this.planetDir).multiplyScalar(3600);
     this.planet.rotation.set(0.35, 0.2, 0.25);
     this.planet.renderOrder = -5;
-    scene.add(this.planet);
+    far.add(this.planet);
     const ringTex = canvasTex(512, 8, (g, w, h) => {
       const rr = rng(8);
       for (let x = 0; x < w; x++) { const a = (0.25 + 0.55 * rr()) * Math.sin(Math.PI * x / w) * (x % 97 < 6 ? 0.2 : 1); g.fillStyle = `rgba(243,224,190,${a})`; g.fillRect(x, 0, 1, h); }
@@ -130,7 +133,7 @@ export class SkySystem {
     this.ring.position.copy(this.planet.position);
     this.ring.lookAt(0, 0, 0); this.ring.rotateX(1.25); this.ring.rotateY(0.2);
     this.ring.renderOrder = -4;
-    scene.add(this.ring);
+    far.add(this.ring);
 
     // 抱肚星云 and 午睡黑洞, only at night
     const neb = canvasTex(256, 256, (g, w, h) => {
@@ -145,7 +148,7 @@ export class SkySystem {
     });
     this.nebula = new THREE.Sprite(new THREE.SpriteMaterial({ map: neb, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, transparent: true, opacity: 0 }));
     this.nebula.position.set(-0.4, 0.62, -0.68).normalize().multiplyScalar(3500); this.nebula.scale.set(1500, 1100, 1);
-    this.nebula.renderOrder = -7; scene.add(this.nebula);
+    this.nebula.renderOrder = -7; far.add(this.nebula);
     const bh = canvasTex(256, 256, (g, w, h) => {
       const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
       gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.36, 'rgba(0,0,0,1)'); gr.addColorStop(0.42, 'rgba(190,175,255,1)'); gr.addColorStop(0.5, 'rgba(142,125,255,.55)'); gr.addColorStop(1, 'rgba(142,125,255,0)');
@@ -153,7 +156,7 @@ export class SkySystem {
     });
     this.hole = new THREE.Sprite(new THREE.SpriteMaterial({ map: bh, depthWrite: false, fog: false, transparent: true, opacity: 0 }));
     this.hole.position.set(-0.75, 0.42, 0.5).normalize().multiplyScalar(3500); this.hole.scale.setScalar(380);
-    this.hole.renderOrder = -6; scene.add(this.hole);
+    this.hole.renderOrder = -6; far.add(this.hole);
 
     // lights
     const sun = this.light = new THREE.DirectionalLight(0xffffff, 3);
@@ -249,13 +252,16 @@ export class SkySystem {
     return this.state;
   }
 
+  // call every frame after the camera moved
+  follow(camera) { camera.getWorldPosition(this.far.position); }
+
   updateEnv(force) {
     if (!force && this.lastEnvSun.distanceToSquared(this.sunDir) < 0.0004) return;
     this.lastEnvSun.copy(this.sunDir);
     const sky = this.sky;
     this.envScene.add(sky);
     const rt = this.pmrem.fromScene(this.envScene, 0, 0.1, 10000);
-    this.scene.add(sky);
+    this.far.add(sky);
     if (this.envRT) this.envRT.dispose();
     this.envRT = rt;
     this.scene.environment = rt.texture;
