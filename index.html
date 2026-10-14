@@ -295,13 +295,13 @@
         <p data-i18n>由无数个抱肚子的瞬间凝结而成。靠近它，你会不自觉地也抱住自己的肚子。</p>
         <span class="go" data-i18n>生成一个银河 ›</span>
       </a>
-      <div class="planet p-nap reveal">
+      <a class="planet p-nap reveal" href="wushui/">
         <div class="orb"></div>
-        <span class="tag" data-i18n>04 · 建设中</span>
+        <span class="tag" data-i18n>04 · 已开放</span>
         <h3 data-i18n>午睡黑洞</h3>
         <p data-i18n>万物终将被吸进午觉。目前没有任何东西逃出来过，也没有谁想逃出来。</p>
-        <span class="go soon" data-i18n>即将开放</span>
-      </div>
+        <span class="go" data-i18n>去睡个午觉 ›</span>
+      </a>
     </div>
   </div>
 </section>
@@ -410,7 +410,8 @@
     "01 · 已开放": { en: "01 · OPEN", ja: "01 · オープン" },
     "02 · 已开放": { en: "02 · OPEN", ja: "02 · オープン" },
     "03 · 已开放": { en: "03 · OPEN", ja: "03 · オープン" },
-    "04 · 建设中": { en: "04 · UNDER CONSTRUCTION", ja: "04 · <ruby>建設中<rt>けんせつちゅう</rt></ruby>" },
+    "04 · 已开放": { en: "04 · OPEN", ja: "04 · オープン" },
+    "去睡个午觉 ›": { en: "Take a nap ›", ja: "お<ruby>昼寝<rt>ひるね</rt></ruby>しに<ruby>行<rt>い</rt></ruby>く ›" },
     "奶蛙、奶蛙 mini、奶蛙 Pro Max，全部在这里。可以加入购物袋，也可以直接加入你的心里。": { en: "Naiwa, Naiwa mini and Naiwa Pro Max, all in one place. Add one to your bag, or straight to your heart.", ja: "ナイワ、ナイワ mini、ナイワ Pro Max、ぜんぶここに。バッグに<ruby>入<rt>い</rt></ruby>れても、<ruby>心<rt>こころ</rt></ruby>に<ruby>入<rt>い</rt></ruby>れてもOK。" },
     "进入商店 ›": { en: "Enter the store ›", ja: "ストアに<ruby>入<rt>はい</rt></ruby>る ›" },
     "发呆星": { en: "Planet Daze", ja: "ぼーっと<ruby>星<rt>ぼし</rt></ruby>" },
@@ -600,7 +601,7 @@
     buildLore(tr(loreZh), lang === 'en');
     document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
     // Carry the language over to the store, Planet Daze and the nebula
-    ['shopping/', 'daidai/', 'baodu/'].forEach(p => document.querySelectorAll(`a[href^="${p}"]`).forEach(a => a.setAttribute('href', p + '?lang=' + lang)));
+    ['shopping/', 'daidai/', 'baodu/', 'wushui/'].forEach(p => document.querySelectorAll(`a[href^="${p}"]`).forEach(a => a.setAttribute('href', p + '?lang=' + lang)));
     onScroll();
     if (save) { try { localStorage.setItem('lang', lang); } catch (e) {} }
   };
