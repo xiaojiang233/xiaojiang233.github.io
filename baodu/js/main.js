@@ -4,7 +4,10 @@ import { PRESETS, buildPreset, SPAWN, starColor } from './gen.js';
 import { makeStarField, makeBackdrop, makeOverlay, SHAPE } from './render.js';
 import { Sound } from './audio.js';
 import { tr, trp, setLang, pickLang, lang } from './i18n.js';
+import { injectIcons, icon } from './icons.js';
+import { TECHS, TECH_T, FORMS, TEMPERS, QUIRKS, ATTITUDES, attitudeIdx, aggressionOf, curiosityOf, techLevel, describe, speciesName, population, fmtPop } from './civ.js';
 
+injectIcons();
 const $ = id => document.getElementById(id);
 const qs = new URLSearchParams(location.search);
 const touch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
@@ -19,21 +22,23 @@ try { const s = localStorage.getItem('baodu-q'); if (!qs.get('q') && s !== null 
 // ------------------------------------------------------------------ state
 const S = {
   mode: 'look', tool: { create: 'galaxy', destroy: 'nova' }, paused: false, speedLog: 0,
-  scale: 1, planeY: 0, autoOrbit: true, grid: true, spin: true, preset: 'milky', sound: true,
+  scale: 1, planeY: 0, autoOrbit: true, grid: true, spin: true, preset: 'milky', sound: true, civ: true,
 };
+if (qs.get('civ') === '0') S.civ = false;
+else { try { if (!qs.get('civ') && localStorage.getItem('baodu-civ') === '0') S.civ = false; } catch (e) {} }
 const CREATE = [
-  ['galaxy', '🌀', '星系', '放下一个小星系。按住拖动再松开，可以把它扔出去。'],
-  ['star', '⭐', '恒星', '放下一颗恒星，身边带着几颗小行星。'],
-  ['cluster', '✨', '星团', '放下一团密密的星团。'],
-  ['bh', '⚫', '黑洞', '放下一个黑洞。离它太近的星星都会被吞掉。'],
-  ['nebula', '🌸', '星云', '放下一团星云，里面会慢慢长出新的蓝色星星。'],
-  ['naiwa', null, '奶蛙', '放下一只奶蛙。它会把路过的星星都抱进肚子里。'],
+  ['galaxy', 'galaxy', '星系', '放下一个小星系。按住拖动再松开，可以把它扔出去。'],
+  ['star', 'star', '恒星', '放下一颗恒星，身边带着几颗小行星。'],
+  ['cluster', 'cluster', '星团', '放下一团密密的星团。'],
+  ['bh', 'bh', '黑洞', '放下一个黑洞。离它太近的星星都会被吞掉。'],
+  ['nebula', 'nebula', '星云', '放下一团星云，里面会慢慢长出新的蓝色星星。'],
+  ['naiwa', 'naiwa', '奶蛙', '放下一只奶蛙。它会把路过的星星都抱进肚子里。'],
 ];
 const DESTROY = [
-  ['nova', '💥', '超新星', '点一下引爆超新星，把周围的星星炸飞。点中恒星会让它消失。'],
-  ['erase', '🧹', '橡皮擦', '按住拖动，擦掉经过的星星。'],
-  ['remove', '🗑️', '移除天体', '点一个天体把它拿走。拿走星系核心后，星星会四散飞出。'],
-  ['grab', '🧲', '引力抓取', '按住不放，用一个看不见的引力源把星星拽向光标。'],
+  ['nova', 'nova', '超新星', '点一下引爆超新星，把周围的星星炸飞。点中恒星会让它消失。'],
+  ['erase', 'eraser', '橡皮擦', '按住拖动，擦掉经过的星星。'],
+  ['remove', 'remove', '移除天体', '点一个天体把它拿走。拿走星系核心后，星星会四散飞出。'],
+  ['grab', 'grab', '引力抓取', '按住不放，用一个看不见的引力源把星星拽向光标。'],
 ];
 const NAMES = { core: '星系核心', star: '恒星', bh: '黑洞', cluster: '星团', cloud: '星云', naiwa: '奶蛙', crunch: '大坍缩' };
 
@@ -79,6 +84,7 @@ function resize() {
 addEventListener('resize', resize);
 
 const sim = new Sim();
+sim.civOn = S.civ;
 const sound = new Sound();
 const field = makeStarField(sim);
 const overlay = makeOverlay();
@@ -125,14 +131,27 @@ function spriteFor(b) {
   return s;
 }
 
+// war beams: one line per ongoing war / trade route
+const MAXW = 60;
+const beamPos = new Float32Array(MAXW * 6), beamCol = new Float32Array(MAXW * 6);
+const beamGeo = new THREE.BufferGeometry();
+beamGeo.setAttribute('position', new THREE.BufferAttribute(beamPos, 3).setUsage(THREE.DynamicDrawUsage));
+beamGeo.setAttribute('color', new THREE.BufferAttribute(beamCol, 3).setUsage(THREE.DynamicDrawUsage));
+const beams = new THREE.LineSegments(beamGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthTest: false, depthWrite: false }));
+beams.frustumCulled = false; beams.renderOrder = 3;
+scene.add(beams);
+
 // ------------------------------------------------------------------ camera
-const cam = { yaw: 0.55, pitch: 0.7, dist: 44, distGoal: 44, target: new THREE.Vector3(), follow: null, shake: 0 };
+const cam = { yaw: 0.55, pitch: 0.7, dist: 44, distGoal: 44, target: new THREE.Vector3(), follow: null, fp: null, shake: 0 };
 const tmpV = new THREE.Vector3();
 function placeCamera(dt) {
   cam.dist += (cam.distGoal - cam.dist) * (1 - Math.exp(-dt * 9));
   if (cam.follow) {
     if (!sim.bodies.includes(cam.follow)) setFollow(null);
     else cam.target.lerp(tmpV.set(cam.follow.x, cam.follow.y, cam.follow.z), 1 - Math.exp(-dt * 6));
+  } else if (cam.fp) {
+    if (!sim._valid(cam.fp.i, cam.fp.seed)) { toast('这颗星星熄灭了。'); setFollow(null); }
+    else { const k = cam.fp.i * 3; cam.target.lerp(tmpV.set(sim.pos[k], sim.pos[k + 1], sim.pos[k + 2]), 1 - Math.exp(-dt * 6)); }
   }
   const cp = Math.cos(cam.pitch);
   camera.position.set(cam.target.x + cam.dist * cp * Math.sin(cam.yaw), cam.target.y + cam.dist * Math.sin(cam.pitch), cam.target.z + cam.dist * cp * Math.cos(cam.yaw));
@@ -150,8 +169,18 @@ function homeView(snap) {
 }
 function setFollow(b) {
   cam.follow = b;
+  cam.fp = null;
   $('focus').style.display = b ? 'block' : 'none';
+  updateCard();
 }
+// follow one star particle (and open its civilization card)
+function setFollowStar(i) {
+  cam.follow = null;
+  cam.fp = { i, seed: sim.seed[i], lvl: sim.lvl[i] };
+  $('focus').style.display = 'block';
+  updateCard();
+}
+const speciesOf = seed => tr('{n}族', { n: speciesName(describe(seed), lang) });
 
 // ------------------------------------------------------------------ toast
 let toastT = 0;
@@ -167,14 +196,42 @@ function toast(zh, vars, once) {
 // ------------------------------------------------------------------ fx
 const fx = [];
 function addFx(shape, x, y, z, col, s0, s1, life, delay = 0) { fx.push({ shape, x, y, z, col, s0, s1, life, age: -delay }); }
+let newsT = -99;
+// civilization news: always shown when it concerns the followed star, otherwise at most one every few seconds
+function news(zh, vars, mine) {
+  if (!mine && tAbs - newsT < 7) return;
+  newsT = tAbs;
+  toast(zh, vars);
+}
+const mineOf = (a, b) => !!(cam.fp && (cam.fp.i === a || cam.fp.i === b));
+function onScreen(x, y, z) { const s = screenOf(x, y, z); return !!s && s[0] > 0 && s[0] < innerWidth && s[1] > 0 && s[1] < innerHeight; }
 sim.onEvent = ev => {
   if (ev.type === 'sn') {
     const k = Math.sqrt(ev.power);
     addFx(SHAPE.flash, ev.x, ev.y, ev.z, [1, 0.92, 0.75], 9 * k, 16 * k, 0.9);
     addFx(SHAPE.ring, ev.x, ev.y, ev.z, [1, 0.7, 0.4], 2, 44 * k, 2.4);
     addFx(SHAPE.ring, ev.x, ev.y, ev.z, [0.6, 0.75, 1], 2, 30 * k, 1.8, 0.18);
-    sound.boom();
-    cam.shake = Math.max(cam.shake, 0.45 * k);
+    if (ev.power >= 0.5) { sound.boom(); cam.shake = Math.max(cam.shake, 0.45 * k); }
+    else if (onScreen(ev.x, ev.y, ev.z)) sound.swoosh();
+  } else if (ev.type === 'battle') {
+    if (fx.length < 90) addFx(SHAPE.flash, ev.x, ev.y, ev.z, [1, 0.45, 0.25], 1.4, 3.2, 0.5);
+  } else if (ev.type === 'war-start') {
+    const A = speciesOf(sim.seed[ev.a]), B = speciesOf(sim.seed[ev.b]), mine = mineOf(ev.a, ev.b);
+    if (ev.kind === 'war') news('{a}向{b}宣战了！', { a: A, b: B }, mine);
+    else if (mine) news('{a}与{b}开始通商。', { a: A, b: B }, true);
+    updateCard();
+  } else if (ev.type === 'trade-end') {
+    if (mineOf(ev.a, ev.b)) news('{a}与{b}的贸易让双方都学到了新东西。', { a: speciesOf(ev.sa), b: speciesOf(ev.sb) }, true);
+    updateCard();
+  } else if (ev.type === 'war-end') {
+    const A = speciesOf(ev.sa), B = speciesOf(ev.sb), mine = mineOf(ev.a, ev.b), v = { a: A, b: B };
+    const k = ev.b * 3;
+    if (ev.star) news('{a}击碎了{b}的恒星。一团光吞没了附近的世界。', v, true);
+    else if (ev.result === 'a') news('{a}击败了{b}，{b}的文明陷入废墟。', v, mine);
+    else if (ev.result === 'b') news('{b}击退了{a}的进攻，{a}的文明陷入废墟。', v, mine);
+    else if (ev.result === 'both') news('{a}与{b}同归于尽，两颗星球一片荒芜。', v, mine);
+    else news('{a}与{b}签订了停战协议。', v, mine);
+    updateCard();
   } else if (ev.type === 'merge') {
     addFx(SHAPE.flash, ev.a.x, ev.a.y, ev.a.z, [1, 0.85, 0.6], 8, 14, 1.2);
     toast('两个星系合并成了一个。', null, 'merge');
@@ -204,6 +261,25 @@ function planePoint(cx, cy) {
 function screenOf(x, y, z) {
   tmpV.set(x, y, z).project(camera);
   return tmpV.z < 1 ? [(tmpV.x * 0.5 + 0.5) * innerWidth, (-tmpV.y * 0.5 + 0.5) * innerHeight] : null;
+}
+// nearest star (that hosts a civilization) to a screen point
+const vp = new THREE.Matrix4();
+function pickStar(cx, cy) {
+  camera.updateMatrixWorld();
+  vp.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+  const m = vp.elements, P = sim.pos;
+  let best = -1, bd = (touch ? 22 : 14) ** 2;
+  for (let i = 0; i < sim.hi; i++) {
+    if (sim.kind[i] !== 1 || !sim.seed[i]) continue;
+    const k = i * 3, x = P[k], y = P[k + 1], z = P[k + 2];
+    const w = m[3] * x + m[7] * y + m[11] * z + m[15];
+    if (w < 0.05) continue;
+    const sx = ((m[0] * x + m[4] * y + m[8] * z + m[12]) / w * 0.5 + 0.5) * innerWidth;
+    const sy = (-(m[1] * x + m[5] * y + m[9] * z + m[13]) / w * 0.5 + 0.5) * innerHeight;
+    const d = (sx - cx) ** 2 + (sy - cy) ** 2;
+    if (d < bd) { bd = d; best = i; }
+  }
+  return best;
 }
 function pickBody(cx, cy, ignore) {
   let best = null, bd = (touch ? 40 : 28) ** 2;
@@ -403,8 +479,14 @@ function endPointer(e) {
     const tap = orbitG.moved < 6 && performance.now() - p.t < 450;
     if (tap && S.mode === 'look') {
       const b = pickBody(p.x, p.y);
-      setFollow(b);
-      if (b) toast('正在跟随：{n}', { n: tr(NAMES[b.type] || '天体') }, 'follow');
+      if (b) {
+        setFollow(b);
+        toast('正在跟随：{n}', { n: tr(NAMES[b.type] || '天体') }, 'follow');
+      } else {
+        const i = S.civ ? pickStar(p.x, p.y) : -1;
+        if (i >= 0) { setFollowStar(i); toast('每一颗星星上都有自己的文明。看看它们过得怎么样。', null, 'civ-hint'); }
+        else setFollow(null);
+      }
     }
     orbitG = null;
     canvas.classList.remove('drag');
@@ -433,12 +515,88 @@ addEventListener('keydown', e => {
   else if (e.key === 'h' || e.key === 'H') homeView(false);
   else if (e.key === 'm' || e.key === 'M') toggleSound();
   else if ((e.key === 'Delete' || e.key === 'Backspace') && cam.follow) destroyBody(cam.follow);
+  else if (e.key === 'c' || e.key === 'C') setCiv(!S.civ);
   else if (e.key === 'Escape') setFollow(null);
   else if (S.mode !== 'look' && /^[qwerty]$/i.test(e.key)) {
     const list = S.mode === 'create' ? CREATE : DESTROY, i = 'qwerty'.indexOf(e.key.toLowerCase());
     if (list[i]) { S.tool[S.mode] = list[i][0]; refreshUI(); }
   }
 });
+
+// ------------------------------------------------------------------ civilizations
+function setCiv(on) {
+  S.civ = on;
+  sim.setCiv(on);
+  try { localStorage.setItem('baodu-civ', on ? '1' : '0'); } catch (e) {}
+  if (!on && cam.fp) setFollow(null);
+  updateCard();
+  refreshUI();
+  toast(on ? '文明系统开启了。每颗星星上都有人在生活。' : '文明系统关闭了，现在是纯物理模拟。', null);
+}
+// what the followed star (particle or star body) is
+function civTarget() {
+  if (!S.civ) return null;
+  if (cam.fp) {
+    const i = cam.fp.i, seed = cam.fp.seed;
+    if (!sim._valid(i, seed)) return null;
+    return { seed, lvl: sim.lvl[i], age: (sim.time - sim.cstart[i]) * curiosityOf(seed), epoch: sim.epoch[i], i };
+  }
+  if (cam.follow && cam.follow.type === 'star' && cam.follow.seed) {
+    const b = cam.follow, age = (sim.time - b.cstart) * curiosityOf(b.seed);
+    return { seed: b.seed, lvl: techLevel(age), age, epoch: 0, i: -1, body: b };
+  }
+  return null;
+}
+function updateCard() {
+  const el = $('civ'), c = civTarget();
+  el.hidden = !c;
+  document.body.classList.toggle('hascard', !!c);
+  if (!c) return;
+  const d = describe(c.seed), l = c.lvl;
+  $('civName').innerHTML = speciesOf(c.seed);
+  $('civSub').innerHTML = [tr(FORMS[d.form]), tr(TEMPERS[d.temper]), tr(ATTITUDES[attitudeIdx(aggressionOf(c.seed))])].join(' · ');
+  $('civTech').innerHTML = l < 0 ? tr('荒芜，等待新生命') : tr(TECHS[l]);
+  $('civEpoch').innerHTML = tr('第 {n} 纪元', { n: c.epoch + 1 });
+  $('civBar').style.width = (l < 0 ? 0 : l >= 7 ? 100 : Math.round((c.age - TECH_T[l]) / (TECH_T[l + 1] - TECH_T[l]) * 100)) + '%';
+  $('civPop').textContent = l < 0 ? '—' : fmtPop(population(d, l), lang);
+  const w = c.i >= 0 ? sim.warOf(c.i) : null;
+  if (w) {
+    const other = speciesOf(w.a === c.i ? w.sb : w.sa);
+    $('civStar').innerHTML = tr(w.kind === 'war' ? '正在与 {n} 交战' : '正在与 {n} 通商', { n: other });
+  } else $('civStar').innerHTML = tr(l < 0 ? '一片寂静' : '和平');
+  $('civQuirk').innerHTML = tr(QUIRKS[d.quirk]);
+  $('civWar').style.display = c.body ? 'none' : '';
+}
+$('civClose').addEventListener('click', () => setFollow(null));
+$('civHug').addEventListener('click', () => {
+  const c = civTarget();
+  if (!c) return;
+  if (c.body) c.body.cstart -= 30 / curiosityOf(c.seed); else sim.civBoost(c.i);
+  sound.pop(3);
+  toast('{n}收到了抱抱，进步了一点。', { n: speciesOf(c.seed) });
+  updateCard();
+});
+$('civWar').addEventListener('click', () => {
+  const c = civTarget();
+  if (!c || c.body) return;
+  if (sim.provoke(c.i) < 0) toast('附近没有能开战的邻居，或者它已经在打仗了。', null);
+  updateCard();
+});
+$('civDoom').addEventListener('click', () => {
+  const c = civTarget();
+  if (!c) return;
+  const name = speciesOf(c.seed);
+  if (c.body) { destroyBody(c.body); toast('{n}的恒星熄灭了。', { n: name }); return; }
+  const k = c.i * 3, x = sim.pos[k], y = sim.pos[k + 1], z = sim.pos[k + 2];
+  sim.extinct(c.i); sim.stats.collapsed++;
+  addFx(SHAPE.flash, x, y, z, [1, 0.7, 0.4], 3, 7, 0.8);
+  addFx(SHAPE.ring, x, y, z, [1, 0.6, 0.3], 0.5, 12, 1.2);
+  sound.remove();
+  toast('一颗陨石砸中了{n}的家园。', { n: name });
+  updateCard();
+});
+$('bCiv').addEventListener('click', () => setCiv(!S.civ));
+$('cCiv').addEventListener('change', e => setCiv(e.target.checked));
 
 // ------------------------------------------------------------------ UI
 function setMode(m) {
@@ -482,13 +640,13 @@ function buildTools() {
   const list = S.mode === 'create' ? CREATE : S.mode === 'destroy' ? DESTROY : [];
   el.classList.toggle('hide', !list.length);
   el.classList.toggle('red', S.mode === 'destroy');
-  el.innerHTML = list.map(([k, icon, name], i) => `<button type="button" class="tool${S.tool[S.mode] === k ? ' on' : ''}" data-t="${k}">
-    <i>${icon || '<img src="../naiwa.png" alt="" style="height:24px;width:auto;display:block">'}</i><span>${tr(name)}</span></button>`).join('');
+  el.innerHTML = list.map(([k, ic, name]) => `<button type="button" class="tool${S.tool[S.mode] === k ? ' on' : ''}" data-t="${k}">
+    <i>${icon(ic)}</i><span>${tr(name)}</span></button>`).join('');
 }
 $('tools').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) { S.tool[S.mode] = b.dataset.t; refreshUI(); } });
 
 function hintText() {
-  if (S.mode === 'look') return tr(touch ? '拖动旋转，双指缩放，点一个天体可以跟随它。' : '拖动旋转，滚轮缩放，点一个天体可以跟随它，Shift 拖动平移。');
+  if (S.mode === 'look') return tr(touch ? '拖动旋转，双指缩放，点一颗星星看看它的文明。' : '拖动旋转，滚轮缩放，点一颗星星看看它的文明，Shift 拖动平移。');
   const list = S.mode === 'create' ? CREATE : DESTROY;
   const t = list.find(x => x[0] === S.tool[S.mode]);
   return tr(t[3]) + ' · ' + tr(touch ? '双指转动镜头、缩放' : '右键拖动转动镜头');
@@ -499,8 +657,15 @@ refreshUI = () => {
   buildPresetChips();
   $('hint').innerHTML = hintText();
   $('tPause').textContent = trp(S.paused ? '继续' : '暂停');
-  $('iPause').textContent = S.paused ? '▶' : '⏸';
-  $('iSound').textContent = S.sound ? '🔊' : '🔇';
+  $('iPause').innerHTML = icon(S.paused ? 'play' : 'pause');
+  $('iSound').innerHTML = icon(S.sound ? 'sound' : 'mute');
+  $('iGear').innerHTML = icon('gear');
+  document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = icon(el.dataset.ic); });
+  $('cCiv').checked = S.civ;
+  $('iCiv').innerHTML = icon('naiwa');
+  $('tCiv').textContent = trp('文明');
+  $('bCiv').classList.toggle('on', S.civ);
+  updateCard();
   $('bPause').classList.toggle('on', S.paused);
   $('tSound').textContent = trp('声音') + ' ' + trp(S.sound ? '开' : '关');
   $('tPanel').textContent = trp($('panel').classList.contains('off') ? '设置' : '收起');
@@ -531,6 +696,7 @@ function frame(now) {
     const dtSim = Math.min(dtReal * speed(), 0.3);
     const n = Math.max(1, Math.min(14, Math.ceil(dtSim / 0.02)));
     for (let i = 0; i < n; i++) sim.step(dtSim / n);
+    if (S.civ) { sim.civStep(Math.max(900, Math.min(4000, sim.hi / 20))); sim.warStep(); }
   }
   if (S.spin && idle > 3 && !act && !ptrs.size) cam.yaw += dtReal * 0.035;
   placeCamera(dtReal);
@@ -577,6 +743,33 @@ function frame(now) {
       live.add(b.id);
     }
   }
+  // civilizations: star-faring worlds glow, wars draw beams between the two stars
+  if (S.civ) {
+    const P = sim.pos;
+    let nh = 0;
+    for (const i of sim.adv) {
+      if (sim.kind[i] !== 1 || sim.lvl[i] < 6) { sim.adv.delete(i); continue; }
+      if (nh++ > 380) break;
+      const k = i * 3, asc = sim.lvl[i] === 7;
+      overlay.add(P[k], P[k + 1], P[k + 2], asc ? 0.42 : 0.5, asc ? 0.2 : 0.38, asc ? 0.5 : 0.1, asc ? 1.3 : 1.0, SHAPE.glow);
+    }
+    let nb = 0;
+    for (const w of sim.wars) {
+      const a = w.a * 3, b = w.b * 3, o = nb * 6;
+      beamPos[o] = P[a]; beamPos[o + 1] = P[a + 1]; beamPos[o + 2] = P[a + 2];
+      beamPos[o + 3] = P[b]; beamPos[o + 4] = P[b + 1]; beamPos[o + 5] = P[b + 2];
+      const war = w.kind === 'war', pulse = 0.55 + 0.45 * Math.sin(tAbs * 9 + nb * 1.7);
+      const r = war ? 1 * pulse : 0.25, g = war ? 0.28 * pulse : 0.9, bl = war ? 0.18 * pulse : 0.5;
+      beamCol[o] = beamCol[o + 3] = r; beamCol[o + 1] = beamCol[o + 4] = g; beamCol[o + 2] = beamCol[o + 5] = bl;
+      // a little fleet runs along the beam, and both stars flare
+      const u = (tAbs * 0.7 + nb * 0.37) % 1;
+      overlay.add(P[a] + (P[b] - P[a]) * u, P[a + 1] + (P[b + 1] - P[a + 1]) * u, P[a + 2] + (P[b + 2] - P[a + 2]) * u, r * 0.8, g * 0.8, bl * 0.8, 0.9, SHAPE.glow);
+      for (const q of [a, b]) overlay.add(P[q], P[q + 1], P[q + 2], r * 0.45, g * 0.45, bl * 0.45, 1.6, SHAPE.glow);
+      nb++;
+    }
+    beamGeo.setDrawRange(0, nb * 2);
+    beamGeo.attributes.position.needsUpdate = beamGeo.attributes.color.needsUpdate = true;
+  } else beamGeo.setDrawRange(0, 0);
   for (const [id, sp] of sprites) {
     if (!live.has(id)) { scene.remove(sp); sp.material.dispose(); sprites.delete(id); }
   }
@@ -617,7 +810,22 @@ function frame(now) {
   }
 
   // follow marker
-  if (cam.follow) {
+  if (cam.fp) {
+    const k = cam.fp.i * 3, s = screenOf(sim.pos[k], sim.pos[k + 1], sim.pos[k + 2]), el = $('focus');
+    if (s) {
+      el.style.display = 'block';
+      el.style.transform = `translate(${s[0]}px, ${s[1]}px)`;
+      $('focusTag').innerHTML = speciesOf(cam.fp.seed);
+    } else el.style.display = 'none';
+    const l = sim.lvl[cam.fp.i];
+    if (l !== cam.fp.lvl && S.civ) {
+      const name = speciesOf(cam.fp.seed);
+      if (l < 0) toast('{n}的文明毁灭了。', { n: name });
+      else if (l > cam.fp.lvl) toast('{n}进入了{t}。', { n: name, t: tr(TECHS[l]) });
+      cam.fp.lvl = l;
+      updateCard();
+    }
+  } else if (cam.follow) {
     const s = screenOf(cam.follow.x, cam.follow.y, cam.follow.z);
     const el = $('focus');
     if (s) {
@@ -639,6 +847,12 @@ function frame(now) {
     $('sFps').textContent = Math.round(fpsN / fpsAcc);
     fpsAcc = 0; fpsN = 0;
     $('timeInfo').innerHTML = tr('{t} 百万年', { t: Math.round(sim.time * 11) });
+    const lc = sim.lvlCount;
+    $('sCiv').textContent = S.civ ? nfmt(lc[1] + lc[2] + lc[3] + lc[4] + lc[5] + lc[6] + lc[7] + lc[8]) : '—';
+    $('sAdv').textContent = S.civ ? nfmt(lc[7] + lc[8]) : '—';
+    $('sFall').textContent = S.civ ? nfmt(sim.stats.collapsed) : '—';
+    $('sWar').textContent = S.civ ? nfmt(sim.stats.wars) : '—';
+    if (cam.fp || (cam.follow && cam.follow.type === 'star')) updateCard();
   }
 }
 

@@ -43,7 +43,12 @@
 
   .tr { top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 62vw; }
   .tr button { font-size: 13px; padding: 8px 14px; display: flex; gap: 6px; align-items: center; transition: background .2s; white-space: nowrap; }
-  .tr .ic { font-size: 14px; line-height: 1; }
+  .icw { display: inline-flex; align-items: center; }
+  .ic { width: 1.25em; height: 1.25em; display: block; overflow: visible; }
+  .tr .ic { width: 18px; height: 18px; }
+  .modes .ic { width: 17px; height: 17px; }
+  .tool .ic { width: 30px; height: 30px; }
+  .tool i { display: block; line-height: 0; }
   .tr button:hover { background: rgba(40,44,70,.7); }
   .tr button.on { color: #1d1300; background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); border-color: transparent; }
   .tr kbd, .modes kbd { font: 600 10px/1 ui-monospace, Menlo, monospace; opacity: .55; }
@@ -82,10 +87,29 @@
   .tools::-webkit-scrollbar { display: none; }
   .tools.hide { display: none; }
   .tool { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 3px; width: 66px; padding: 8px 4px 7px; border-radius: 16px; font-size: 12px; color: var(--muted); transition: background .2s, color .2s, transform .15s; }
-  .tool i { font-style: normal; font-size: 22px; line-height: 1; }
   .tool:hover { background: rgba(255,255,255,.1); color: var(--text); }
   .tool.on { background: rgba(255,214,10,.2); color: var(--gold-b); box-shadow: inset 0 0 0 1px rgba(255,214,10,.5); }
   .tools.red .tool.on { background: rgba(255,93,93,.2); color: #ff9a8a; box-shadow: inset 0 0 0 1px rgba(255,93,93,.55); }
+
+  /* ---------- civilization card ---------- */
+  #civ { position: fixed; z-index: 12; left: max(14px, env(safe-area-inset-left)); bottom: max(14px, env(safe-area-inset-bottom)); width: 288px; border-radius: 22px; padding: 14px 16px 14px; transition: opacity .25s, transform .25s; }
+  #civ[hidden] { display: block; opacity: 0; transform: translateY(12px); pointer-events: none; }
+  #civ .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  #civ .name { font-size: 22px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+  #civ .sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  #civ .x { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); flex: none; }
+  #civ .x:hover { background: rgba(255,255,255,.12); color: var(--text); }
+  #civ .x .ic { width: 12px; height: 12px; }
+  #civ .tech { margin: 12px 0 4px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; }
+  #civ .tech small { font-weight: 500; color: var(--faint); }
+  #civ .bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; }
+  #civ .bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); transition: width .4s; }
+  #civ .facts { display: flex; justify-content: space-between; gap: 12px; text-align: right; font-size: 12px; color: var(--muted); margin: 10px 0 0; font-variant-numeric: tabular-nums; }
+  #civ .facts b { color: var(--text); }
+  #civ p.quirk { font-size: 13px; line-height: 1.5; color: var(--muted); margin: 10px 0 12px; }
+  #civ .act { display: flex; gap: 6px; flex-wrap: wrap; }
+  #civ .act .chip { display: flex; align-items: center; gap: 5px; padding: 6px 11px 6px 8px; }
+  #civ .act .ic { width: 18px; height: 18px; }
 
   #focus { position: fixed; z-index: 9; left: 0; top: 0; pointer-events: none; display: none; }
   #focus .ring { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border: 1.5px solid var(--gold-b); border-radius: 50%; box-shadow: 0 0 18px rgba(255,214,10,.4); animation: pulse 1.8s ease-in-out infinite; }
@@ -103,8 +127,11 @@
     .tr button { padding: 8px 13px; font-size: 15px; }
     .toast { top: auto; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 178px); transform: translate(-50%, 30px); }
     .toast.show { transform: translate(-50%, 0); }
+    body.hascard .toast { bottom: auto; top: 128px; transform: translate(-50%, -30px); }
+    body.hascard .toast.show { transform: translate(-50%, 0); }
     #panel { top: auto; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 170px); left: 12px; right: 12px; width: auto; max-height: 46vh; }
     .title .sub { max-width: 150px; }
+    #civ { left: 12px; right: 12px; width: auto; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 178px); }
     .hint { font-size: 12px; padding: 6px 12px; }
     .modes button { padding: 8px 16px; }
     .tool { width: 60px; }
@@ -121,9 +148,10 @@
 </div>
 
 <div class="hud tr">
-  <button class="glass pill" id="bPause" type="button" aria-label="pause"><span class="ic" id="iPause"></span><span class="lbl" id="tPause"></span><kbd>␣</kbd></button>
-  <button class="glass pill" id="bSound" type="button" aria-label="sound"><span class="ic" id="iSound"></span><span class="lbl" id="tSound"></span><kbd>M</kbd></button>
-  <button class="glass pill" id="bPanel" type="button" aria-label="settings"><span class="ic">⚙</span><span class="lbl" id="tPanel"></span></button>
+  <button class="glass pill" id="bPause" type="button" aria-label="pause"><span class="icw" id="iPause"></span><span class="lbl" id="tPause"></span><kbd>␣</kbd></button>
+  <button class="glass pill on" id="bCiv" type="button" aria-label="civilizations"><span class="icw" id="iCiv"></span><span class="lbl" id="tCiv"></span></button>
+  <button class="glass pill" id="bSound" type="button" aria-label="sound"><span class="icw" id="iSound"></span><span class="lbl" id="tSound"></span><kbd>M</kbd></button>
+  <button class="glass pill" id="bPanel" type="button" aria-label="settings"><span class="icw" id="iGear"></span><span class="lbl" id="tPanel"></span></button>
 </div>
 
 <aside id="panel" class="glass">
@@ -145,6 +173,7 @@
   </section>
   <section>
     <h4 data-i18n>宇宙</h4>
+    <label class="ck"><input type="checkbox" id="cCiv" checked><span data-i18n>文明系统（关闭后是纯物理模拟）</span></label>
     <div class="chips">
       <button class="chip" id="bRegen" type="button" data-i18n>重新生成</button>
       <button class="chip danger" id="bCrunch" type="button" data-i18n>大坍缩</button>
@@ -160,6 +189,10 @@
       <span><span data-i18n>天体</span> <b id="sBodies">0</b></span>
       <span><span data-i18n>被吞噬</span> <b id="sEaten">0</b></span>
       <span><span data-i18n>被抱住</span> <b id="sHug">0</b></span>
+      <span><span data-i18n>文明</span> <b id="sCiv">0</b></span>
+      <span><span data-i18n>星际文明</span> <b id="sAdv">0</b></span>
+      <span><span data-i18n>文明毁灭</span> <b id="sFall">0</b></span>
+      <span><span data-i18n>战争</span> <b id="sWar">0</b></span>
       <span>FPS <b id="sFps">0</b></span>
     </div>
   </section>
@@ -172,12 +205,20 @@
   <div class="hint glass pill" id="hint"></div>
   <div class="tools glass" id="tools"></div>
   <div class="modes glass pill" id="modes">
-    <button type="button" data-mode="look"><span data-i18n>观察</span><kbd>1</kbd></button>
-    <button type="button" data-mode="create"><span data-i18n>生成</span><kbd>2</kbd></button>
-    <button type="button" data-mode="destroy" class="destroy"><span data-i18n>破坏</span><kbd>3</kbd></button>
+    <button type="button" data-mode="look"><span class="icw" data-ic="eye"></span><span data-i18n>观察</span><kbd>1</kbd></button>
+    <button type="button" data-mode="create"><span class="icw" data-ic="spark"></span><span data-i18n>生成</span><kbd>2</kbd></button>
+    <button type="button" data-mode="destroy" class="destroy"><span class="icw" data-ic="burst"></span><span data-i18n>破坏</span><kbd>3</kbd></button>
   </div>
 </div>
 
+<div id="civ" class="glass" hidden>
+  <div class="head"><div><div class="name grad" id="civName"></div><div class="sub" id="civSub"></div></div><button class="x" id="civClose" type="button" aria-label="close"><svg class="ic"><use href="#i-close"/></svg></button></div>
+  <div class="tech"><span id="civTech"></span><small id="civEpoch"></small></div>
+  <div class="bar"><i id="civBar"></i></div>
+  <div class="facts"><span><span data-i18n>人口</span> <b id="civPop"></b></span><span id="civStar"></span></div>
+  <p class="quirk" id="civQuirk"></p>
+  <div class="act"><button class="chip" id="civHug" type="button"><svg class="ic"><use href="#i-hug"/></svg><span data-i18n>送一个抱抱</span></button><button class="chip danger" id="civWar" type="button"><svg class="ic"><use href="#i-war"/></svg><span data-i18n>挑起战争</span></button><button class="chip danger" id="civDoom" type="button"><svg class="ic"><use href="#i-comet"/></svg><span data-i18n>降下陨石</span></button></div>
+</div>
 <div id="focus"><div class="ring"></div><div class="tag" id="focusTag"></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><img src="../naiwa.png" alt=""><span id="toastText"></span></div>
 

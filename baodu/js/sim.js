@@ -6,6 +6,8 @@
 // Each body can also carry a flat-rotation-curve halo (v0, rc) and density-wave "waves"
 // (spiral arms / bars) so galaxies keep their arms for a long time.
 
+import { techLevel, curiosityOf, aggressionOf, powerOf, TECH_T } from './civ.js';
+
 export const MAXP = 80000;
 export const MAXB = 64;
 export const TAU = Math.PI * 2;
@@ -16,6 +18,13 @@ export const gauss = () => {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(TAU * rnd());
 };
 export const clamp = (x, a, b) => (x < a ? a : x > b ? b : x);
+
+// share of stars that start at each tech level (0..7) when a galaxy is generated
+const START_SHARE = [0.25, 0.23, 0.2, 0.15, 0.09, 0.05, 0.022, 0.008];
+// chance per sim time unit that a civilization at this level destroys itself (wars, climate...); level 7 has ascended
+const COLLAPSE = [0, 0, 0, 0.0016, 0.0016, 0.0007, 0.0003, 0];
+const CONTACT = 0.0009;   // chance per sim time unit that a planetary civilization makes contact with a neighbour
+const MAX_WARS = 60, AUTO_WARS = 24;
 
 export class Sim {
   constructor() {
@@ -28,6 +37,17 @@ export class Sim {
     this.kind = new Uint8Array(MAXP); // 0 dead, 1 star, 2 gas
     this.life = new Float32Array(MAXP);
     this.life0 = new Float32Array(MAXP);
+    // civilizations: one per star particle (seed 0 = none)
+    this.seed = new Uint32Array(MAXP);
+    this.cstart = new Float32Array(MAXP);   // when the current epoch began (may lie in the future = barren)
+    this.lvl = new Int8Array(MAXP);         // current tech level, -1 = barren world
+    this.epoch = new Uint8Array(MAXP);      // how many civilizations this world has already lost
+    this.lvlCount = new Int32Array(9);      // index = level + 1
+    this.adv = new Set();                   // star-faring worlds (drawn with a golden halo)
+    this.cur = 0; this.cycleT = 1; this.lastWrap = 0;
+    this.civOn = true;                      // false = pure physics: no civilizations, no wars
+    this.wars = [];                         // {a, b, sa, sb, t0, dur, kind: 'war' | 'trade', next}
+    this.busy = new Uint8Array(MAXP);       // star is currently at war / trading
     this.hi = 0; // high-water mark of used slots
     this.free = [];
     this.alive = 0;
@@ -36,7 +56,7 @@ export class Sim {
     this.time = 0;
     this.decay = [];
     this.births = [];
-    this.stats = { swallowed: 0, hugged: 0 };
+    this.stats = { swallowed: 0, hugged: 0, collapsed: 0, wars: 0, destroyed: 0 };
     this.onEvent = () => {};
     this._bx = new Float64Array(MAXB); this._by = new Float64Array(MAXB); this._bz = new Float64Array(MAXB);
     this._bm = new Float64Array(MAXB); this._be2 = new Float64Array(MAXB); this._bh = new Float64Array(MAXB);
@@ -50,11 +70,14 @@ export class Sim {
     this.hi = 0; this.free.length = 0; this.alive = 0;
     this.bodies.length = 0; this.decay.length = 0; this.births.length = 0;
     this.time = 0;
-    this.stats.swallowed = 0; this.stats.hugged = 0;
+    this.stats.swallowed = 0; this.stats.hugged = 0; this.stats.collapsed = 0; this.stats.wars = 0; this.stats.destroyed = 0;
+    this.seed.fill(0); this.lvlCount.fill(0); this.adv.clear(); this.busy.fill(0); this.wars.length = 0;
+    this.cur = 0; this.lastWrap = 0; this.cycleT = 1;
   }
 
   // ---------------------------------------------------------------- particles
-  addP(x, y, z, vx, vy, vz, r, g, b, size, kind = 1, life = 0) {
+  // stars (kind 1) get a civilization unless civ is false (planets, debris)
+  addP(x, y, z, vx, vy, vz, r, g, b, size, kind = 1, life = 0, civ = true) {
     let i;
     if (this.free.length) i = this.free.pop();
     else if (this.hi < MAXP) i = this.hi++;
@@ -67,12 +90,15 @@ export class Sim {
     this.kind[i] = kind;
     this.life[i] = this.life0[i] = life;
     if (life > 0) this.decay.push(i);
+    this.seed[i] = 0;
+    if (kind === 1 && civ) this.civInit(i, false);
     this.alive++;
     return i;
   }
 
   kill(i) {
     if (!this.kind[i]) return;
+    if (this.seed[i]) { this.lvlCount[this.lvl[i] + 1]--; this.seed[i] = 0; this.adv.delete(i); this.busy[i] = 0; }
     this.kind[i] = 0; this.size[i] = 0; this.life[i] = 0;
     this.free.push(i);
     this.alive--;
@@ -162,6 +188,7 @@ export class Sim {
       const imp = (K * 0.35) / (r + 2.5) / r / Math.max(1, b.m * 0.15);
       b.vx += dx * imp; b.vy += dy * imp; b.vz += dz * imp;
     }
+    this.extinctNear(x, y, z, 7 * Math.sqrt(power));
     this.onEvent({ type: 'sn', x, y, z, power });
   }
 
@@ -175,6 +202,218 @@ export class Sim {
       if (dx * dx + dy * dy + dz * dz < R2) { this.kill(i); n++; }
     }
     return n;
+  }
+
+  // ---------------------------------------------------------------- civilizations
+  // fresh = a newborn star (its civilization starts from nothing); otherwise it already has a head start
+  civInit(i, fresh) {
+    const seed = (Math.floor(rnd() * 4294967295) >>> 0) || 1;
+    let age = 0;
+    if (!fresh) {
+      let u = rnd(), l = 0;
+      while (l < 7 && u >= START_SHARE[l]) { u -= START_SHARE[l]; l++; }
+      age = TECH_T[l] + rnd() * ((TECH_T[l + 1] === Infinity ? 700 : TECH_T[l + 1]) - TECH_T[l]);
+    }
+    this.seed[i] = seed;
+    this.cstart[i] = this.time - age / curiosityOf(seed);
+    this.epoch[i] = 0;
+    this.lvl[i] = techLevel(age);
+    this.lvlCount[this.lvl[i] + 1]++;
+    this._civLook(i);
+  }
+
+  levelOf(i) { return techLevel((this.time - this.cstart[i]) * curiosityOf(this.seed[i])); }
+
+  // advanced worlds shine: bigger, warmer, golden (level 7 turns magenta-white)
+  _civLook(i) {
+    const l = this.lvl[i], k = i * 3;
+    let r = this.col0[k], g = this.col0[k + 1], b = this.col0[k + 2], s = this.size0[i];
+    if (!this.civOn) { this.col[k] = r; this.col[k + 1] = g; this.col[k + 2] = b; this.size[i] = s; this.adv.delete(i); return; }
+    if (l < 0) { r *= 0.45; g *= 0.45; b *= 0.5; s *= 0.85; }
+    else if (l >= 3) {
+      const m = [0, 0, 0, 0, 0.12, 0.35, 0.5, 0.55][l], sz = [1, 1, 1, 1.15, 1.3, 1.6, 1.9, 2.2][l];
+      const tr = 1, tg = l === 7 ? 0.7 : 0.86, tb = l === 7 ? 1 : 0.45;
+      r += (tr * 1.1 - r) * m; g += (tg * 1.1 - g) * m; b += (tb * 1.1 - b) * m;
+      s = Math.min(0.55, s * sz);
+    }
+    this.col[k] = r; this.col[k + 1] = g; this.col[k + 2] = b; this.size[i] = s;
+    if (l >= 6) this.adv.add(i); else this.adv.delete(i);
+  }
+
+  _setLevel(i, l) {
+    this.lvlCount[this.lvl[i] + 1]--;
+    this.lvl[i] = l;
+    this.lvlCount[l + 1]++;
+    this._civLook(i);
+  }
+
+  // the civilization layer can be switched off for a pure gravity sandbox, and back on again
+  setCiv(on) {
+    if (on === this.civOn) return;
+    this.civOn = on;
+    this.wars.length = 0;
+    this.busy.fill(0);
+    for (let i = 0; i < this.hi; i++) {
+      if (!this.seed[i]) continue;
+      if (on) this._setLevel(i, this.levelOf(i)); else this._civLook(i);
+    }
+    if (!on) this.adv.clear();
+  }
+
+  // the world is wiped clean and sits barren for a while before life starts over
+  extinct(i) {
+    this.cstart[i] = this.time + 45 + rnd() * 70;
+    if (this.epoch[i] < 250) this.epoch[i]++;
+    this._setLevel(i, -1);
+  }
+
+  // helping hand: jump ahead one era
+  civBoost(i) {
+    const l = this.lvl[i];
+    if (l < 0) { this.cstart[i] = this.time; this._setLevel(i, 0); return; }
+    if (l >= 7) return;
+    this.cstart[i] = this.time - TECH_T[l + 1] / curiosityOf(this.seed[i]) - 0.01;
+    this._setLevel(i, this.levelOf(i));
+  }
+
+  extinctNear(x, y, z, R) {
+    const R2 = R * R, P = this.pos;
+    let n = 0;
+    for (let i = 0; i < this.hi; i++) {
+      if (!this.seed[i] || this.lvl[i] < 0) continue;
+      const k = i * 3, dx = P[k] - x, dy = P[k + 1] - y, dz = P[k + 2] - z;
+      if (dx * dx + dy * dy + dz * dz < R2) { this.extinct(i); n++; }
+    }
+    this.stats.collapsed += n;
+    return n;
+  }
+
+  // ---- wars and trade
+  _nearestCiv(i, R) {
+    const P = this.pos, k = i * 3;
+    let best = -1, bd = R * R;
+    for (let t = 0; t < 14; t++) {
+      const j = (rnd() * this.hi) | 0;
+      if (j === i || !this.seed[j] || this.lvl[j] < 1 || this.busy[j]) continue;
+      const q = j * 3, dx = P[q] - P[k], dy = P[q + 1] - P[k + 1], dz = P[q + 2] - P[k + 2];
+      const d = dx * dx + dy * dy + dz * dz;
+      if (d < bd) { bd = d; best = j; }
+    }
+    return best;
+  }
+
+  _contact(i, l) {
+    const j = this._nearestCiv(i, 2 + 2 * l);
+    if (j < 0) return;
+    const war = rnd() < 0.15 + aggressionOf(this.seed[i]) * 0.7;
+    this.startWar(i, j, war ? 'war' : 'trade');
+  }
+
+  startWar(a, b, kind) {
+    if (this.wars.length >= MAX_WARS) return false;
+    this.busy[a] = this.busy[b] = 1;
+    const dur = kind === 'war' ? 7 + rnd() * 8 : 4 + rnd() * 3;
+    this.wars.push({ a, b, sa: this.seed[a], sb: this.seed[b], t0: this.time, dur, kind, next: this.time + 0.8 });
+    this.onEvent({ type: 'war-start', a, b, kind });
+    return true;
+  }
+
+  // the player (or a bad mood) forces a civilization to attack its nearest neighbour
+  provoke(i) {
+    if (!this.civOn || !this.seed[i] || this.busy[i] || this.lvl[i] < 0) return -1;
+    const P = this.pos, k = i * 3;
+    let best = -1, bd = 26 * 26;
+    for (let j = 0; j < this.hi; j++) {
+      if (j === i || !this.seed[j] || this.lvl[j] < 1 || this.busy[j]) continue;
+      const q = j * 3, dx = P[q] - P[k], dy = P[q + 1] - P[k + 1], dz = P[q + 2] - P[k + 2];
+      const d = dx * dx + dy * dy + dz * dz;
+      if (d < bd) { bd = d; best = j; }
+    }
+    if (best < 0 || !this.startWar(i, best, 'war')) return -1;
+    return best;
+  }
+
+  warOf(i) { return this.wars.find(w => w.a === i || w.b === i) || null; }
+
+  _valid(i, s) { return this.kind[i] === 1 && this.seed[i] === s; }
+
+  warStep() {
+    if (!this.civOn) return;
+    const t = this.time;
+    for (let n = this.wars.length - 1; n >= 0; n--) {
+      const w = this.wars[n];
+      const okA = this._valid(w.a, w.sa), okB = this._valid(w.b, w.sb);
+      if (!okA || !okB || (this.lvl[w.a] < 1 && w.kind === 'war')) {
+        if (okA) this.busy[w.a] = 0;
+        if (okB) this.busy[w.b] = 0;
+        this.wars.splice(n, 1);
+        continue;
+      }
+      if (t >= w.t0 + w.dur) { this._resolve(w); this.wars.splice(n, 1); continue; }
+      if (w.kind === 'war' && t >= w.next) {
+        w.next = t + 0.9 + rnd() * 1.2;
+        const x = rnd() < 0.6 ? w.b : w.a;
+        this.onEvent({ type: 'battle', x: this.pos[x * 3], y: this.pos[x * 3 + 1], z: this.pos[x * 3 + 2] });
+      }
+    }
+  }
+
+  _resolve(w) {
+    const { a, b } = w;
+    const sa = this.seed[a], sb = this.seed[b];
+    this.busy[a] = this.busy[b] = 0;
+    const la = this.lvl[a], lb = this.lvl[b];
+    if (w.kind === 'trade') {
+      for (const i of [a, b]) if (this.lvl[i] >= 0 && this.lvl[i] < 7) { this.cstart[i] -= 14 / curiosityOf(this.seed[i]); this._setLevel(i, this.levelOf(i)); }
+      this.onEvent({ type: 'trade-end', a, b, sa, sb });
+      return;
+    }
+    this.stats.wars++;
+    const ratio = powerOf(la, this.seed[a]) / powerOf(Math.max(lb, 0), this.seed[b]) * (0.75 + rnd() * 0.5);
+    let result;
+    if (ratio > 1.6) result = 'a';
+    else if (ratio < 0.62) result = 'b';
+    else result = rnd() < 0.5 && la >= 5 && lb >= 5 ? 'both' : 'peace';
+    const info = { type: 'war-end', a, b, sa, sb, result, la, lb, star: false };
+    const loser = result === 'a' ? b : result === 'b' ? a : -1;
+    const lw = result === 'a' ? a : b;   // winner
+    if (loser >= 0) {
+      const k = loser * 3, x = this.pos[k], y = this.pos[k + 1], z = this.pos[k + 2];
+      this.extinct(loser); this.stats.collapsed++;
+      // a star-faring winner can crack the loser's sun open: a (smaller) supernova that may take out the neighbours too
+      if (this.lvl[lw] >= 6 && rnd() < 0.3) {
+        this.kill(loser);
+        this.supernova(x, y, z, 0.35);
+        this.stats.destroyed++;
+        info.star = true;
+      }
+    } else if (result === 'both') {
+      for (const i of [a, b]) { this.extinct(i); this.stats.collapsed++; }
+    } else {
+      for (const i of [a, b]) if (this.lvl[i] >= 0 && this.lvl[i] < 7) { this.cstart[i] -= 6 / curiosityOf(this.seed[i]); this._setLevel(i, this.levelOf(i)); }
+    }
+    this.onEvent(info);
+  }
+
+  // visits a rolling slice of the stars each frame, so progress costs the same however many there are
+  civStep(K) {
+    const n = this.hi;
+    if (!n || !this.civOn) return;
+    for (let c = 0; c < K; c++) {
+      if (this.cur >= n) {
+        this.cur = 0;
+        this.cycleT = Math.max(0.05, this.time - this.lastWrap);
+        this.lastWrap = this.time;
+        break;
+      }
+      const i = this.cur++;
+      if (!this.seed[i]) continue;
+      const l = this.levelOf(i);
+      if (l !== this.lvl[i]) this._setLevel(i, l);
+      const h = COLLAPSE[l < 0 ? 0 : l];
+      if (h && rnd() < h * this.cycleT) { this.extinct(i); this.stats.collapsed++; continue; }
+      if (l >= 5 && !this.busy[i] && this.wars.length < AUTO_WARS && rnd() < CONTACT * this.cycleT) this._contact(i, l);
+    }
   }
 
   // ---------------------------------------------------------------- stepping
@@ -344,6 +583,7 @@ export class Sim {
       this.kind[i] = 1;
       this.col[k] = this.col0[k] = 0.55 * br; this.col[k + 1] = this.col0[k + 1] = 0.75 * br; this.col[k + 2] = this.col0[k + 2] = 1.0 * br;
       this.size[i] = this.size0[i] = 0.22 + rnd() * 0.12;
+      this.civInit(i, true);
     }
   }
 }
