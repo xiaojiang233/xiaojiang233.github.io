@@ -288,13 +288,13 @@
         <p data-i18n>宇宙中最安静的星球。一天有 25 个小时，多出来的那一个专门用来发呆。</p>
         <span class="go" data-i18n>骑车去海边 ›</span>
       </a>
-      <div class="planet p-nebula reveal">
+      <a class="planet p-nebula reveal" href="baodu/">
         <div class="orb"></div>
-        <span class="tag" data-i18n>03 · 建设中</span>
+        <span class="tag" data-i18n>03 · 已开放</span>
         <h3 data-i18n>抱肚星云</h3>
         <p data-i18n>由无数个抱肚子的瞬间凝结而成。靠近它，你会不自觉地也抱住自己的肚子。</p>
-        <span class="go soon" data-i18n>即将开放</span>
-      </div>
+        <span class="go" data-i18n>生成一个银河 ›</span>
+      </a>
       <div class="planet p-nap reveal">
         <div class="orb"></div>
         <span class="tag" data-i18n>04 · 建设中</span>
@@ -409,12 +409,13 @@
     "奶蛙宇宙不大，但每个角落都很软。": { en: "The Naiwa Universe isn’t big, but every corner is soft.", ja: "ナイワ<ruby>宇宙<rt>うちゅう</rt></ruby>は<ruby>広<rt>ひろ</rt></ruby>くない。でも、どこもやわらかい。" },
     "01 · 已开放": { en: "01 · OPEN", ja: "01 · オープン" },
     "02 · 已开放": { en: "02 · OPEN", ja: "02 · オープン" },
-    "03 · 建设中": { en: "03 · UNDER CONSTRUCTION", ja: "03 · <ruby>建設中<rt>けんせつちゅう</rt></ruby>" },
+    "03 · 已开放": { en: "03 · OPEN", ja: "03 · オープン" },
     "04 · 建设中": { en: "04 · UNDER CONSTRUCTION", ja: "04 · <ruby>建設中<rt>けんせつちゅう</rt></ruby>" },
     "奶蛙、奶蛙 mini、奶蛙 Pro Max，全部在这里。可以加入购物袋，也可以直接加入你的心里。": { en: "Naiwa, Naiwa mini and Naiwa Pro Max, all in one place. Add one to your bag, or straight to your heart.", ja: "ナイワ、ナイワ mini、ナイワ Pro Max、ぜんぶここに。バッグに<ruby>入<rt>い</rt></ruby>れても、<ruby>心<rt>こころ</rt></ruby>に<ruby>入<rt>い</rt></ruby>れてもOK。" },
     "进入商店 ›": { en: "Enter the store ›", ja: "ストアに<ruby>入<rt>はい</rt></ruby>る ›" },
     "发呆星": { en: "Planet Daze", ja: "ぼーっと<ruby>星<rt>ぼし</rt></ruby>" },
     "宇宙中最安静的星球。一天有 25 个小时，多出来的那一个专门用来发呆。": { en: "The quietest planet in the universe. A day here has 25 hours; the extra one is reserved for zoning out.", ja: "<ruby>宇宙<rt>うちゅう</rt></ruby>でいちばん<ruby>静<rt>しず</rt></ruby>かな<ruby>星<rt>ほし</rt></ruby>。<ruby>一日<rt>いちにち</rt></ruby>は 25 <ruby>時間<rt>じかん</rt></ruby>、<ruby>増<rt>ふ</rt></ruby>えた１<ruby>時間<rt>じかん</rt></ruby>はぼーっとする<ruby>専用<rt>せんよう</rt></ruby>。" },
+    "生成一个银河 ›": { en: "Make a galaxy ›", ja: "<ruby>銀河<rt>ぎんが</rt></ruby>を<ruby>作<rt>つく</rt></ruby>る ›" },
     "骑车去海边 ›": { en: "Ride to the sea ›", ja: "<ruby>自転車<rt>じてんしゃ</rt></ruby>で<ruby>海<rt>うみ</rt></ruby>へ ›" },
     "即将开放": { en: "Coming soon", ja: "まもなくオープン" },
     "抱肚星云": { en: "Belly-Hug Nebula", ja: "お<ruby>腹<rt>なか</rt></ruby>ハグ<ruby>星雲<rt>せいうん</rt></ruby>" },
@@ -598,8 +599,8 @@
     document.querySelector('meta[name=description]').content = plain(tr('奶蛙宇宙官网。宇宙从一次抱肚子开始。'));
     buildLore(tr(loreZh), lang === 'en');
     document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
-    // Carry the language over to the store and Planet Daze
-    ['shopping/', 'daidai/'].forEach(p => document.querySelectorAll(`a[href^="${p}"]`).forEach(a => a.setAttribute('href', p + '?lang=' + lang)));
+    // Carry the language over to the store, Planet Daze and the nebula
+    ['shopping/', 'daidai/', 'baodu/'].forEach(p => document.querySelectorAll(`a[href^="${p}"]`).forEach(a => a.setAttribute('href', p + '?lang=' + lang)));
     onScroll();
     if (save) { try { localStorage.setItem('lang', lang); } catch (e) {} }
   };
