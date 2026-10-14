@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>抱肚星云 · 银河模拟器 · 奶蛙.space</title>
+<meta name="description" content="抱肚星云是一台 3D 银河模拟器。生成星系、恒星和黑洞，也可以引爆超新星，把一切都抱进肚子里。">
+<meta name="theme-color" content="#02030a">
+<meta property="og:title" content="抱肚星云 · 银河模拟器">
+<meta property="og:description" content="生成星系、恒星和黑洞，也可以引爆超新星。">
+<meta property="og:image" content="../naiwa.png">
+<link rel="icon" href="../naiwa.png">
+<link rel="modulepreload" href="../daidai/lib/three.bundle.js">
+<style>
+  :root {
+    --space: #02030a; --text: #f5f5f7; --muted: #c4c4d4; --faint: #8a8aa3;
+    --glass: rgba(14, 16, 32, .55); --line: rgba(255,255,255,.16);
+    --gold-a: #ff9f0a; --gold-b: #ffd60a; --milk: #f3dcae; --violet: #8e7dff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; background: var(--space); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Hiragino Sans", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased; letter-spacing: -.01em; user-select: none; -webkit-user-select: none; }
+  a { color: inherit; text-decoration: none; }
+  rt { font-size: .5em; opacity: .8; letter-spacing: 0; }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  canvas#c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  canvas#c.look { cursor: grab; }
+  canvas#c.look.drag { cursor: grabbing; }
+  canvas#c.act { cursor: crosshair; }
+  .grad { background: linear-gradient(90deg, var(--gold-a), var(--gold-b) 55%, var(--milk)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .glass { background: var(--glass); backdrop-filter: saturate(160%) blur(18px); -webkit-backdrop-filter: saturate(160%) blur(18px); border: 1px solid var(--line); }
+  .pill { border-radius: 980px; }
+
+  .hud { position: fixed; z-index: 10; pointer-events: none; }
+  .hud > * { pointer-events: auto; }
+  .tl { top: max(14px, env(safe-area-inset-top)); left: max(14px, env(safe-area-inset-left)); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .back { font-size: 13px; padding: 7px 14px; opacity: .9; }
+  .title { padding: 10px 16px 9px; border-radius: 18px; }
+  .title b { display: block; font-size: 16px; font-weight: 800; }
+  .title .sub { font-size: 12px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .title .sub span.gold { color: var(--gold-b); }
+
+  .tr { top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 62vw; }
+  .tr button { font-size: 13px; padding: 8px 14px; display: flex; gap: 6px; align-items: center; transition: background .2s; white-space: nowrap; }
+  .tr .ic { font-size: 14px; line-height: 1; }
+  .tr button:hover { background: rgba(40,44,70,.7); }
+  .tr button.on { color: #1d1300; background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); border-color: transparent; }
+  .tr kbd, .modes kbd { font: 600 10px/1 ui-monospace, Menlo, monospace; opacity: .55; }
+  body.touch kbd { display: none; }
+
+  /* ---------- side panel ---------- */
+  #panel { position: fixed; z-index: 11; top: calc(max(14px, env(safe-area-inset-top)) + 52px); right: max(14px, env(safe-area-inset-right)); width: 292px; max-height: calc(100% - 210px); overflow-y: auto; border-radius: 24px; padding: 16px 16px 10px; transition: opacity .25s, transform .25s; scrollbar-width: thin; }
+  #panel.off { opacity: 0; transform: translateX(14px); pointer-events: none; }
+  #panel h4 { font-size: 11px; letter-spacing: .22em; color: var(--gold-b); font-weight: 700; margin: 4px 0 8px; text-transform: uppercase; }
+  #panel section { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+  #panel section:last-child { border: 0; margin-bottom: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12.5px; padding: 6px 11px; border-radius: 980px; background: rgba(255,255,255,.08); border: 1px solid var(--line); transition: background .2s, transform .15s; }
+  .chip:hover { background: rgba(255,255,255,.16); }
+  .chip:active { transform: scale(.96); }
+  .chip.on { background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); color: #1d1300; border-color: transparent; font-weight: 700; }
+  .chip.danger { border-color: rgba(255,107,107,.45); color: #ffb3b3; }
+  .row { display: grid; grid-template-columns: 64px 1fr 42px; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin: 7px 0; }
+  .row output { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+  input[type=range] { width: 100%; accent-color: var(--gold-b); height: 20px; }
+  label.ck { display: flex; gap: 8px; align-items: center; font-size: 12.5px; color: var(--muted); margin: 7px 0; cursor: pointer; }
+  label.ck input { accent-color: var(--gold-b); width: 15px; height: 15px; }
+  .langs { display: flex; gap: 14px; margin-top: 4px; font-size: 12.5px; color: var(--faint); }
+  .langs a.on { color: var(--text); font-weight: 700; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .stats b { color: var(--text); font-weight: 700; }
+
+  /* ---------- dock ---------- */
+  .dock { left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(100vw - 20px, 720px); }
+  .hint { font-size: 13px; color: var(--muted); padding: 7px 16px; text-align: center; transition: opacity .6s; max-width: 100%; }
+  .modes { display: flex; padding: 4px; gap: 2px; }
+  .modes button { padding: 9px 20px; font-size: 14px; font-weight: 700; border-radius: 980px; display: flex; gap: 6px; align-items: center; transition: background .2s, color .2s; color: var(--muted); }
+  .modes button.on { background: linear-gradient(90deg, var(--gold-a), var(--gold-b)); color: #1d1300; box-shadow: 0 6px 24px rgba(255,180,10,.25); }
+  .modes button.on.destroy { background: linear-gradient(90deg, #ff5d5d, #ff9f0a); }
+  .tools { display: flex; gap: 6px; padding: 6px; border-radius: 22px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .tools::-webkit-scrollbar { display: none; }
+  .tools.hide { display: none; }
+  .tool { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 3px; width: 66px; padding: 8px 4px 7px; border-radius: 16px; font-size: 12px; color: var(--muted); transition: background .2s, color .2s, transform .15s; }
+  .tool i { font-style: normal; font-size: 22px; line-height: 1; }
+  .tool:hover { background: rgba(255,255,255,.1); color: var(--text); }
+  .tool.on { background: rgba(255,214,10,.2); color: var(--gold-b); box-shadow: inset 0 0 0 1px rgba(255,214,10,.5); }
+  .tools.red .tool.on { background: rgba(255,93,93,.2); color: #ff9a8a; box-shadow: inset 0 0 0 1px rgba(255,93,93,.55); }
+
+  #focus { position: fixed; z-index: 9; left: 0; top: 0; pointer-events: none; display: none; }
+  #focus .ring { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border: 1.5px solid var(--gold-b); border-radius: 50%; box-shadow: 0 0 18px rgba(255,214,10,.4); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: .95; } 50% { transform: scale(1.18); opacity: .6; } }
+  #focus .tag { position: absolute; left: 30px; top: -12px; font-size: 12px; padding: 4px 10px; border-radius: 10px; white-space: nowrap; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+  .toast { position: fixed; left: 50%; top: calc(max(14px, env(safe-area-inset-top)) + 4px); transform: translate(-50%, -30px); z-index: 40; display: flex; align-items: center; gap: 10px; padding: 9px 18px 9px 12px; border-radius: 980px; background: rgba(30,30,45,.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line); font-size: 14px; opacity: 0; transition: opacity .4s, transform .45s cubic-bezier(.2,.9,.3,1.2); max-width: calc(100vw - 32px); pointer-events: none; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast img { width: 16px; height: 28px; object-fit: contain; }
+  .err { position: fixed; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--muted); }
+
+  @media (max-width: 760px) {
+    .tr { max-width: none; flex-wrap: nowrap; }
+    .tr .lbl { display: none; }
+    .tr button { padding: 8px 13px; font-size: 15px; }
+    .toast { top: auto; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 178px); transform: translate(-50%, 30px); }
+    .toast.show { transform: translate(-50%, 0); }
+    #panel { top: auto; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 170px); left: 12px; right: 12px; width: auto; max-height: 46vh; }
+    .title .sub { max-width: 150px; }
+    .hint { font-size: 12px; padding: 6px 12px; }
+    .modes button { padding: 8px 16px; }
+    .tool { width: 60px; }
+  }
+  @media (max-height: 520px) { .hint { display: none; } }
+</style>
+</head>
+<body>
+<canvas id="c" class="look" aria-label="抱肚星云 3D 银河模拟器"></canvas>
+
+<div class="hud tl">
+  <a class="back glass pill" id="back" href="../" data-i18n>‹ 奶蛙宇宙</a>
+  <div class="title glass"><b class="grad" data-i18n>抱肚星云</b><div class="sub"><span id="presetName"></span> · <span class="gold" id="timeInfo"></span></div></div>
+</div>
+
+<div class="hud tr">
+  <button class="glass pill" id="bPause" type="button" aria-label="pause"><span class="ic" id="iPause"></span><span class="lbl" id="tPause"></span><kbd>␣</kbd></button>
+  <button class="glass pill" id="bSound" type="button" aria-label="sound"><span class="ic" id="iSound"></span><span class="lbl" id="tSound"></span><kbd>M</kbd></button>
+  <button class="glass pill" id="bPanel" type="button" aria-label="settings"><span class="ic">⚙</span><span class="lbl" id="tPanel"></span></button>
+</div>
+
+<aside id="panel" class="glass">
+  <section>
+    <h4 data-i18n>星系</h4>
+    <div class="chips" id="presets"></div>
+  </section>
+  <section>
+    <h4 data-i18n>放置</h4>
+    <div class="row"><span data-i18n>规模</span><input type="range" id="rScale" min="0.5" max="3" step="0.1" value="1"><output id="oScale">1.0×</output></div>
+    <div class="row"><span data-i18n>高度</span><input type="range" id="rHeight" min="-12" max="12" step="0.5" value="0"><output id="oHeight">0</output></div>
+    <label class="ck"><input type="checkbox" id="cOrbit" checked><span data-i18n>自动入轨（新天体绕着最近的引力中心转）</span></label>
+    <label class="ck"><input type="checkbox" id="cGrid" checked><span data-i18n>参考环</span></label>
+    <label class="ck"><input type="checkbox" id="cSpin" checked><span data-i18n>镜头缓慢自转</span></label>
+  </section>
+  <section>
+    <h4 data-i18n>时间</h4>
+    <div class="row"><span data-i18n>速度</span><input type="range" id="rSpeed" min="-2" max="3" step="0.1" value="0"><output id="oSpeed">1×</output></div>
+  </section>
+  <section>
+    <h4 data-i18n>宇宙</h4>
+    <div class="chips">
+      <button class="chip" id="bRegen" type="button" data-i18n>重新生成</button>
+      <button class="chip danger" id="bCrunch" type="button" data-i18n>大坍缩</button>
+      <button class="chip danger" id="bClear" type="button" data-i18n>清空宇宙</button>
+      <button class="chip" id="bHome" type="button" data-i18n>回到中心</button>
+      <button class="chip" id="bQual" type="button"></button>
+    </div>
+  </section>
+  <section>
+    <h4 data-i18n>现状</h4>
+    <div class="stats">
+      <span><span data-i18n>星星</span> <b id="sStars">0</b></span>
+      <span><span data-i18n>天体</span> <b id="sBodies">0</b></span>
+      <span><span data-i18n>被吞噬</span> <b id="sEaten">0</b></span>
+      <span><span data-i18n>被抱住</span> <b id="sHug">0</b></span>
+      <span>FPS <b id="sFps">0</b></span>
+    </div>
+  </section>
+  <section>
+    <div class="langs"><a href="?lang=zh" data-lang="zh">简体中文</a><a href="?lang=en" data-lang="en">English</a><a href="?lang=ja" data-lang="ja">日本語</a></div>
+  </section>
+</aside>
+
+<div class="hud dock">
+  <div class="hint glass pill" id="hint"></div>
+  <div class="tools glass" id="tools"></div>
+  <div class="modes glass pill" id="modes">
+    <button type="button" data-mode="look"><span data-i18n>观察</span><kbd>1</kbd></button>
+    <button type="button" data-mode="create"><span data-i18n>生成</span><kbd>2</kbd></button>
+    <button type="button" data-mode="destroy" class="destroy"><span data-i18n>破坏</span><kbd>3</kbd></button>
+  </div>
+</div>
+
+<div id="focus"><div class="ring"></div><div class="tag" id="focusTag"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"><img src="../naiwa.png" alt=""><span id="toastText"></span></div>
+
+<noscript><div class="err">抱肚星云需要 JavaScript 才能运行。</div></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
