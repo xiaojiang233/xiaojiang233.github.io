@@ -247,7 +247,7 @@ export const SPAWN = {
   star(sim, p, v, s) {
     const t = rnd(), col = starColor(t * 0.7, 1.2);
     const m = 1.5 * s;
-    const b = sim.addBody({ type: 'star', x: p.x, y: p.y, z: p.z, vx: v[0], vy: v[1], vz: v[2], m, eps: 0.08, color: col, glow: 1.5 + s * 0.5, size: s });
+    const b = sim.addBody({ type: 'star', x: p.x, y: p.y, z: p.z, vx: v[0], vy: v[1], vz: v[2], m, eps: 0.08, color: col, glow: 1.5 + s * 0.5, size: s, seed: (Math.floor(rnd() * 4294967295) >>> 0) || 1, cstart: sim.time });
     if (!b) return;
     const tilt = randTilt(), fr = frame(tilt.tilt, tilt.yaw);
     for (let k = 0; k < 7; k++) {
@@ -256,7 +256,7 @@ export const SPAWN = {
       const hue = rnd();
       sim.addP(p.x + (fr.e1[0] * c + fr.e2[0] * sn) * r, p.y + (fr.e1[1] * c + fr.e2[1] * sn) * r, p.z + (fr.e1[2] * c + fr.e2[2] * sn) * r,
         v[0] + (-fr.e1[0] * sn + fr.e2[0] * c) * vc, v[1] + (-fr.e1[1] * sn + fr.e2[1] * c) * vc, v[2] + (-fr.e1[2] * sn + fr.e2[2] * c) * vc,
-        0.5 + hue * 0.5, 0.7 + hue * 0.2, 1 - hue * 0.5, 0.12, 1);
+        0.5 + hue * 0.5, 0.7 + hue * 0.2, 1 - hue * 0.5, 0.12, 1, 0, false);
     }
   },
   cluster(sim, p, v, s) {

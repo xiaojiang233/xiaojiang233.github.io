@@ -139,7 +139,7 @@ void main() {
 
 export const SHAPE = { glow: 0, ring: 1, bh: 2, star: 3, flash: 4 };
 
-export function makeOverlay(max = 768) {
+export function makeOverlay(max = 1100) {
   const geo = new THREE.InstancedBufferGeometry();
   geo.setAttribute('corner', new THREE.BufferAttribute(new Float32Array([-1, -1, 1, -1, 1, 1, -1, 1]), 2));
   geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
