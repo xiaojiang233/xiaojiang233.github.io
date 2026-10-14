@@ -1,0 +1,21 @@
+{
+  "name": "naiwa-promo",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render NaiwaPromo out/naiwa-promo.mp4",
+    "capture": "node capture/capture.mjs"
+  },
+  "dependencies": {
+    "@expo-google-fonts/noto-sans-sc": "^0.4.4",
+    "@remotion/cli": "4.0.535",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.535"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "typescript": "5.8.3"
+  }
+}
